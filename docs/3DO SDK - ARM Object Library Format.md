@@ -64,22 +64,24 @@ of the same sex, but will reject inputs of mixed endian-ness.
 
 Strings and bytes may be aligned on any byte boundary.
 
-ALF fields defined in this document do not use half-words, and align words on 4-byte boundaries.
+ALF fields defined in this document do not use half-words, and align
+words on 4-byte boundaries.
 
-Within the contents of an ALF file (within the data contained in 
-OBJ_AREA chunks - see below), the alignment of words and half-words is 
-defined by the use to which ALF is being put. For all current ARM-based 
-systems, alignment is strict, as described immediately above.
-
+Within the contents of an ALF file (within the data contained in
+OBJ_AREA chunks - see below), the alignment of words and half-words is
+defined by the use to which ALF is being put. For all current
+ARM-based systems, alignment is strict, as described immediately
+above.
 
 
 # Library File Format
 
-For library files, the first part of each chunk's name is "LIB_"; for 
-object libraries, the names of the additional two chunks begin with 
+For library files, the first part of each chunk's name is "LIB_"; for
+object libraries, the names of the additional two chunks begin with
 "OFL_".
 
-Each piece of a library file is stored in a separate, identifiable chunk, named as follows:
+Each piece of a library file is stored in a separate, identifiable
+chunk, named as follows:
 
 | Chunk        | Chunk Name                            |
 | ------------ | ------------------------------------- |
@@ -90,19 +92,19 @@ Each piece of a library file is stored in a separate, identifiable chunk, named 
 | Symbol table | OFL_SYMT (object code libraries only) |
 | Time stamp   | OFL_TIME (object code libraries only) |
 
-There may be many LIB_DATA chunks in a library, one for each library 
-member. In all chunks, word values are stored with the same byte order 
-as the target system; strings are stored in ascending address order, 
+There may be many LIB_DATA chunks in a library, one for each library
+member. In all chunks, word values are stored with the same byte order
+as the target system; strings are stored in ascending address order,
 which is independent of target byte order.
 
 ## LIB_DIRY
 
-The LIB_DIRY chunk contains a directory of the modules in the library, 
-each of which is stored in a LIB_DATA chunk. The directory size is fixed
- when the library is created. The directory consists of a sequence of 
-variable length entries, each an integral number of words long. The 
-number of directory entries is determined by the size of the LIB_DIRY 
-chunk.
+The LIB_DIRY chunk contains a directory of the modules in the library,
+each of which is stored in a LIB_DATA chunk. The directory size is
+fixed when the library is created. The directory consists of a
+sequence of variable length entries, each an integral number of words
+long. The number of directory entries is determined by the size of the
+LIB_DIRY chunk.
 
 | ChunkIndex  | Description                                                    |
 | ----------- | -------------------------------------------------------------- |
@@ -110,18 +112,20 @@ chunk.
 | DataLength  | The size of the Data (an integral number of words).            |
 | Data        |                                                                |
 
-Data                 |
------------------------------------------------------
+ChunkIndex is a word containing the 0-origin index within the chunk
+ file header of the corresponding LIB_DATA chunk. Conventionally, the
+ first 3 chunks of an OFL file are LIB_DIRY, LIB_TIME and LIB_VSRN, so
+ *ChunkIndex* is at least 3. A ChunkIndex of 0 means the directory
+ entry is unused.
 
-ChunkIndex is a word containing the 0-origin index within the chunk file
- header of the corresponding LIB_DATA chunk. Conventionally, the first 3
- chunks of an OFL file are LIB_DIRY, LIB_TIME and LIB_VSRN, so *ChunkIndex* is at least 3. A ChunkIndex of 0 means the directory entry is unused.
+The corresponding LIB_DATA chunk entry gives the offset and size of
+the library module in the library file.
 
-The corresponding LIB_DATA chunk entry gives the offset and size of the library module in the library file.
+EntryLength is a word containing the number of bytes in this LIB_DIRY
+entry, always a multiple of 4.
 
-EntryLength is a word containing the number of bytes in this LIB_DIRY entry, always a multiple of 4.
-
-DataLength is a word containing the number of bytes used in the data section of this LIB_DIRY entry, also a multiple of 4.
+DataLength is a word containing the number of bytes used in the data
+section of this LIB_DIRY entry, also a multiple of 4.
 
 The Data section consists of, in order:
 
@@ -129,24 +133,28 @@ The Data section consists of, in order:
 - any other information relevant to the library module (often empty);
 - a 2-word, word-aligned time stamp.
 
-Strings should contain only ISO-8859 non-control characters (codes [0-31], 127 and 128+[0-31] are excluded).
+Strings should contain only ISO-8859 non-control characters (codes
+[0-31], 127 and 128+[0-31] are excluded).
 
-The string field is the name used to identify this library module. 
-Typically it is the name of the file from which the library member was 
+The string field is the name used to identify this library module.
+Typically it is the name of the file from which the library member was
 created.
 
-The format of the time stamp is described in [Time stamps](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/3atsb.html#XREF15659). Its value is an encoded version of the last-modified time of the file from which the library member was created.
+The format of the time stamp is described in [Time
+stamps](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/3atsb.html#XREF15659). Its
+value is an encoded version of the last-modified time of the file from
+which the library member was created.
 
-To ensure maximum robustness with respect to earlier, now obsolete, versions of the ARM object library format:
+To ensure maximum robustness with respect to earlier, now obsolete,
+versions of the ARM object library format:
 
 - Applications which create libraries or library members should ensure
-   that the LIB_DIRY entries they create contain valid time stamps.
-
-- Applications which read LIB_DIRY entries should not rely on
-   any data beyond the end of the name string being present, unless the 
-  difference between the DataLength field and the name-string length 
-  allows for it. Even then, the contents of a time stamp should be treated
-   cautiously and not assumed to be sensible.
+  that the LIB_DIRY entries they create contain valid time stamps.
+- Applications which read LIB_DIRY entries should not rely on any data
+  beyond the end of the name string being present, unless the
+  difference between the DataLength field and the name-string length
+  allows for it. Even then, the contents of a time stamp should be
+  treated cautiously and not assumed to be sensible.
 
 Applications which write LIB_DIRY or OFL_SYMT entries should ensure that
  padding is done with NUL (0) bytes; applications which read LIB_DIRY or
