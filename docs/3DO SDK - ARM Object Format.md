@@ -338,12 +338,12 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
   exactly the same contents. If there is no definition of a common
   area, its size will be the size of the largest common reference to
   it.
-
-Although common areas conventionally hold data, it is quite legal to
-use bit 10 in conjunction with bit 9 to define a common block
-containing code. This is most useful for defining a code area which
-must be generated in several compilation units but which should be
-included in the final image only once.
+  
+  Although common areas conventionally hold data, it is quite legal to
+  use bit 10 in conjunction with bit 9 to define a common block
+  containing code. This is most useful for defining a code area which
+  must be generated in several compilation units but which should be
+  included in the final image only once.
 
 Bit 12-encodes the zero-initialised attribute, specifying that the
 area has no initialising data in this object file, and that the area
