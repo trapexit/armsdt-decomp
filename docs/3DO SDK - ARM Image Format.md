@@ -319,25 +319,28 @@ environment.
         SWI     #&10                  ; return top of memory in r1
 ```
 
-The following code calculates the length of the image inclusive of its 
+The following code calculates the length of the image inclusive of its
 relocation data, and decides whether a move up store is possible.
 
 ```
-    ADR    r2, End                            ; -> End
-01  LDR    r0, [r2], #4                            ; load relocation offset, increment r2
-    CMNS   r0, #1                            ; terminator?
-    BNE    %B01                            ; No, so loop again
-    SUB    r3, r1, r9                            ; MemLimit - freeSpace
-    SUBS   r0, r3, r2                            ; amount to move by
-    BLE    RelocateOnly                            ; not enough space to move...
-    BIC    r0, r0, #15                            ; a multiple of 16...
-    ADD    r3, r2, r0                            ; End + shift
-    ADR    r8, %F02                            ; intermediate limit for copy-up
+        ADR     r2, End               ; r2 -> End of relocation list
+
+01:     LDR     r0, [r2], #4          ; load relocation offset, increment r2
+        CMNS    r0, #1                ; check for terminator (-1)?
+        BNE     %B01                  ; not done, loop again
+
+        SUB     r3, r1, r9            ; MemLimit - freeSpace
+        SUBS    r0, r3, r2            ; compute amount to move by
+        BLE     RelocateOnly          ; not enough space, jump to relocation routine
+
+        BIC     r0, r0, #15           ; align down to multiple of 16 bytes
+        ADD     r3, r2, r0            ; End + shift
+        ADR     r8, %F02              ; set intermediate limit for copy-up
 ```
 
-Finally, the image copies itself four words at a time, being careful 
-about the direction of copy, and jumping to the copied copy code as soon
- as it has copied itself.
+Finally, the image copies itself four words at a time, being careful
+about the direction of copy, and jumping to the copied copy code as
+soon as it has copied itself.
 
 ```
 02:     LDMDB   r2!, {r4-r7}            ; load from source (decrement before)
