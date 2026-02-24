@@ -205,22 +205,26 @@ file format or even another library.
 
 # Object code libraries
 
-An object code library is a library file whose members are files in ARM Object Format (see [ARM Object Format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/ats2frst.html#XREF16187) for details).
+An object code library is a library file whose members are files in
+ARM Object Format (see [ARM Object
+Format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/ats2frst.html#XREF16187)
+for details).
 
-An object code library contains two additional chunks: an external 
-symbol table chunk named OFL_SYMT; and a time stamp chunk named 
+An object code library contains two additional chunks: an external
+symbol table chunk named OFL_SYMT; and a time stamp chunk named
 OFL_TIME.
+
 
 ## OFL_SYMT
 
-The external symbol table contains an entry for each external symbol 
-defined by members of the library, together with the index of the chunk 
-containing the member defining that symbol.
+The external symbol table contains an entry for each external symbol
+defined by members of the library, together with the index of the
+chunk containing the member defining that symbol.
 
-The OFL_SYMT chunk has exactly the same format as the LIB_DIRY chunk 
-except that the Data section of each entry contains only a string, the 
-name of an external symbol, and between 1 and 4 bytes of NUL padding, as
- follows:
+The OFL_SYMT chunk has exactly the same format as the LIB_DIRY chunk
+except that the Data section of each entry contains only a string, the
+name of an external symbol, and between 1 and 4 bytes of NUL padding,
+as follows:
 
 | ChunkIndex           | Description                                                                     |
 | -------------------- | ------------------------------------------------------------------------------- |
@@ -231,6 +235,9 @@ name of an external symbol, and between 1 and 4 bytes of NUL padding, as
 
 OFL_SYMT entries do not contain time stamps.
 
+
 ## OFL_TIME
 
-The OFL_TIME chunk records when the OFL_SYMT chunk was last modified and has the same format as the LIB_TIME chunk (see [Time stamps](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/3atsb.html#XREF15659)).
+The OFL_TIME chunk records when the OFL_SYMT chunk was last modified
+and has the same format as the LIB_TIME chunk (see [Time
+stamps](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/3atsb.html#XREF15659)).
