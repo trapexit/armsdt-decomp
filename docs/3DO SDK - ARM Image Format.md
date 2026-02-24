@@ -262,8 +262,6 @@ the word at offset 0x34 contains the base address of the image's data.
 
 # Zero-initialisation code
 
----
-
 The Zero-initialisation code is as follows:
 
 ```
