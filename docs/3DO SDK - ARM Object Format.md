@@ -451,7 +451,6 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
 | 24-27 | 0x0F000000 | Base register for based area  | Data areas only |
 
 
-
 # Format of the areas chunk
 
 The areas chunk (OBJ_AREA) contains the actual area contents (code, 
