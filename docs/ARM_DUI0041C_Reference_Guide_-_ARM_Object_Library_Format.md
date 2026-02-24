@@ -129,4 +129,5 @@ The `OFL_SYMT` chunk has exactly the same format as the `LIB_DIRY` chunk except 
 
 ### 14.5.2 OFL_TIME
 
-The `OFL_TIME` chunk records when the `OFL_SYMT` chunk was last modified and has the same format as the `LIB_TIME` chunk.
+The `OFL_TIME` chunk records when the `OFL_SYMT` chunk was last
+modified and has the same format as the `LIB_TIME` chunk.
