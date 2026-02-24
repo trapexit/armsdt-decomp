@@ -344,33 +344,31 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
   containing code. This is most useful for defining a code area which
   must be generated in several compilation units but which should be
   included in the final image only once.
-
-Bit 12-encodes the zero-initialised attribute, specifying that the
-area has no initialising data in this object file, and that the area
-contents are missing from the OBJ_AREA chunk. Typically, this
-attribute is given to large uninitialised data areas. When an
-uninitialised area is included in an image, the linker either includes
-a read-write area of binary zeroes of appropriate size, or maps a
-read-write area of appropriate size that will be zeroed at image
-start-up time. This attribute is incompatible with the read-only
-attribute (see Bit 13, below).
-
-Whether or not a zero-initialised area is re-zeroed if the image is 
-re-entered is a property of the relevant image format and/or the system 
-on which it will be executed. The definition of AOF neither requires nor
- precludes re-zeroing.
-
-A combination of bit 10 (common definition) and bit 12 (zero 
-initialised) has exactly the same meaning as bit 11 (reference to 
-common).
-
-Bit 13 encodes the read only attribute and denotes that the area will 
-not be modified following relocation by the linker. The linker groups 
-read-only areas together so that they may be write protected at 
-run-time, hardware permitting. Code areas and debugging tables should 
-have this bit set. The setting of this bit is incompatible with the 
-setting of bit 12.
-
+- Bit 12 - encodes the zero-initialised attribute, specifying that the
+  area has no initialising data in this object file, and that the area
+  contents are missing from the OBJ_AREA chunk. Typically, this
+  attribute is given to large uninitialised data areas. When an
+  uninitialised area is included in an image, the linker either
+  includes a read-write area of binary zeroes of appropriate size, or
+  maps a read-write area of appropriate size that will be zeroed at
+  image start-up time. This attribute is incompatible with the
+  read-only attribute (see Bit 13, below).
+    
+  Whether or not a zero-initialised area is re-zeroed if the image is
+  re-entered is a property of the relevant image format and/or the
+  system on which it will be executed. The definition of AOF neither
+  requires nor precludes re-zeroing.
+  
+  A combination of bit 10 (common definition) and bit 12 (zero
+  initialised) has exactly the same meaning as bit 11 (reference to
+  common).
+- Bit 13 - encodes the read only attribute and denotes that the area
+  will not be modified following relocation by the linker. The linker
+  groups read-only areas together so that they may be write protected
+  at run-time, hardware permitting. Code areas and debugging tables
+  should have this bit set. The setting of this bit is incompatible
+  with the setting of bit 12.
+  
 Bit 14 encodes the position independent (PI) attribute, usually only of 
 significance for code areas. Any reference to a memory address from a PI
  area must be in the form of a link-time-fixed offset from a base 
