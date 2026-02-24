@@ -80,12 +80,13 @@ half-words on 2-byte boundaries.
 
 # The overall structure of an AOF file
 
-An AOF file contains a number of separate but related pieces of data. To
- simplify access to these data, and to give a degree of extensibility to
- tools which process AOF, the object file format is itself layered on 
-another format called *Chunk File Format*, which provides a simple 
-and efficient means of accessing and updating distinct chunks of data 
-within a single file. The object file format defines five chunks:
+An AOF file contains a number of separate but related pieces of
+data. To simplify access to these data, and to give a degree of
+extensibility to tools which process AOF, the object file format is
+itself layered on another format called *Chunk File Format*, which
+provides a simple and efficient means of accessing and updating
+distinct chunks of data within a single file. The object file format
+defines five chunks:
 
 - the AOF header
 - the AOF areas
@@ -95,18 +96,20 @@ within a single file. The object file format defines five chunks:
 
 These are described in detail after the description of chunk file format.
 
+
 ## Chunk file format
 
-A chunk is accessed via a header at the start of the file. The header 
-contains the number, size, location and identity of each chunk in the 
+A chunk is accessed via a header at the start of the file. The header
+contains the number, size, location and identity of each chunk in the
 file.
 
-The size of the header may vary between different chunk files, but is 
-fixed for each file. Not all entries in a header need be used, thus 
-limited expansion of the number of chunks is permitted without a 
+The size of the header may vary between different chunk files, but is
+fixed for each file. Not all entries in a header need be used, thus
+limited expansion of the number of chunks is permitted without a
 wholesale copy.
 
-A chunk file can be copied without knowledge of the contents of its chunks.
+A chunk file can be copied without knowledge of the contents of its
+chunks.
 
 The layout of a chunk file is as follows:
 
@@ -123,16 +126,17 @@ The layout of a chunk file is as follows:
 | ...             |                                                                   |
 | chunk_numChunks | Start of Data Chunks                                              |
 
-ChunkFileId-marks the file as a chunk file. Its value is 
-0xC3CBC6C5. The endian-ness of the chunk file can be deduced from this 
-value (if, when read as a word, it appears to be 0xC5C6CBC3 then each 
+ChunkFileId-marks the file as a chunk file. Its value is
+0xC3CBC6C5. The endian-ness of the chunk file can be deduced from this
+value (if, when read as a word, it appears to be 0xC5C6CBC3 then each
 word value must be byte- reversed before use).
 
-- maxChunks-defines the number of the entries in the header, fixed when the file is created.
+- maxChunks-defines the number of the entries in the header, fixed
+  when the file is created.
 
-- numChunks-defines how many chunks are currently used in the
-   file, which can vary from 0 to maxChunks. numChunks is redundant in 
-  that it can be found by scanning the entries.
+- numChunks-defines how many chunks are currently used in the file,
+  which can vary from 0 to maxChunks. numChunks is redundant in that
+  it can be found by scanning the entries.
 
 Each entry in the chunk file header consists of four words in order:
 
