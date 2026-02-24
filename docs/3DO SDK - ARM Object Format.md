@@ -368,21 +368,22 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
   at run-time, hardware permitting. Code areas and debugging tables
   should have this bit set. The setting of this bit is incompatible
   with the setting of bit 12.
+- Bit 14 - encodes the position independent (PI) attribute, usually
+  only of significance for code areas. Any reference to a memory
+  address from a PI area must be in the form of a link-time-fixed
+  offset from a base register (e.g. a PC-relative branch offset).
+- Bit 15 - encodes the debugging table attribute and denotes that the
+  area contains symbolic debugging tables. The linker groups these
+  areas together so they can be accessed as a single continuous chunk
+  at or before run-time (usually, a debugger will extract its
+  debugging tables from the image file prior to starting the
+  debugger).
   
-Bit 14 encodes the position independent (PI) attribute, usually only of 
-significance for code areas. Any reference to a memory address from a PI
- area must be in the form of a link-time-fixed offset from a base 
-register (e.g. a PC-relative branch offset).
-
-Bit 15 encodes the debugging table attribute and denotes that the area 
-contains symbolic debugging tables. The linker groups these areas 
-together so they can be accessed as a single continuous chunk at or 
-before run-time (usually, a debugger will extract its debugging tables 
-from the image file prior to starting the debugger).
-
-Usually, debugging tables are read-only and, therefore, have bit 13 set also. In debugging table areas, bit 9 (the *code* attribute) is ignored.
-
-Bits 16-19 encode additional attributes of code areas and shall be non-0 only if the area has the code attribute (bit 9 set).
+  Usually, debugging tables are read-only and, therefore, have bit 13
+  set also. In debugging table areas, bit 9 (the *code* attribute) is
+  ignored.
+- Bits 16-19 - encode additional attributes of code areas and shall be
+  non-0 only if the area has the code attribute (bit 9 set).
 
 Bit 16 encodes the 32-bit PC attribute, and denotes that code in 
 this area complies with a 32-bit variant of the ARM Procedure Call 
