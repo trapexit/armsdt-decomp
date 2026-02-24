@@ -2,39 +2,48 @@
 
 From **ARM DUI0041C**
 
----
 
 ## Chapter 13: ARM Image Format
 
-This chapter describes the ARM Image Format (AIF). It contains the following sections:
+This chapter describes the ARM Image Format (AIF). It contains the
+following sections:
 
 - Overview of the ARM Image Format
 - AIF variants
 - The layout of AIF
 
----
 
 ## 13.1 Overview of the ARM Image Format
 
-ARM Image Format (AIF) is a simple format for ARM executable images, consisting of:
+ARM Image Format (AIF) is a simple format for ARM executable images,
+consisting of:
 
 - a 128-byte header
 - the image code
 - the image initialized static data.
 
-An AIF image is capable of self-relocation if it is created with the appropriate linker options. The image can be loaded anywhere and it will execute where it is loaded. After an AIF image has been relocated, it can create its own zero-initialized area. Finally, the image is entered at the unique entry point.
+An AIF image is capable of self-relocation if it is created with the
+appropriate linker options. The image can be loaded anywhere and it
+will execute where it is loaded. After an AIF image has been
+relocated, it can create its own zero-initialized area. Finally, the
+image is entered at the unique entry point.
 
----
 
 ## 13.2 AIF Variants
 
 There are three variants of AIF:
 
+
 ### Executable AIF
 
-Executable AIF can be loaded at its load address and entered at the same point (at the first word of the AIF header). It prepares itself for execution by relocating itself if required and setting to zero its own zero-initialized data.
+Executable AIF can be loaded at its load address and entered at the
+same point (at the first word of the AIF header). It prepares itself
+for execution by relocating itself if required and setting to zero its
+own zero-initialized data.
 
-The header is part of the image itself. Code in the header ensures that the image is properly prepared for execution before being entered at its entry address.
+The header is part of the image itself. Code in the header ensures
+that the image is properly prepared for execution before being entered
+at its entry address.
 
 The fourth word of an executable AIF header is:
 
@@ -42,21 +51,35 @@ The fourth word of an executable AIF header is:
 BL entrypoint
 ```
 
-The most significant byte of this word (in the target byte order) is `0xeb`.
+The most significant byte of this word (in the target byte order) is
+`0xeb`.
 
-The base address of an executable AIF image is the address at which its header should be loaded. Its code starts at `base + 0x80`.
+The base address of an executable AIF image is the address at which
+its header should be loaded. Its code starts at `base + 0x80`.
+
 
 ### Non-executable AIF
 
-Non-executable AIF must be processed by an image loader that loads the image at its load address and prepares it for execution as detailed in the AIF header. The header is then discarded. The header is not part of the image, it only describes the image.
+Non-executable AIF must be processed by an image loader that loads the
+image at its load address and prepares it for execution as detailed in
+the AIF header. The header is then discarded. The header is not part
+of the image, it only describes the image.
 
-The fourth word of a non-executable AIF image is the offset of its entry point from its base address. The most significant nibble of this word (in the target byte order) is `0x0`.
+The fourth word of a non-executable AIF image is the offset of its
+entry point from its base address. The most significant nibble of this
+word (in the target byte order) is `0x0`.
 
-The base address of a non-executable AIF image is the address at which its code should be loaded.
+The base address of a non-executable AIF image is the address at which
+its code should be loaded.
+
 
 ### Extended AIF
 
-Extended AIF is a special type of non-executable AIF. It contains a scatter-loaded image. It has an AIF header that points to a chain of load region descriptors within the file. The image loader should place each region at the location in memory specified by the load region descriptor.
+Extended AIF is a special type of non-executable AIF. It contains a
+scatter-loaded image. It has an AIF header that points to a chain of
+load region descriptors within the file. The image loader should place
+each region at the location in memory specified by the load region
+descriptor.
 
 ---
 
