@@ -296,7 +296,7 @@ A field may be subject to more than one relocation.
 └──┴──┴──┴──┴──┴──┴──┴───────────────────────────┘
 ```
 
-**Offset** — byte offset in the preceding area of the subject field to be relocated.
+**Offset**: byte offset in the preceding area of the subject field to be relocated.
 
 **SID (bits 0–23):** Depends on the A bit (bit 27):
 
