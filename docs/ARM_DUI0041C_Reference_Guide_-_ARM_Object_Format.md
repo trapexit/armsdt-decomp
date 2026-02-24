@@ -22,8 +22,8 @@ following sections:
 
 The following terms apply throughout this section:
 
-- **object file** — refers to a file in ARM Object Format.
-- **address** — for data in a file, this means offset from the start
+- **object file** - refers to a file in ARM Object Format.
+- **address** - for data in a file, this means offset from the start
   of the file.
 
 
@@ -113,7 +113,7 @@ three words, and a four word entry for each chunk in the file.
 |-------|-------------|
 | ChunkFileId | Marks the file as a chunk file. Its value is `0xC3CBC6C5`. The endianness can be determined from this value (if it appears to be `0xC5C6CBC3` when read as a word, each word value must be byte-reversed before use). |
 | max_chunks | Defines the number of entries in the header, fixed when the file is created. |
-| num_chunks | Defines how many chunks are currently used in the file (0 to max_chunks). Redundant — can be found by scanning the entries. |
+| num_chunks | Defines how many chunks are currently used in the file (0 to max_chunks). Redundant - can be found by scanning the entries. |
 
 **Second part (4 words per chunk entry):**
 
@@ -174,7 +174,7 @@ six words, and a variable length part consisting of a sequence of area
 headers.
 
 
-### Part One — Fixed Header (6 words)
+### Part One - Fixed Header (6 words)
 
 | Field | Description |
 |-------|-------------|
@@ -186,7 +186,7 @@ headers.
 | Entry Offset | The entry address is defined to be the base address of the entry area plus Entry Offset. |
 
 
-### Part Two — Area Headers (5 words each)
+### Part Two - Area Headers (5 words each)
 
 | Field | Description |
 |-------|-------------|
@@ -231,23 +231,23 @@ the containing object module in the link list.
 
 **Bit descriptions:**
 
-- **Bit 8** — Absolute attribute: area must be placed at its Base Address. Not usually set by language processors.
-- **Bit 9** — Code attribute: 1 = code, 0 = data.
-- **Bit 10** — Common definition: common areas with the same name are overlaid by the linker. All other references must specify a size ≤ the definition size. Can be used with bit 9 for common code blocks.
-- **Bit 11** — Common block reference: precludes the area having initializing data (implies bit 12). If both bits 10 and 11 are set, bit 11 is ignored.
-- **Bit 12** — Zero-initialized attribute: area has no initializing data in this object file; contents are missing from `OBJ_AREA`. Incompatible with read-only (bit 13).
-- **Bit 13** — Read-only: area will not be modified following relocation. Code areas and debugging tables must have this bit set. Incompatible with bit 12.
-- **Bit 14** — Position independent (PI): any memory address reference must be a link-time-fixed offset from a base register (e.g., pc-relative branch offset).
-- **Bit 15** — Debugging table: area contains symbolic debugging tables. Bit 9 is ignored in debugging table areas. Usually has bit 13 set also.
-- **Bits 16–22** — Additional attributes of code areas (must be non-zero only if bit 9 is set). Bits 20–22 can be non-zero for data areas.
-  - **Bit 16** — 32-bit PC attribute.
-  - **Bit 17** — Reentrant attribute.
-  - **Bit 18** — Uses ARM floating-point instruction set (LFM/SFM).
-  - **Bit 19** — No Software Stack Check attribute.
-  - **Bit 20** — Thumb code area.
-  - **Bit 21** — Area may contain ARM halfword instructions.
-  - **Bit 22** — Suitable for ARM/Thumb interworking.
-- **Bits 23–31** — Reserved, set to 0.
+- **Bit 8** - Absolute attribute: area must be placed at its Base Address. Not usually set by language processors.
+- **Bit 9** - Code attribute: 1 = code, 0 = data.
+- **Bit 10** - Common definition: common areas with the same name are overlaid by the linker. All other references must specify a size ≤ the definition size. Can be used with bit 9 for common code blocks.
+- **Bit 11** - Common block reference: precludes the area having initializing data (implies bit 12). If both bits 10 and 11 are set, bit 11 is ignored.
+- **Bit 12** - Zero-initialized attribute: area has no initializing data in this object file; contents are missing from `OBJ_AREA`. Incompatible with read-only (bit 13).
+- **Bit 13** - Read-only: area will not be modified following relocation. Code areas and debugging tables must have this bit set. Incompatible with bit 12.
+- **Bit 14** - Position independent (PI): any memory address reference must be a link-time-fixed offset from a base register (e.g., pc-relative branch offset).
+- **Bit 15** - Debugging table: area contains symbolic debugging tables. Bit 9 is ignored in debugging table areas. Usually has bit 13 set also.
+- **Bits 16–22** - Additional attributes of code areas (must be non-zero only if bit 9 is set). Bits 20–22 can be non-zero for data areas.
+  - **Bit 16** - 32-bit PC attribute.
+  - **Bit 17** - Reentrant attribute.
+  - **Bit 18** - Uses ARM floating-point instruction set (LFM/SFM).
+  - **Bit 19** - No Software Stack Check attribute.
+  - **Bit 20** - Thumb code area.
+  - **Bit 21** - Area may contain ARM halfword instructions.
+  - **Bit 22** - Suitable for ARM/Thumb interworking.
+- **Bits 23–31** - Reserved, set to 0.
 
 
 ## 15.4 The AREAS Chunk (OBJ_AREA)
@@ -298,11 +298,15 @@ A field may be subject to more than one relocation.
 
 - **Offset**: byte offset in the preceding area of the subject field
   to be relocated.
+
 - **SID (bits 0–23):** Depends on the A bit (bit 27):
+
 - **A=1:** Subject field is relocated by the value of the symbol at
   index SID in the symbol table chunk.
+
 - **A=0:** Subject field is relocated by the base of the area at index
   SID in the array of areas.
+
 - **FT (bits 24–25):** Describes the subject field type:
 
 | Value | Field Type |
@@ -323,17 +327,18 @@ Bytes, halfwords, and instructions may only be relocated by values of small size
 | 10 | At most 2 instructions |
 | 11 | At most 3 instructions |
 
-**R (bit 26) and B (bit 28):** Determine how the relocation value modifies the subject field:
+- **R (bit 26) and B (bit 28):** Determine how the relocation value modifies the subject field:
 
-- **R=0, B=0** — Plain additive relocation: `subject_field = subject_field + relocation_value`
-- **R=1, B=0** — PC-relative relocation: `subject_field = subject_field + (relocation_value - base_of_area_containing(subject_field))`. Special case: if A=0 and the relocation value is the base of the area containing the subject field, it is not added. If R=1, B is usually 0. B=1 denotes the inter-link-unit value of a branch destination is to be used.
-- **R=0, B=1** — Based area relocation: `subject_field = subject_field + (relocation_value - base_of_area_group_containing(relocation_value))`. Bits 29–30 must be 0. Bit 31 must be 1.
+- **R=0, B=0** - Plain additive relocation: `subject_field = subject_field + relocation_value`
+- **R=1, B=0** - PC-relative relocation: `subject_field = subject_field + (relocation_value - base_of_area_containing(subject_field))`. Special case: if A=0 and the relocation value is the base of the area containing the subject field, it is not added. If R=1, B is usually 0. B=1 denotes the inter-link-unit value of a branch destination is to be used.
+- **R=0, B=1** - Based area relocation: `subject_field = subject_field + (relocation_value - base_of_area_group_containing(relocation_value))`. Bits 29–30 must be 0. Bit 31 must be 1.
 
----
 
 ## 15.6 Symbol Table Chunk Format (OBJ_SYMT)
 
-The Number of Symbols field in the fixed part of the AOF header defines how many entries there are in the symbol table. Each symbol table entry is four words long:
+The Number of Symbols field in the fixed part of the AOF header
+defines how many entries there are in the symbol table. Each symbol
+table entry is four words long:
 
 | Field | Description |
 |-------|-------------|
@@ -341,6 +346,7 @@ The Number of Symbols field in the fixed part of the AOF header defines how many
 | Attributes | See Symbol Attributes below. |
 | Value | Meaningful only if the symbol is a defining occurrence (bit 0 set) or a common symbol (bit 6 set). If absolute: contains the symbol value. If common: contains the byte length. Otherwise: offset from the base address of the area named by Area Name. |
 | Area Name | Meaningful only if the symbol is a non-absolute defining occurrence (bit 0 set, bit 2 unset). Gives the string table index for the name of the area in which the symbol is defined. |
+
 
 ### 15.6.1 Symbol Attributes
 
@@ -358,23 +364,23 @@ The Number of Symbols field in the fixed part of the AOF header defines how many
 
 **Bit interpretations:**
 
-- **Bit 0** — Symbol is defined in this object file.
-- **Bit 1** — Symbol has global scope; can be matched by the linker to a similarly named symbol from another object file.
-  - **01** (bit 1 unset, bit 0 set) — Defined with scope limited to this object file.
-  - **10** (bit 1 set, bit 0 unset) — Reference to a symbol defined in another object file. If no defining instance is found, the linker attempts to match to common block names.
-  - **11** — Defined with global scope.
-  - **00** — Reserved.
-- **Bit 2** — Absolute attribute: the symbol has an absolute value (e.g., a constant).
-- **Bit 3** — Case insensitive reference: the linker will ignore case when matching (only meaningful for external references).
-- **Bit 4** — Weak attribute: acceptable for the reference to remain unsatisfied. The linker ignores weak references when deciding which members to load from an object library.
-- **Bit 5** — Reserved, must be 0.
-- **Bit 6** — Common attribute: the symbol is a reference to a common area. The length is given by the symbol's Value field.
-- **Bit 7** — Reserved, must be 0.
-- **Bits 8–11** — Additional attributes of symbols defined in code areas.
-  - **Bit 8** — Code datum: symbol identifies a datum (usually read-only), not an executable instruction.
-  - **Bit 9** — FP arguments in FP registers: symbol identifies a function entry point. A reference with this attribute cannot match a definition lacking it.
-  - **Bits 10–11** — Reserved, must be 0.
-- **Bit 12** — Thumb attribute: symbol is a Thumb symbol.
+- **Bit 0** - Symbol is defined in this object file.
+- **Bit 1** - Symbol has global scope; can be matched by the linker to a similarly named symbol from another object file.
+  - **01** (bit 1 unset, bit 0 set) - Defined with scope limited to this object file.
+  - **10** (bit 1 set, bit 0 unset) - Reference to a symbol defined in another object file. If no defining instance is found, the linker attempts to match to common block names.
+  - **11** - Defined with global scope.
+  - **00** - Reserved.
+- **Bit 2** - Absolute attribute: the symbol has an absolute value (e.g., a constant).
+- **Bit 3** - Case insensitive reference: the linker will ignore case when matching (only meaningful for external references).
+- **Bit 4** - Weak attribute: acceptable for the reference to remain unsatisfied. The linker ignores weak references when deciding which members to load from an object library.
+- **Bit 5** - Reserved, must be 0.
+- **Bit 6** - Common attribute: the symbol is a reference to a common area. The length is given by the symbol's Value field.
+- **Bit 7** - Reserved, must be 0.
+- **Bits 8–11** - Additional attributes of symbols defined in code areas.
+  - **Bit 8** - Code datum: symbol identifies a datum (usually read-only), not an executable instruction.
+  - **Bit 9** - FP arguments in FP registers: symbol identifies a function entry point. A reference with this attribute cannot match a definition lacking it.
+  - **Bits 10–11** - Reserved, must be 0.
+- **Bit 12** - Thumb attribute: symbol is a Thumb symbol.
 
 ---
 
