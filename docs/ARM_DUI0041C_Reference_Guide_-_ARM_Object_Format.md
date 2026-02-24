@@ -382,7 +382,6 @@ table entry is four words long:
   - **Bits 10–11** - Reserved, must be 0.
 - **Bit 12** - Thumb attribute: symbol is a Thumb symbol.
 
----
 
 ## 15.7 The String Table Chunk (OBJ_STRT)
 
