@@ -27,10 +27,11 @@ Click on one of the topics below to select it:
 - Some examples
 - The APCS in non-user ARM modes
 
-Since the ARM CPU is used in a wide variety of systems, the APCS is not a
- single standard, but a consistent family of standards. See [APCS variants](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsb.html#XREF35590) for details of the variants in the family. Implementors of run-time 
-systems, operating systems, embedded control monitors, etc., must choose
- the variant(s) most appropriate to their requirements.
+Since the ARM CPU is used in a wide variety of systems, the APCS is
+not a single standard, but a consistent family of standards. See "APCS
+variants" for details of the variants in the family. Implementors of
+run-time systems, operating systems, embedded control monitors, etc.,
+must choose the variant(s) most appropriate to their requirements.
 
 Naturally, there can be no binary compatibility between program 
 fragments which conform to different members of the APCS family. Those 
