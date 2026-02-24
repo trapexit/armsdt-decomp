@@ -296,14 +296,14 @@ A field may be subject to more than one relocation.
 └──┴──┴──┴──┴──┴──┴──┴───────────────────────────┘
 ```
 
-**Offset**: byte offset in the preceding area of the subject field to be relocated.
-
-**SID (bits 0–23):** Depends on the A bit (bit 27):
-
-- **A=1:** Subject field is relocated by the value of the symbol at index SID in the symbol table chunk.
-- **A=0:** Subject field is relocated by the base of the area at index SID in the array of areas.
-
-**FT (bits 24–25):** Describes the subject field type:
+- **Offset**: byte offset in the preceding area of the subject field
+  to be relocated.
+- **SID (bits 0–23):** Depends on the A bit (bit 27):
+- **A=1:** Subject field is relocated by the value of the symbol at
+  index SID in the symbol table chunk.
+- **A=0:** Subject field is relocated by the base of the area at index
+  SID in the array of areas.
+- **FT (bits 24–25):** Describes the subject field type:
 
 | Value | Field Type |
 |-------|------------|
