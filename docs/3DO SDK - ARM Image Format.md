@@ -152,28 +152,7 @@ word of the AIF header (see [AIF Header Layout](https://ext.3dodev.com/3DO/Portf
 
 ## AIF Header Layout
 
-+--------+------------------------------------------+--------------------------------------------------------------+
-| Offset | Field                                    | Description                                                  |
-+--------+------------------------------------------+--------------------------------------------------------------+
-| 0x00   | BL DecompressCode                        | NOP if the image is not compressed.                          |
-| 0x04   | BL SelfRelocCode                         | NOP if the image is not self-relocating.                     |
-| 0x08   | BL DBGInit/ZeroInit                      | NOP if the image has none.                                   |
-| 0x0C   | BL ImageEntryPoint / EntryPoint offset   | BL makes header addressable via r14; application must not   |
-|        |                                          | return. Non-executable AIF uses offset, not BL.              |
-| 0x10   | Program Exit Instr                       | Last resort in case of return.                               |
-| 0x14   | Image ReadOnly size                      | Includes header if executable AIF; excludes if non-exec.     |
-| 0x18   | Image ReadWrite size                     | Exact size; multiple of 4 bytes.                             |
-| 0x1C   | Image Debug size                         | Exact size; multiple of 4 bytes.                             |
-| 0x20   | Image Zero-init size                     | Exact size; multiple of 4 bytes.                             |
-| 0x24   | Image Debug type                         | 0, 1, 2, or 3.                                               |
-| 0x28   | Image base                               | Link-time code address.                                      |
-| 0x2C   | Work Space                               | Min workspace for self-moving relocatable image (bytes).    |
-| 0x30   | Address mode + flags                     | LSB = 26 or 32; bit 8 set if separate data base used.       |
-| 0x34   | Data base                                | Link-time data address.                                      |
-| 0x38   | Two reserved words                       | Initially 0.                                                 |
-| 0x40   | Debug Init Instr                         | NOP if unused.                                               |
-| 0x44   | Zero-init code (14 words)                | Header is 32 words total.                                    |
-+--------+------------------------------------------+--------------------------------------------------------------+
+
 
 | Offset (hex) | Field                                   | Description                                                                                                                  |
 |--------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
