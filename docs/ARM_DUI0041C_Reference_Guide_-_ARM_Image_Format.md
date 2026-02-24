@@ -1,6 +1,6 @@
 # ARM Image Format
 
-**ARM DUI 0041C** — Copyright © 1997 and 1998 ARM Limited. All rights reserved.
+From **ARM DUI 0041C**
 
 ---
 
