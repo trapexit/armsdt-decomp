@@ -33,11 +33,11 @@ in ARM Object Format, and the term *linker* refers to the ARM linker.
 
 The terms *byte, half word, word*, and *string* are used to mean:
 
-| Type      | Description                                                                                                                        |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| byte      | 8 bits; considered unsigned unless otherwise stated. Usually used to store flag bits or characters.                                |
-| half word | 16 bits (2 bytes); usually considered unsigned.                                                                                    |
-| word      | 32 bits (4 bytes); usually considered unsigned.                                                                                    |
+| Type      | Description |
+| --------- | ----------- |
+| byte      | 8 bits; considered unsigned unless otherwise stated. Usually used to store flag bits or characters. |
+| half word | 16 bits (2 bytes); usually considered unsigned. |
+| word      | 32 bits (4 bytes); usually considered unsigned. |
 | string    | A sequence of bytes terminated by a NUL (0x00) byte. The NUL byte is part of the string but is not counted in the string's length. |
 
 
