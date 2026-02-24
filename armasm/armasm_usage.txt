@@ -1,0 +1,31 @@
+ARM AOF Macro Assembler vsn 2.50 (ARM Ltd SDT2.51) [Build number 130]
+
+Usage:      armasm [keyword arguments] sourcefile objectfile
+            armasm [keyword arguments] -o objectfile sourcefile
+
+Keywords    (Upper case shows allowable abbreviation)
+-list       listingfile   Write a listing file (see manual for options)
+-Depend     dependfile    Save 'make' source file dependencies
+-Errors     errorsfile    Put stderr diagnostics to errorsfile
+-I          dir[,dir]     Add dirs to source file search path
+-PreDefine  directive     Pre-execute a SET{L,A,S} directive
+-NOCache                  Source caching off    (default on)
+-MaxCache   <n>           Maximum cache size    (default 8MB)
+-NOEsc                    Ignore C-style (\c) escape sequences
+-NOWarn                   Turn off Warning messages
+-g                        Output debugging tables
+-APCS       <pcs>/<quals> Make pre-definitions to match the
+                          chosen proc-call standard
+-CheckReglist             Warn about out of order LDM/STM register lists
+-Help                     Print this information
+-LIttleend                Little-endian ARM
+-BIgend                   Big-endian ARM
+-VIA        <file>        Read further arguments from <file>
+-ARCH       <target-arch> Set target architecture version
+            one of:       3, 3M, 4TxM, 4T, 4
+-CPU        <target-cpu>  Set the target ARM core type
+            one of:       ARM6, ARM7, ARM7M, ARM7T, ARM7TM, ARM7TDI, ARM7TDMI, ARM7TDSP, ARM8, ARM9, ARM9TM, StrongARM1
+-FPu        <target-arch> Set target FP architecture version
+            one of:       NONE, FPA
+-16                       Assemble 16 bit Thumb instructions
+-32                       Assemble 32 bit ARM instructions

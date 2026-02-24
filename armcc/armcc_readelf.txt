@@ -1,0 +1,395 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x80493c0
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          780356 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         6
+  Size of section headers:           40 (bytes)
+  Number of section headers:         26
+  Section header string table index: 25
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .interp           PROGBITS        080480f4 0000f4 000013 00   A  0   0  1
+  [ 2] .note.ABI-tag     NOTE            08048108 000108 000020 00   A  0   0  4
+  [ 3] .hash             HASH            08048128 000128 000264 04   A  4   0  4
+  [ 4] .dynsym           DYNSYM          0804838c 00038c 000540 10   A  5   1  4
+  [ 5] .dynstr           STRTAB          080488cc 0008cc 0002f7 00   A  0   0  1
+  [ 6] .gnu.version      VERSYM          08048bc4 000bc4 0000a8 02   A  4   0  2
+  [ 7] .gnu.version_r    VERNEED         08048c6c 000c6c 000030 00   A  5   1  4
+  [ 8] .rel.got          REL             08048c9c 000c9c 000050 08   A  4  20  4
+  [ 9] .rel.bss          REL             08048cec 000cec 000018 08   A  4  22  4
+  [10] .rel.plt          REL             08048d04 000d04 000228 08   A  4  12  4
+  [11] .init             PROGBITS        08048f2c 000f2c 00002f 00  AX  0   0  4
+  [12] .plt              PROGBITS        08048f5c 000f5c 000460 04  AX  0   0  4
+  [13] .text             PROGBITS        080493c0 0013c0 09898c 00  AX  0   0 16
+  [14] .fini             PROGBITS        080e1d4c 099d4c 00001a 00  AX  0   0  4
+  [15] .rodata           PROGBITS        080e1d80 099d80 021187 00   A  0   0 32
+  [16] .data             PROGBITS        08103f20 0baf20 002020 00  WA  0   0 32
+  [17] .eh_frame         PROGBITS        08105f40 0bcf40 000004 00  WA  0   0  4
+  [18] .ctors            PROGBITS        08105f44 0bcf44 000008 00  WA  0   0  4
+  [19] .dtors            PROGBITS        08105f4c 0bcf4c 000008 00  WA  0   0  4
+  [20] .got              PROGBITS        08105f54 0bcf54 000148 04  WA  0   0  4
+  [21] .dynamic          DYNAMIC         0810609c 0bd09c 0000a0 08  WA  5   0  4
+  [22] .bss              NOBITS          08106140 0bd140 0056e0 00  WA  0   0 32
+  [23] .comment          PROGBITS        00000000 0bd140 0010ae 00      0   0  1
+  [24] .note             NOTE            000010ae 0be1ee 000578 00      0   0  1
+  [25] .shstrtab         STRTAB          00000000 0be766 0000dd 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+There are no section groups in this file.
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  PHDR           0x000034 0x08048034 0x08048034 0x000c0 0x000c0 R E 0x4
+  INTERP         0x0000f4 0x080480f4 0x080480f4 0x00013 0x00013 R   0x1
+      [Requesting program interpreter: /lib/ld-linux.so.2]
+  LOAD           0x000000 0x08048000 0x08048000 0xbaf07 0xbaf07 R E 0x1000
+  LOAD           0x0baf20 0x08103f20 0x08103f20 0x0221c 0x07900 RW  0x1000
+  DYNAMIC        0x0bd09c 0x0810609c 0x0810609c 0x000a0 0x000a0 RW  0x4
+  NOTE           0x000108 0x08048108 0x08048108 0x00020 0x00020 R   0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .interp .note.ABI-tag .hash .dynsym .dynstr .gnu.version .gnu.version_r .rel.got .rel.bss .rel.plt .init .plt .text .fini .rodata 
+   03     .data .eh_frame .ctors .dtors .got .dynamic .bss 
+   04     .dynamic 
+   05     .note.ABI-tag 
+
+Dynamic section at offset 0xbd09c contains 20 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x0000000c (INIT)                       0x8048f2c
+ 0x0000000d (FINI)                       0x80e1d4c
+ 0x00000004 (HASH)                       0x8048128
+ 0x00000005 (STRTAB)                     0x80488cc
+ 0x00000006 (SYMTAB)                     0x804838c
+ 0x0000000a (STRSZ)                      739 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000015 (DEBUG)                      0x0
+ 0x00000003 (PLTGOT)                     0x8105f54
+ 0x00000002 (PLTRELSZ)                   552 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0x8048d04
+ 0x00000011 (REL)                        0x8048c9c
+ 0x00000012 (RELSZ)                      104 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x6ffffffe (VERNEED)                    0x8048c6c
+ 0x6fffffff (VERNEEDNUM)                 1
+ 0x6ffffff0 (VERSYM)                     0x8048bc4
+ 0x00000000 (NULL)                       0x0
+
+Relocation section '.rel.got' at offset 0xc9c contains 10 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+08106078  00000206 R_386_GLOB_DAT    08105450   hexprefix
+08106088  00000606 R_386_GLOB_DAT    081055bc   exu_init
+08106094  00000906 R_386_GLOB_DAT    08105e7c   single_reg_prefix
+08106084  00000506 R_386_GLOB_DAT    0810b420   mbu_ops
+08106098  00000a06 R_386_GLOB_DAT    08105e78   double_reg_prefix
+08106080  00000406 R_386_GLOB_DAT    08105e2c   NullOp
+0810608c  00000706 R_386_GLOB_DAT    08105ab4   mbu_init
+08106090  00000806 R_386_GLOB_DAT    08105e34   csr_names
+0810607c  00000306 R_386_GLOB_DAT    0810b620   exu_ops
+08106074  00000106 R_386_GLOB_DAT    00000000   __gmon_start__
+
+Relocation section '.rel.bss' at offset 0xcec contains 3 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+08106140  00000e05 R_386_COPY        08106140   stdout@GLIBC_2.0
+08106144  00004005 R_386_COPY        08106144   stderr@GLIBC_2.0
+08106148  00002c05 R_386_COPY        08106148   stdin@GLIBC_2.0
+
+Relocation section '.rel.plt' at offset 0xd04 contains 69 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+08105f60  00003d07 R_386_JUMP_SLOT   08048f6c   fgetc@GLIBC_2.0
+08105f64  00002d07 R_386_JUMP_SLOT   08048f7c   ferror@GLIBC_2.0
+08105f68  00000f07 R_386_JUMP_SLOT   08048f8c   vsprintf@GLIBC_2.0
+08105f6c  00004e07 R_386_JUMP_SLOT   08048f9c   strchr@GLIBC_2.0
+08105f70  00001a07 R_386_JUMP_SLOT   08048fac   feof@GLIBC_2.0
+08105f74  00001107 R_386_JUMP_SLOT   08048fbc   ungetc@GLIBC_2.0
+08105f78  00005007 R_386_JUMP_SLOT   08048fcc   __register_frame_info@GLIBC_2.0
+08105f7c  00003b07 R_386_JUMP_SLOT   08048fdc   isprint@GLIBC_2.0
+08105f80  00004807 R_386_JUMP_SLOT   08048fec   fileno@GLIBC_2.0
+08105f84  00003c07 R_386_JUMP_SLOT   08048ffc   strcmp@GLIBC_2.0
+08105f88  00001f07 R_386_JUMP_SLOT   0804900c   isspace@GLIBC_2.0
+08105f8c  00002707 R_386_JUMP_SLOT   0804901c   fprintf@GLIBC_2.0
+08105f90  00001307 R_386_JUMP_SLOT   0804902c   getenv@GLIBC_2.0
+08105f94  00002007 R_386_JUMP_SLOT   0804903c   fflush@GLIBC_2.0
+08105f98  00004d07 R_386_JUMP_SLOT   0804904c   clock@GLIBC_2.0
+08105f9c  00003a07 R_386_JUMP_SLOT   0804905c   isalnum@GLIBC_2.0
+08105fa0  00004507 R_386_JUMP_SLOT   0804906c   __errno_location@GLIBC_2.0
+08105fa4  00003807 R_386_JUMP_SLOT   0804907c   ftell@GLIBC_2.0
+08105fa8  00001907 R_386_JUMP_SLOT   0804908c   system@GLIBC_2.0
+08105fac  00002207 R_386_JUMP_SLOT   0804909c   chmod@GLIBC_2.0
+08105fb0  00001807 R_386_JUMP_SLOT   080490ac   tolower@GLIBC_2.0
+08105fb4  00002307 R_386_JUMP_SLOT   080490bc   isxdigit@GLIBC_2.0
+08105fb8  00001b07 R_386_JUMP_SLOT   080490cc   malloc@GLIBC_2.0
+08105fbc  00003607 R_386_JUMP_SLOT   080490dc   fread@GLIBC_2.0
+08105fc0  00001207 R_386_JUMP_SLOT   080490ec   memmove@GLIBC_2.0
+08105fc4  00001c07 R_386_JUMP_SLOT   080490fc   remove@GLIBC_2.0
+08105fc8  00002a07 R_386_JUMP_SLOT   0804910c   __deregister_fram[...]@GLIBC_2.0
+08105fcc  00005207 R_386_JUMP_SLOT   0804911c   strpbrk@GLIBC_2.0
+08105fd0  00002107 R_386_JUMP_SLOT   0804912c   abort@GLIBC_2.0
+08105fd4  00002407 R_386_JUMP_SLOT   0804913c   __sigsetjmp@GLIBC_2.0
+08105fd8  00004407 R_386_JUMP_SLOT   0804914c   __xstat@GLIBC_2.0
+08105fdc  00005107 R_386_JUMP_SLOT   0804915c   vfprintf@GLIBC_2.0
+08105fe0  00002b07 R_386_JUMP_SLOT   0804916c   fseek@GLIBC_2.0
+08105fe4  00003907 R_386_JUMP_SLOT   0804917c   time@GLIBC_2.0
+08105fe8  00004f07 R_386_JUMP_SLOT   0804918c   fputs@GLIBC_2.0
+08105fec  00002e07 R_386_JUMP_SLOT   0804919c   strstr@GLIBC_2.0
+08105ff0  00000b07 R_386_JUMP_SLOT   080491ac   longjmp@GLIBC_2.0
+08105ff4  00001407 R_386_JUMP_SLOT   080491bc   __strtol_internal@GLIBC_2.0
+08105ff8  00001507 R_386_JUMP_SLOT   080491cc   qsort@GLIBC_2.0
+08105ffc  00003007 R_386_JUMP_SLOT   080491dc   strncmp@GLIBC_2.0
+08106000  00004107 R_386_JUMP_SLOT   080491ec   fputc@GLIBC_2.0
+08106004  00004b07 R_386_JUMP_SLOT   080491fc   __libc_start_main@GLIBC_2.0
+08106008  00001707 R_386_JUMP_SLOT   0804920c   islower@GLIBC_2.0
+0810600c  00004c07 R_386_JUMP_SLOT   0804921c   toupper@GLIBC_2.0
+08106010  00003207 R_386_JUMP_SLOT   0804922c   realloc@GLIBC_2.0
+08106014  00002907 R_386_JUMP_SLOT   0804923c   strcat@GLIBC_2.0
+08106018  00000d07 R_386_JUMP_SLOT   0804924c   printf@GLIBC_2.0
+0810601c  00001607 R_386_JUMP_SLOT   0804925c   memcpy@GLIBC_2.0
+08106020  00003f07 R_386_JUMP_SLOT   0804926c   fclose@GLIBC_2.1
+08106024  00002607 R_386_JUMP_SLOT   0804927c   __sysv_signal@GLIBC_2.0
+08106028  00002507 R_386_JUMP_SLOT   0804928c   strrchr@GLIBC_2.0
+0810602c  00002807 R_386_JUMP_SLOT   0804929c   ctime@GLIBC_2.0
+08106030  00004207 R_386_JUMP_SLOT   080492ac   isdigit@GLIBC_2.0
+08106034  00002f07 R_386_JUMP_SLOT   080492bc   isupper@GLIBC_2.0
+08106038  00004a07 R_386_JUMP_SLOT   080492cc   strspn@GLIBC_2.0
+0810603c  00003507 R_386_JUMP_SLOT   080492dc   isalpha@GLIBC_2.0
+08106040  00004707 R_386_JUMP_SLOT   080492ec   _IO_putc@GLIBC_2.0
+08106044  00005307 R_386_JUMP_SLOT   080492fc   free@GLIBC_2.0
+08106048  00001007 R_386_JUMP_SLOT   0804930c   utime@GLIBC_2.0
+0810604c  00001d07 R_386_JUMP_SLOT   0804931c   isatty@GLIBC_2.0
+08106050  00003707 R_386_JUMP_SLOT   0804932c   memset@GLIBC_2.0
+08106054  00003107 R_386_JUMP_SLOT   0804933c   strncpy@GLIBC_2.0
+08106058  00004607 R_386_JUMP_SLOT   0804934c   fopen@GLIBC_2.1
+0810605c  00001e07 R_386_JUMP_SLOT   0804935c   __strtoul_internal@GLIBC_2.0
+08106060  00003407 R_386_JUMP_SLOT   0804936c   strtok@GLIBC_2.0
+08106064  00003e07 R_386_JUMP_SLOT   0804937c   sprintf@GLIBC_2.0
+08106068  00004307 R_386_JUMP_SLOT   0804938c   fwrite@GLIBC_2.0
+0810606c  00003307 R_386_JUMP_SLOT   0804939c   _IO_getc@GLIBC_2.0
+08106070  00000c07 R_386_JUMP_SLOT   080493ac   strcpy@GLIBC_2.0
+No processor specific unwind information to decode
+
+Symbol table '.dynsym' contains 84 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+     2: 08105450     4 OBJECT  GLOBAL DEFAULT   16 hexprefix
+     3: 0810b620   512 OBJECT  GLOBAL DEFAULT   22 exu_ops
+     4: 08105e2c     8 OBJECT  GLOBAL DEFAULT   16 NullOp
+     5: 0810b420   512 OBJECT  GLOBAL DEFAULT   22 mbu_ops
+     6: 081055bc  1272 OBJECT  GLOBAL DEFAULT   16 exu_init
+     7: 08105ab4   888 OBJECT  GLOBAL DEFAULT   16 mbu_init
+     8: 08105e34    64 OBJECT  GLOBAL DEFAULT   16 csr_names
+     9: 08105e7c     4 OBJECT  GLOBAL DEFAULT   16 single_reg_prefix
+    10: 08105e78     4 OBJECT  GLOBAL DEFAULT   16 double_reg_prefix
+    11: 080491ac    74 FUNC    WEAK   DEFAULT  UND longjmp@GLIBC_2.0 (2)
+    12: 080493ac    34 FUNC    GLOBAL DEFAULT  UND strcpy@GLIBC_2.0 (2)
+    13: 0804924c    41 FUNC    GLOBAL DEFAULT  UND printf@GLIBC_2.0 (2)
+    14: 08106140     4 OBJECT  GLOBAL DEFAULT   22 stdout@GLIBC_2.0 (2)
+    15: 08048f8c   134 FUNC    WEAK   DEFAULT  UND vs[...]@GLIBC_2.0 (2)
+    16: 0804930c    59 FUNC    GLOBAL DEFAULT  UND utime@GLIBC_2.0 (2)
+    17: 08048fbc   129 FUNC    WEAK   DEFAULT  UND ungetc@GLIBC_2.0 (2)
+    18: 080490ec   138 FUNC    GLOBAL DEFAULT  UND memmove@GLIBC_2.0 (2)
+    19: 0804902c   224 FUNC    GLOBAL DEFAULT  UND getenv@GLIBC_2.0 (2)
+    20: 080491bc  1106 FUNC    GLOBAL DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    21: 080491cc   162 FUNC    GLOBAL DEFAULT  UND qsort@GLIBC_2.0 (2)
+    22: 0804925c    62 FUNC    GLOBAL DEFAULT  UND memcpy@GLIBC_2.0 (2)
+    23: 0804920c    46 FUNC    GLOBAL DEFAULT  UND islower@GLIBC_2.0 (2)
+    24: 080490ac    52 FUNC    GLOBAL DEFAULT  UND tolower@GLIBC_2.0 (2)
+    25: 0804908c   607 FUNC    WEAK   DEFAULT  UND system@GLIBC_2.0 (2)
+    26: 08048fac    51 FUNC    WEAK   DEFAULT  UND feof@GLIBC_2.0 (2)
+    27: 080490cc   338 FUNC    WEAK   DEFAULT  UND malloc@GLIBC_2.0 (2)
+    28: 080490fc    85 FUNC    GLOBAL DEFAULT  UND remove@GLIBC_2.0 (2)
+    29: 0804931c    46 FUNC    WEAK   DEFAULT  UND isatty@GLIBC_2.0 (2)
+    30: 0804935c  1058 FUNC    GLOBAL DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    31: 0804900c    46 FUNC    GLOBAL DEFAULT  UND isspace@GLIBC_2.0 (2)
+    32: 0804903c   152 FUNC    WEAK   DEFAULT  UND fflush@GLIBC_2.0 (2)
+    33: 0804912c   435 FUNC    GLOBAL DEFAULT  UND abort@GLIBC_2.0 (2)
+    34: 0804909c    59 FUNC    WEAK   DEFAULT  UND chmod@GLIBC_2.0 (2)
+    35: 080490bc    46 FUNC    GLOBAL DEFAULT  UND is[...]@GLIBC_2.0 (2)
+    36: 0804913c    50 FUNC    GLOBAL DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    37: 0804928c   441 FUNC    GLOBAL DEFAULT  UND strrchr@GLIBC_2.0 (2)
+    38: 0804927c   133 FUNC    GLOBAL DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    39: 0804901c    36 FUNC    GLOBAL DEFAULT  UND fprintf@GLIBC_2.0 (2)
+    40: 0804929c    35 FUNC    GLOBAL DEFAULT  UND ctime@GLIBC_2.0 (2)
+    41: 0804923c    49 FUNC    GLOBAL DEFAULT  UND strcat@GLIBC_2.0 (2)
+    42: 0804910c   162 FUNC    WEAK   DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    43: 0804916c   150 FUNC    GLOBAL DEFAULT  UND fseek@GLIBC_2.0 (2)
+    44: 08106148     4 OBJECT  GLOBAL DEFAULT   22 stdin@GLIBC_2.0 (2)
+    45: 08048f7c    51 FUNC    WEAK   DEFAULT  UND ferror@GLIBC_2.0 (2)
+    46: 0804919c   188 FUNC    GLOBAL DEFAULT  UND strstr@GLIBC_2.0 (2)
+    47: 080492bc    46 FUNC    GLOBAL DEFAULT  UND isupper@GLIBC_2.0 (2)
+    48: 080491dc   148 FUNC    GLOBAL DEFAULT  UND strncmp@GLIBC_2.0 (2)
+    49: 0804933c   147 FUNC    GLOBAL DEFAULT  UND strncpy@GLIBC_2.0 (2)
+    50: 0804922c   742 FUNC    WEAK   DEFAULT  UND realloc@GLIBC_2.0 (2)
+    51: 0804939c   138 FUNC    GLOBAL DEFAULT  UND _I[...]@GLIBC_2.0 (2)
+    52: 0804936c   260 FUNC    GLOBAL DEFAULT  UND strtok@GLIBC_2.0 (2)
+    53: 080492dc    46 FUNC    GLOBAL DEFAULT  UND isalpha@GLIBC_2.0 (2)
+    54: 080490dc   155 FUNC    WEAK   DEFAULT  UND fread@GLIBC_2.0 (2)
+    55: 0804932c    70 FUNC    GLOBAL DEFAULT  UND memset@GLIBC_2.0 (2)
+    56: 0804907c   166 FUNC    WEAK   DEFAULT  UND ftell@GLIBC_2.0 (2)
+    57: 0804917c    65 FUNC    GLOBAL DEFAULT  UND time@GLIBC_2.0 (2)
+    58: 0804905c    44 FUNC    GLOBAL DEFAULT  UND isalnum@GLIBC_2.0 (2)
+    59: 08048fdc    46 FUNC    GLOBAL DEFAULT  UND isprint@GLIBC_2.0 (2)
+    60: 08048ffc    58 FUNC    GLOBAL DEFAULT  UND strcmp@GLIBC_2.0 (2)
+    61: 08048f6c   138 FUNC    WEAK   DEFAULT  UND fgetc@GLIBC_2.0 (2)
+    62: 0804937c    36 FUNC    GLOBAL DEFAULT  UND sprintf@GLIBC_2.0 (2)
+    63: 0804926c   245 FUNC    GLOBAL DEFAULT  UND fclose@GLIBC_2.1 (3)
+    64: 08106144     4 OBJECT  GLOBAL DEFAULT   22 stderr@GLIBC_2.0 (2)
+    65: 080491ec   150 FUNC    GLOBAL DEFAULT  UND fputc@GLIBC_2.0 (2)
+    66: 080492ac    46 FUNC    GLOBAL DEFAULT  UND isdigit@GLIBC_2.0 (2)
+    67: 0804938c   162 FUNC    WEAK   DEFAULT  UND fwrite@GLIBC_2.0 (2)
+    68: 0804914c   314 FUNC    GLOBAL DEFAULT  UND __xstat@GLIBC_2.0 (2)
+    69: 0804906c    27 FUNC    WEAK   DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    70: 0804934c   121 FUNC    GLOBAL DEFAULT  UND fopen@GLIBC_2.1 (3)
+    71: 080492ec   150 FUNC    GLOBAL DEFAULT  UND _I[...]@GLIBC_2.0 (2)
+    72: 08048fec    53 FUNC    GLOBAL DEFAULT  UND fileno@GLIBC_2.0 (2)
+    73: 080e1d84     4 OBJECT  GLOBAL DEFAULT   15 _IO_stdin_used
+    74: 080492cc   174 FUNC    GLOBAL DEFAULT  UND strspn@GLIBC_2.0 (2)
+    75: 080491fc   261 FUNC    GLOBAL DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    76: 0804921c    52 FUNC    GLOBAL DEFAULT  UND toupper@GLIBC_2.0 (2)
+    77: 0804904c   111 FUNC    GLOBAL DEFAULT  UND clock@GLIBC_2.0 (2)
+    78: 08048f9c   359 FUNC    GLOBAL DEFAULT  UND strchr@GLIBC_2.0 (2)
+    79: 0804918c   176 FUNC    WEAK   DEFAULT  UND fputs@GLIBC_2.0 (2)
+    80: 08048fcc   116 FUNC    WEAK   DEFAULT  UND __[...]@GLIBC_2.0 (2)
+    81: 0804915c 17193 FUNC    GLOBAL DEFAULT  UND vf[...]@GLIBC_2.0 (2)
+    82: 0804911c   178 FUNC    GLOBAL DEFAULT  UND strpbrk@GLIBC_2.0 (2)
+    83: 080492fc   202 FUNC    WEAK   DEFAULT  UND free@GLIBC_2.0 (2)
+
+Histogram for bucket list length (total of 67 buckets):
+ Length  Number     % of total  Coverage
+      0  18         ( 26.9%)
+      1  27         ( 40.3%)     32.5%
+      2  13         ( 19.4%)     63.9%
+      3  8          ( 11.9%)     92.8%
+      4  0          (  0.0%)     92.8%
+      5  0          (  0.0%)     92.8%
+      6  1          (  1.5%)    100.0%
+
+Version symbols section '.gnu.version' contains 84 entries:
+ Addr: 0x0000000008048bc4  Offset: 0x00000bc4  Link: 4 (.dynsym)
+  000:   0 (*local*)       0 (*local*)       1 (*global*)      1 (*global*)   
+  004:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  008:   1 (*global*)      1 (*global*)      1 (*global*)      2 (GLIBC_2.0)  
+  00c:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  010:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  014:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  018:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  01c:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  020:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  024:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  028:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  02c:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  030:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  034:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  038:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  03c:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     3 (GLIBC_2.1)  
+  040:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  044:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     3 (GLIBC_2.1)     2 (GLIBC_2.0)  
+  048:   2 (GLIBC_2.0)     1 (*global*)      2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  04c:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+  050:   2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)     2 (GLIBC_2.0)  
+
+Version needs section '.gnu.version_r' contains 1 entry:
+ Addr: 0x0000000008048c6c  Offset: 0x00000c6c  Link: 5 (.dynstr)
+  000000: Version: 1  File: libc.so.6  Cnt: 2
+  0x0010:   Name: GLIBC_2.1  Flags: none  Version: 3
+  0x0020:   Name: GLIBC_2.0  Flags: none  Version: 2
+
+Displaying notes found in: .note.ABI-tag
+  Owner                Data size 	Description
+  GNU                  0x00000010	NT_GNU_ABI_TAG (ABI version tag)
+    OS: Linux, ABI: 2.0.0
+
+Displaying notes found in: .note
+  Owner                Data size 	Description
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)
+  01.01                0x00000000	NT_VERSION (version)

@@ -1,0 +1,23 @@
+
+AOF Decoder Version 4.20 (ARM Ltd SDT2.51) [Build number 130]
+       - decodes an ARM Object Format (AOF) file
+
+decaof [options] file [file...]
+
+Options:-
+-b   (brief) print only the area declarations
+-a   print area contents in hex (=> -d)
+-d   print area declarations
+-r   print relocation directives (=> -d)
+-c   disassemble code areas (=> -d)
+-only xxx   process only area named or containing symbol xxx
+-g   print debug areas formatted readably
+-m   display mangled symbols
+-s   print symbol table
+-t   print string table
+-q   print area size summary
+-z   print code and data size summary
+
+Examples:-
+     decaof -agst myprog.o
+     decaof -b test1.o test2.o test3.o

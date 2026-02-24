@@ -1,0 +1,31 @@
+AOF Librarian version 4.50 (ARM Ltd SDT2.51) [Build number 130]
+       - AOF library creation and maintenance tool
+
+Command format:
+
+armlib options library [ file_list | member_list ]
+
+Wildcards '?' and '*' may be used in <member_list>
+
+Options:-
+
+-c      Create a new library containing files in <file_list>.
+-i      Insert files in <file_list>, replace existing members of the same name.
+-d      Delete the members in <member_list>.
+-e      Extract members in <member_list> placing in files of the same name.
+-o      Add an external symbol table to an object library (DEFAULT).
+-n      Do not add an external symbol table to an object library.
+-p      Respect paths of files and objects.
+-l      List library, may be specified with any other option.
+-s      List symbol table, may be specified with any other option.
+-t dir  Extract files to <dir> directory.
+-v file Take additional arguments from via file.
+
+Examples:-
+
+        armlib -c mylib obj1 obj2 obj3...
+        armlib -e mylib ?sort*
+        armlib -d mylib hash.o
+        armlib -i mylib quick_sort.o quick_hash1.o
+        armlib -l -s ansilib
+

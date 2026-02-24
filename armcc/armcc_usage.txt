@@ -1,0 +1,20 @@
+Norcroft  ARM C vsn 4.91 (ARM Ltd SDT2.51) [Build number 130]
+
+Usage:         armcc [options] file1 file2 ... filen
+Main options:
+
+-c             Do not link the files being compiled
+-C             Prevent the preprocessor from removing comments (Use with -E)
+-D<symbol>     Define <symbol> on entry to the compiler
+-E             Preprocess the C source code only
+-f<options>    Enable a selection of compiler defined features
+-g<options>    Generate tables for high-level debugging
+-I<directory>  Include <directory> on the #include search path
+-J<directory>  Replace the default #include path with <directory>
+-o<file>       Name the file that holds the final output of the compilation
+-O0            Minimum optimization
+-O1            Restricted optimization for debugging
+-O2            Maximum optimization
+-S             Output assembly code instead of object code
+-U<symbol>     Undefine <symbol> on entry to the compiler
+-W<options>    Disable all or selected warning messages
