@@ -44,21 +44,20 @@ options carefully.
 
 ## Design criteria
 
-Throughout its history, the APCS has compromised between fastest, smallest and easiest to use.
+Throughout its history, the APCS has compromised between fastest,
+smallest and easiest to use.
 
 The criteria we have considered to be important are:
 
-- Function call should be fast and it should be easy for compilers to optimise function entry sequences.
-
+- Function call should be fast and it should be easy for compilers to
+  optimise function entry sequences.
 - The function call sequence should be as compact as possible.
-
 - Extensible stacks and multiple stacks should be accommodated.
-
-- The standard should encourage the production of reentrant code, with writable data separated from code.
-
-- The standard should be simple enough to be used by assembly
-   language programmers, and should support simple approaches to link 
-  editing, debugging and run-time error diagnosis.
+- The standard should encourage the production of reentrant code, with
+  writable data separated from code.
+- The standard should be simple enough to be used by assembly language
+  programmers, and should support simple approaches to link editing,
+  debugging and run-time error diagnosis.
 
 Overall, we have tended to rank compact code and a clear definition most
  highly, with simplicity and ease of use ahead of performance in matters
