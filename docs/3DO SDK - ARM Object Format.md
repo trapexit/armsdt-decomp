@@ -162,7 +162,8 @@ second components are defined in the next section.
 
 # ARM object format
 
-Each piece of an object file is stored in a separate, identifiable, chunk. AOF defines five chunks as follows:
+Each piece of an object file is stored in a separate, identifiable,
+chunk. AOF defines five chunks as follows:
 
 | Chunk          | Chunk Name |
 | -------------- | ---------- |
@@ -173,32 +174,38 @@ Each piece of an object file is stored in a separate, identifiable, chunk. AOF d
 | String Table   | OBJ_STRT   |
 
 
+Only the header and areas chunks must be present, but a typical object
+file contains all five of the above chunks.
 
-Only the header and areas chunks must be present, but a typical object file contains all five of the above chunks.
+Each name in an object file is encoded as an offset into the string
+table, stored in the OBJ_STRT chunk (see [The string table chunk
+(OBJ_STRT)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsf.html#XREF26065)). This
+allows the variable-length nature of names to be factored out from
+primary data formats.
 
-Each name in an object file is encoded as an offset into the string table, stored in the OBJ_STRT chunk (see [The string table chunk (OBJ_STRT)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsf.html#XREF26065)). This allows the variable-length nature of names to be factored out from primary data formats.
-
-A feature of ARM Object Format is that chunks may appear in any order in
- the file (indeed, the ARM C Compiler and the ARM Assembler produce 
+A feature of ARM Object Format is that chunks may appear in any order
+in the file (indeed, the ARM C Compiler and the ARM Assembler produce
 their AOF chunks in different orders).
 
-A language translator or other utility may add additional chunks to an 
-object file, for example a language-specific symbol table or 
-language-specific debugging data. Therefore it is conventional to allow 
-space in the chunk header for additional chunks; space for eight chunks 
-is conventional when the AOF file is produced by a language processor 
-which generates all 5 chunks described here.
+A language translator or other utility may add additional chunks to an
+object file, for example a language-specific symbol table or
+language-specific debugging data. Therefore it is conventional to
+allow space in the chunk header for additional chunks; space for eight
+chunks is conventional when the AOF file is produced by a language
+processor which generates all 5 chunks described here.
 
-The AOF header chunk should not be confused with the chunk file's header.
+The AOF header chunk should not be confused with the chunk file's
+header.
+
 
 ## Format of the AOF header chunk
 
-The AOF header consists of two parts, which appear contiguously in the 
-header chunk. The first part is of fixed size and describes the contents
- and nature of the object file. The second part has a variable length 
-(specified in the fixed part of the header), and consists of a sequence 
-of area declarations describing the code and data areas within the 
-OBJ_AREA chunk.
+The AOF header consists of two parts, which appear contiguously in the
+header chunk. The first part is of fixed size and describes the
+contents and nature of the object file. The second part has a variable
+length (specified in the fixed part of the header), and consists of a
+sequence of area declarations describing the code and data areas
+within the OBJ_AREA chunk.
 
 The AOF header chunk has the following format:
 
@@ -215,39 +222,45 @@ The AOF header chunk has the following format:
 | ...               |                                                     |
 | nth Area Header   | (6 + (5 * Number_of_Areas)) words in the AOF header |
 
-An *Object File Type* of 0xC5E2D080 marks the file as being in 
-relocatable object format (the usual output of compilers and assemblers 
-and the usual input to the linker).
+An *Object File Type* of 0xC5E2D080 marks the file as being in
+relocatable object format (the usual output of compilers and
+assemblers and the usual input to the linker).
 
-The endian-ness of the object code can be deduced from this value and 
+The endian-ness of the object code can be deduced from this value and
 shall be identical to the endian-ness of the containing chunk file.
 
-The Version Id encodes the version of AOF to which the object file 
-complies: version 1.50 is denoted by decimal 150; version 2.00 by 200; 
+The Version Id encodes the version of AOF to which the object file
+complies: version 1.50 is denoted by decimal 150; version 2.00 by 200;
 and this version by decimal 310 (0x136).
 
-The code and data of an object file are encapsulated in a number of separate *areas* in the OBJ_AREA chunk, each with a name and some attributes (see 
-below). Each area is described in the variable-length part of the AOF 
-header which immediately follows the fixed part. Number of Areas gives 
-the number of areas in the file and, equivalently, the number of area 
-declarations which follow the fixed part of the AOF header.
+The code and data of an object file are encapsulated in a number of
+separate *areas* in the OBJ_AREA chunk, each with a name and some
+attributes (see below). Each area is described in the variable-length
+part of the AOF header which immediately follows the fixed
+part. Number of Areas gives the number of areas in the file and,
+equivalently, the number of area declarations which follow the fixed
+part of the AOF header.
 
-If the object file contains a symbol table chunk (named OBJ_SYMT), then 
-Number of Symbols records the number of symbols in the symbol table.
+If the object file contains a symbol table chunk (named OBJ_SYMT),
+then Number of Symbols records the number of symbols in the symbol
+table.
 
-One of the areas in an object file may be designated as containing the 
-start address of any program which is linked to include the file. If 
-this is the case, the entry address is specified as an Entry Area Index,
- Entry Offset pair. Entry Area Index, in the range 1 to Number of Areas,
- gives the 1-origin index in the following array of area headers of the 
-area containing the entry point. The entry address is defined to be the 
-base address of this area plus Entry Offset.
+One of the areas in an object file may be designated as containing the
+start address of any program which is linked to include the file. If
+this is the case, the entry address is specified as an Entry Area
+Index, Entry Offset pair. Entry Area Index, in the range 1 to Number
+of Areas, gives the 1-origin index in the following array of area
+headers of the area containing the entry point. The entry address is
+defined to be the base address of this area plus Entry Offset.
 
-A value of 0 for Entry Area Index signifies that no program entry address is defined by this AOF file.
+A value of 0 for Entry Area Index signifies that no program entry
+address is defined by this AOF file.
+
 
 ## Format of area headers
 
-The area headers follow the fixed part of the AOF header. Each area header has the following format:
+The area headers follow the fixed part of the AOF header. Each area
+header has the following format:
 
 | Area name              | (offset into string table) |
 | ---------------------- | -------------------------- |
@@ -257,35 +270,41 @@ The area headers follow the fixed part of the AOF header. Each area header has t
 | Base Address or 0      | 5 words total              |
 
        
+Each area within an object file must be given a name which is unique
+amongst all the areas in the file. Area Name gives the offset of that
+name in the string table (stored in the OBJ_STRT chunk - see [The
+string table chunk
+(OBJ_STRT)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsf.html#XREF26065)).
 
-Each area within an object file must be given a name which is unique 
-amongst all the areas in the file. Area Name gives the offset of that 
-name in the string table (stored in the OBJ_STRT chunk - see [The string table chunk (OBJ_STRT)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsf.html#XREF26065)).
+The *Area Size* field gives the size of the area in bytes, which must
+be a multiple of 4. Unless the Not Initialised bit (bit 4) is set in
+the area attributes (see [Attributes +
+Alignment](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsc.html#XREF41510)),
+there must be this number of bytes for this area in the OBJ_AREA
+chunk.  If the Not Initialised bit is set, then there shall be no
+initialising bytes for this area in the OBJ_AREA chunk.
 
-The *Area Size* field gives the size of the area in bytes, which 
-must be a multiple of 4. Unless the Not Initialised bit (bit 4) is set 
-in the area attributes (see [Attributes + Alignment](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsc.html#XREF41510)),
- there must be this number of bytes for this area in the OBJ_AREA chunk.
- If the Not Initialised bit is set, then there shall be no initialising 
-bytes for this area in the OBJ_AREA chunk.
+The Number of Relocations word specifies the number of relocation
+directives which apply to this area, (equivalently: the number of
+relocation records following the area's contents in the OBJ_AREA
+chunk - see [Format of the areas
+chunk](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsd.html#XREF30575)).
 
-The Number of Relocations word specifies the number of relocation 
-directives which apply to this area, (equivalently: the number of 
-relocation records following the area's contents in the OBJ_AREA chunk -
- see [Format of the areas chunk](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/2atsd.html#XREF30575)).
+The Base Address field is unused unless the area has the absolute
+attribute (see below). In this case the field records the base address
+of the area. In general, giving an area a base address prior to
+linking, will cause problems for the linker and may prevent linking
+altogether, unless only a single object file is involved.
 
-The Base Address field is unused unless the area has the absolute 
-attribute (see below). In this case the field records the base address 
-of the area. In general, giving an area a base address prior to linking,
- will cause problems for the linker and may prevent linking altogether, 
-unless only a single object file is involved.
 
 ## Attributes + Alignment
 
-Each area has a set of attributes encoded in the most-significant 24 bits of the *Attributes + Alignment* word. The least-significant 8 bits of this word encode the alignment of
- the start of the area as a power of 2 and shall have a value between 2 
-and 32 (this value denotes that the area should start at an address 
-divisible by 2 () *alignment*).
+Each area has a set of attributes encoded in the most-significant 24
+bits of the *Attributes + Alignment* word. The least-significant 8
+bits of this word encode the alignment of the start of the area as a
+power of 2 and shall have a value between 2 and 32 (this value denotes
+that the area should start at an address divisible by 2 ()
+*alignment*).
 
 The linker orders areas in a generated image first by attributes, then 
 by the (case-significant) lexicographic order of area names, then by 
