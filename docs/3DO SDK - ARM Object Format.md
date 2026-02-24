@@ -147,9 +147,11 @@ Each entry in the chunk file header consists of four words in order:
 | fileOffset | is a one word field defining the byte offset within the file of the start of the chunk. All chunks are word-aligned, so it must be divisible by four. A value of zero indicates that the chunk entry is unused |
 | size       | is a one word field defining the exact byte size of the chunk's contents (which need not be a multiple of four) |
 
-The chunkId field provides a conventional way of identifying what type 
+The chunkId field provides a conventional way of identifying what
+type.
 
-For AOF files, the first part of each chunk's name is "OBJ_"; the second components are defined in the next section.
+For AOF files, the first part of each chunk's name is "OBJ_"; the
+second components are defined in the next section.
 
 
 
