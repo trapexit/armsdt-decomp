@@ -406,11 +406,11 @@ At the instant control arrives at the target function, the argument
 list shall be allocated as follows:
 
 - in APCS variants which support the passing of floating-point
-   arguments in floating-point registers (see [APCS
-   variants](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsb.html#XREF35590)),
-   the first 4 floating-point arguments (or fewer if the number of
-   floating-point arguments is less than 4) shall be in machine
-   registers f0-f3;
+  arguments in floating-point registers (see [APCS
+  variants](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsb.html#XREF35590)),
+  the first 4 floating-point arguments (or fewer if the number of
+  floating-point arguments is less than 4) shall be in machine
+  registers f0-f3;
 - the first 4 remaining argument words (or fewer if there are fewer
   than 4 argument words remaining in the argument list) shall be in
   machine registers a1-a4;
@@ -425,12 +425,16 @@ treated as 1, 2 or 3 integer values, as appropriate to its precision.
 
 When the return link value for a function call is placed in the pc:
 
-- sp, fp, sl/v7, sb/v6, v1-v5, and f4-f7 shall contain the same values as they did at the instant of control arrival;
-- if the function returns a simple value of size one word or less, then that value shall be in a1;
+- sp, fp, sl/v7, sb/v6, v1-v5, and f4-f7 shall contain the same values
+  as they did at the instant of control arrival;
+- if the function returns a simple value of size one word or less,
+  then that value shall be in a1;
 
-(Aside: a language implementation is not obliged to consider *all* single-word values simple. See [C language calling conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070)).
-
-- if the function returns a simple floating point value then that value shall be in f0.
+  (Aside: a language implementation is not obliged to consider *all*
+  single-word values simple. See [C language calling
+  conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070)).
+- if the function returns a simple floating point value then that
+  value shall be in f0.
 
 (Aside: The values of ip, lr, a2-a4, f1-f3 and any stacked arguments are undefined).
 
@@ -450,49 +454,61 @@ call. Consider, a function `ProcA` which tail continues to `ProcB` as follows:
     B      ProcB
 ```
 
-If `ProcB` merely preserves the flags it sees on entry, rather than restoring those from lr, the wrong flags may be set when `ProcB` returns direct to `ProcA`'s caller. See [The ARM procedure call standard](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsa.html#XREF17932)).
+If `ProcB` merely preserves the flags it sees on entry, rather than
+restoring those from lr, the wrong flags may be set when `ProcB`
+returns direct to `ProcA`'s caller. See [The ARM procedure call
+standard](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsa.html#XREF17932)).
+
 
 # APCS variants
 
-There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from four independent choices.
+There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from
+four independent choices.
 
 The first choice - 32-bit PC vs 26-bit PC - is fixed by your ARM CPU.
 
-The second choice - implicit vs explicit stack-limit checking - is fixed
- by a combination of memory-management hardware and operating system 
-software: if your ARM-based environment supports implicit stack-limit 
-checking then use it; otherwise use explicit stack-limit checking.
+The second choice - implicit vs explicit stack-limit checking - is
+fixed by a combination of memory-management hardware and operating
+system software: if your ARM-based environment supports implicit
+stack-limit checking then use it; otherwise use explicit stack-limit
+checking.
 
-The third choice - of how to pass floating-point arguments - supports 
+The third choice - of how to pass floating-point arguments - supports
 efficient argument passing in both of the following circumstances:
 
-- the floating point instruction set is emulated by software and floating point operations are dynamically very rare;
-- the floating point instruction set is supported by hardware or floating point operations are dynamically common.
+- the floating point instruction set is emulated by software and
+  floating point operations are dynamically very rare;
+- the floating point instruction set is supported by hardware or
+  floating point operations are dynamically common.
 
-In each case, code conforming to one variant is not compatible with code conforming to the other.
+In each case, code conforming to one variant is not compatible with
+code conforming to the other.
 
-Only the choice between reentrant and non-reentrant variants is a true 
-user level choice. Further, as the alternatives are compatible, each may
- be used where appropriate.
+Only the choice between reentrant and non-reentrant variants is a true
+user level choice. Further, as the alternatives are compatible, each
+may be used where appropriate.
+
 
 ## 32-bit PC vs 26-bit PC
 
-Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a 
-24-bit, word-address program counter, and pack the 4 status flags (NZCV)
- and 2 interrupt-enable flags (IF) into the top 6 bits of r15, and the 2
- mode bits (m0, m1) into the least-significant bits of r15. Thus r15 
-implements a combined PC + PSR.
+Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a
+24-bit, word-address program counter, and pack the 4 status flags
+(NZCV) and 2 interrupt-enable flags (IF) into the top 6 bits of r15,
+and the 2 mode bits (m0, m1) into the least-significant bits of
+r15. Thus r15 implements a combined PC + PSR.
 
-Newer ARM CPUs use a 32-bit program counter (in r15) and a separate PSR.
+Newer ARM CPUs use a 32-bit program counter (in r15) and a separate
+PSR.
 
-In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch 
-with link instruction, so it is natural for the APCS to require the 
-reinstatement of the caller's PSR at function exit (a caller's PSR is 
+In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch
+with link instruction, so it is natural for the APCS to require the
+reinstatement of the caller's PSR at function exit (a caller's PSR is
 preserved across a function call).
 
-In 32-bit CPU modes this reinstatement would be unacceptably expensive 
-in comparison to the gain from it, so the APCS does not require it and a
- caller's PSR flags may be corrupted by a function call.
+In 32-bit CPU modes this reinstatement would be unacceptably expensive
+in comparison to the gain from it, so the APCS does not require it and
+a caller's PSR flags may be corrupted by a function call.
+
 
 ## Implicit vs explicit stack-limit checking
 
