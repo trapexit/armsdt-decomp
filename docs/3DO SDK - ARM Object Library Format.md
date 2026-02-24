@@ -35,29 +35,30 @@ The terms *byte, half word, word,* and *string* are used to mean:
 | word      | 32 bits, or 4 bytes, usually considered unsigned. |
 | string    | A sequence of bytes terminated by a NUL (0x00) byte. The NUL byte is part of the string but is not counted in the string's length. |
 
+
 ## Byte sex or endian-ness
 
 There are two sorts of ALF: *little-endian* and *big-endian**.*
 
-- In little-endian ALF, the least significant byte of a word or 
-  half-word has the lowest address of any byte in the (half-)word. Used by
-   DEC, Intel and Acorn, amongst others.
-
-- In big-endian ALF, the most significant byte of a 
-  (half-)word has the lowest address. This byte sex is used by IBM, 
-  Motorola and Apple, amongst others.
+- In little-endian ALF, the least significant byte of a word or
+  half-word has the lowest address of any byte in the
+  (half-)word. Used by DEC, Intel and Acorn, amongst others.
+- In big-endian ALF, the most significant byte of a (half-)word has
+  the lowest address. This byte sex is used by IBM, Motorola and
+  Apple, amongst others.
 
 For data in a file, address means offset from the start of the file.
 
-There is no guarantee that the endian-ness of an ALF file will be the 
-same as the endian-ness of the system used to process it, (the 
-endian-ness of the file is always the same as the endian-ness of the 
+There is no guarantee that the endian-ness of an ALF file will be the
+same as the endian-ness of the system used to process it, (the
+endian-ness of the file is always the same as the endian-ness of the
 target ARM system).
 
-The two sorts of ALF cannot, meaningfully, be mixed (the target system 
-cannot have mixed endian-ness: it must have one or the other). Thus the 
-ARM linker will accept inputs of either sex and produce an output of the
- same sex, but will reject inputs of mixed endian-ness.
+The two sorts of ALF cannot, meaningfully, be mixed (the target system
+cannot have mixed endian-ness: it must have one or the other). Thus
+the ARM linker will accept inputs of either sex and produce an output
+of the same sex, but will reject inputs of mixed endian-ness.
+
 
 ## Alignment
 
