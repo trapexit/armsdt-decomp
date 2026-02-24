@@ -1,26 +1,35 @@
 # ARM Object Format
 
-This document defines a file format called *ARM Object Format* or *AOF*, which is used by language processors for ARM-based systems.
+This document defines a file format called *ARM Object Format* or
+*AOF*, which is used by language processors for ARM-based systems.
 
-The ARM linker accepts input files in this format and can generate 
-output in the same format, as well as in a variety of image formats. The
- ARM linker is described in [The ARM Linker (armlink)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/ARM.UG/cAUG.3.armlink.html#XREF21025) in the User Manual.
+The ARM linker accepts input files in this format and can generate
+output in the same format, as well as in a variety of image
+formats. The ARM linker is described in [The ARM Linker
+(armlink)](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/ARM.UG/cAUG.3.armlink.html#XREF21025)
+in the User Manual.
 
-ARM Object Format directly supports the ARM Procedure Call standard (APCS), which is described in [ARM Procedure Call Standard](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/cATS.4.apcs.html#XREF28151) in this manual.
-
+ARM Object Format directly supports the ARM Procedure Call standard
+(APCS), which is described in [ARM Procedure Call
+Standard](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/cATS.4.apcs.html#XREF28151)
+in this manual.
 
 
 # About AOF
 
-AOF is a simple object format, similar in complexity and expressive power to Unix's *a.out* format. As will be seen, it provides a generalised superset of a.out's 
-descriptive facilities (though this was neither an original design goal 
-nor an influence on the early development of AOF).
+AOF is a simple object format, similar in complexity and expressive
+power to Unix's *a.out* format. As will be seen, it provides a
+generalised superset of a.out's descriptive facilities (though this
+was neither an original design goal nor an influence on the early
+development of AOF).
 
-AOF was designed to be simple to generate and to process, rather than to be maximally expressive or maximally compact.
+AOF was designed to be simple to generate and to process, rather than
+to be maximally expressive or maximally compact.
 
 ## Terminology
 
-In the rest of this document, the term *object file* refers to a file in ARM Object Format, and the term *linker* refers to the ARM linker.
+In the rest of this document, the term *object file* refers to a file
+in ARM Object Format, and the term *linker* refers to the ARM linker.
 
 The terms *byte, half word, word*, and *string* are used to mean:
 
@@ -30,7 +39,6 @@ The terms *byte, half word, word*, and *string* are used to mean:
 | half word | 16 bits (2 bytes); usually considered unsigned.                                                                                    |
 | word      | 32 bits (4 bytes); usually considered unsigned.                                                                                    |
 | string    | A sequence of bytes terminated by a NUL (0x00) byte. The NUL byte is part of the string but is not counted in the string's length. |
-
 
 
 ## Byte sex or endian-ness
