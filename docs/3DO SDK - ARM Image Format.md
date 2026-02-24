@@ -183,25 +183,30 @@ position-independent. Care is taken to ensure that the instruction
 sequences which compute addresses from these r14 values work in both
 26-bit and 32-bit ARM modes.
 
-The *Program Exit Instruction* will usually be a SWI causing
- program termination. On systems which lack this, a branch-to-self is
-recommended. Applications are expected to exit directly and *not*
-to return to the AIF header, so this instruction should never be
-executed. The ARM linker sets this field to SWI 0x11 by default, but it
-may be set to any desired value by providing a template for the AIF
-header in an area called AIF_HDR in the *first* object file in the input list to *armlink*.
+The *Program Exit Instruction* will usually be a SWI causing program
+termination. On systems which lack this, a branch-to-self is
+recommended. Applications are expected to exit directly and *not* to
+return to the AIF header, so this instruction should never be
+executed. The ARM linker sets this field to SWI 0x11 by default, but
+it may be set to any desired value by providing a template for the AIF
+header in an area called AIF_HDR in the *first* object file in the
+input list to *armlink*.
 
-The *Image ReadOnly Size* includes the size of the AIF header only if the AIF type is executable (that is, if the header itself is part of the image).
+The *Image ReadOnly Size* includes the size of the AIF header only if
+the AIF type is executable (that is, if the header itself is part of
+the image).
 
-An AIF image is re-startable if, and only if, the program it contains is re-startable (n.b. an AIF image is *not* reentrant). If an AIF image is to be re-started then, following its
-decompression, the first word of the header must be set to NOP.
-Similarly, following self-relocation, the second word of the header must
- be reset to NOP. This causes no additional problems with the read-only
-nature of the code segment: both decompression and relocation code must
-write to it. On systems with memory protection, both the decompression
-code and the self-relocation code must be bracketed by system calls to
-change the access status of the read-only section (first to writable,
-then back to read-only).
+An AIF image is re-startable if, and only if, the program it contains
+is re-startable (n.b. an AIF image is *not* reentrant). If an AIF
+image is to be re-started then, following its decompression, the first
+word of the header must be set to NOP.  Similarly, following
+self-relocation, the second word of the header must be reset to
+NOP. This causes no additional problems with the read-only nature of
+the code segment: both decompression and relocation code must write to
+it. On systems with memory protection, both the decompression code and
+the self-relocation code must be bracketed by system calls to change
+the access status of the read-only section (first to writable, then
+back to read-only).
 
 The *image debug type* has the following meaning:
 
