@@ -384,49 +384,51 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
   ignored.
 - Bits 16-19 - encode additional attributes of code areas and shall be
   non-0 only if the area has the code attribute (bit 9 set).
+  
+  Bit 16 encodes the 32-bit PC attribute, and denotes that code in
+  this area complies with a 32-bit variant of the ARM Procedure Call
+  Standard (APCS). For details, refer to [32-bit PC vs 26-bit
+  PC](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsb.html#XREF34877). Such
+  code may be incompatible with code which complies with a 26-bit
+  variant of the APCS.
+- Bit 17 - encodes the reentrant attribute, and denotes that code in
+  this area complies with a reentrant variant of the ARM Procedure Call
+  Standard.
+- Bit 18 - when set, denotes that code in this area uses the ARM's
+  extended floating-point instruction set. Specifically, function entry
+  and exit use the LFM and SFM floating-point save and restore
+  instructions rather than multiple LDFEs and STFEs. Code with this
+  attribute may not execute on older ARM-based systems.
+- Bit 19 - encodes the No Software Stack Check attribute, denoting
+  that code in this area complies with a variant of the ARM Procedure
+  Call Standard without software stack-limit checking. Such code may be
+  incompatible with code which complies with a limit-checked variant of
+  the APCS.
+- Bits 20-27 - encode additional attributes of data areas, and shall
+  be non-0 only if the area does not have the code attribute (bit 9)
+  unset.
+- Bit 20 - encodes the based attribute, denoting that the area is
+  addressed via link-time-fixed offsets from a base register (encoded in
+  bits 24-27). Based areas have a special role in the construction of
+  shared libraries and ROM-able code, and are treated specially by the
+  linker.
+- Bit 21 - encodes the Shared Library Stub Data attribute. In a link
+  step involving layered shared libraries, there may be several copies
+  of the stub data for any library not at the top level. In other
+  respects, areas with this attribute are treated like data areas with
+  the common definition (bit 10) attribute. Areas which also have the
+  zero initialied attribute (bite 12) are treated much the same as
+  areas with the common reference (bit 11) attribute.
+  
+  This attribute is not usually set by language processors, but is set
+  only by the linker (refer to [ARM shared library
+  format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382)).
+- Bits 22-23 - reserved and shall be set to 0.
+- Bits 24-27 - encode the base register used to address a *based*
+  area. If the area does not have the *based* attribute then these
+  bits shall be set to 0.
+- Bits 28-31 - reserved and shall be set to 0.
 
-Bit 16 encodes the 32-bit PC attribute, and denotes that code in 
-this area complies with a 32-bit variant of the ARM Procedure Call 
-Standard (APCS). For details, refer to [32-bit PC vs 26-bit PC](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsb.html#XREF34877). Such code may be incompatible with code which complies with a 26-bit variant of the APCS.
-
-Bit 17 encodes the reentrant attribute, and denotes that code in 
-this area complies with a reentrant variant of the ARM Procedure Call 
-Standard.
-
-Bit 18, when set, denotes that code in this area uses the ARM's extended
- floating-point instruction set. Specifically, function entry and exit 
-use the LFM and SFM floating-point save and restore instructions rather 
-than multiple LDFEs and STFEs. Code with this attribute may not execute 
-on older ARM-based systems.
-
-Bit 19 encodes the No Software Stack Check attribute, denoting that code
- in this area complies with a variant of the ARM Procedure Call Standard without
- software stack-limit checking. Such code may be incompatible with code 
-which complies with a limit-checked variant of the APCS.
-
-Bits 20-27 encode additional attributes of data areas, and shall be non-0 only if the area does not have the code attribute (bit 9) unset.
-
-Bit 20 encodes the based attribute, denoting that the area is 
-addressed via link-time-fixed offsets from a base register (encoded in 
-bits 24-27). Based areas have a special role in the construction of 
-shared libraries and ROM-able code, and are treated specially by the 
-linker.
-
-Bit 21 encodes the Shared Library Stub Data attribute. In a link step 
-involving layered shared libraries, there may be several copies of the 
-stub data for any library not at the top level. In other respects, areas
- with this attribute are treated like data areas with the common 
-definition (bit 10) attribute. Areas which also have the zero initialied
- attribute (bite 12) are treated much the same as areas with the common 
-reference (bit 11) attribute.
-
-This attribute is not usually set by language processors, but is set only by the linker (refer to [ARM shared library format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382)).
-
-Bits 22-23-reserved and shall be set to 0.
-
-Bits 24-27*-*encode the base register used to address a *based* area. If the area does not have the *based* attribute then these bits shall be set to 0.
-
-Bits 28-31*-*reserved and shall be set to 0.
 
 ## Area attributes ummary
 
