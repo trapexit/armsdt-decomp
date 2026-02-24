@@ -406,3 +406,250 @@ Bits 28-31*-*reserved and shall be set to 0.
 | 20    | 0x00100000 | Based area                    | Data areas only |
 | 21    | 0x00200000 | Shared library stub data      | Data areas only |
 | 24-27 | 0x0F000000 | Base register for based area  | Data areas only |
+
+
+
+# Format of the areas chunk
+
+The areas chunk (OBJ_AREA) contains the actual area contents (code, 
+
+```
+Area 1
+Area 1 Relocation
+. . .
+Area n
+Area n Relocation
+```
+
+An area is simply a sequence of byte values. The endian-ness of the 
+words and half-words within it shall agree with that of the containing 
+AOF file.
+
+An area is followed by its associated table of relocation directives (if
+ any). An area is either completely initialised by the values from the 
+file or is initialised to zero, as specified by bit 12 of its area 
+attributes.
+
+Both the area contents and the table of relocation directives are aligned to 4-byte boundaries.
+
+## Relocation directives
+
+A relocation directive describes a value which is computed at link time 
+or load time, but which cannot be fixed when the object module is 
+created.
+
+In the absence of applicable relocation directives, the value of a byte,
+ halfword, word or instruction from the preceding area is exactly the 
+value that will appear in the final image.
+
+A field may be subject to more than one relocation.
+
+Pictorially, a relocation directive looks like:
+
+| Bit       | 31  | 30,29 | 28  | 27  | 26  | 25,24 | 24-0      |
+| --------- | --- | ----- | --- | --- | --- | ----- | --------- |
+| **Field** | 1   | II    | B   | A   | R   | FT    | 24bit SID |
+
+Offset is the byte offset in the preceding area of the subject field to be relocated by a value calculated as described below.
+
+The interpretation of the 24-bit *SID* field depends on the *A* bit.
+
+- If *A* (bit 27) is 1, the subject field is relocated (as further described below) by the value of the symbol of which *SID* is the 0-origin index in the symbol table chunk.
+- If *A* (bit 27) is 0, the subject field is relocated (as further described below) by the base of the area of which *SID* is the 0-origin index in the array of areas, (or, equivalently, in the array of area headers).
+
+The 2-bit field type *FT* (bits 25, 24) describes the subject field:
+
+- 00: the field to be relocated is a byte;
+- 01: the field to be relocated is a half-word (2 bytes);
+- 10: the field to be relocated is a word (4 bytes);
+- 11: the field to be relocated is an instruction or instruction sequence.
+
+Bytes, halfwords and instructions may only be relocated by values of suitably small size. Overflow is faulted by the linker.
+
+An ARM branch, or branch-with-link instruction is always a suitable 
+subject for a relocation directive of field type instruction. For 
+details of other relocatable instruction sequences, refer to [The handling of relocation directives](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF31016).
+
+If the subject field is an instruction sequence, then Offset addresses the first instruction of the sequence and the *II* field (bits 29 and 30) constrains how many instructions may be modified by this directive:
+
+- 00: no constraint (the linker may modify as many contiguous instructions as it needs to);
+- 01: the linker will modify at most 1 instruction;
+- 10: the linker will modify at most 2 instructions;
+- 11: the linker will modify at most 3 instructions.
+
+The way the relocation value is used to modify the subject field is determined by the *R* (PC-relative) bit, modified by the *B* (based) bit.
+
+*R* (bit 26) = 1 and *B* (bit 28) = 0 specifies PC-relative 
+relocation: to the subject field is added the difference between the 
+relocation value and the base of the area containing the subject field. 
+In pseudo C:
+
+```
+subject_field = subject_field + (relocation_value - base_of_area_containing(subject_field))
+```
+
+As a special case, if *A* is 0, and the relocation value is specified as the base of the area containing the subject field, then it is not added and:
+
+```
+subject_field = subject_field - base_of_area_containing(subject_field)
+```
+
+This caters for relocatable PC-relative branches to fixed target addresses.
+
+If *R* is 1, *B* is usually 0. A *B* value of 1 is
+ used to denote that the inter-link-unit value of a branch destination 
+is to be used, rather than the more usual intra-link-unit value.
+
+(Aside: this allows compilers to perform the tail-call optimisation on reentrant code - for details, refer to [Forcing use of an inter-link-unit entry point](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF41042)).
+
+*R* (bit 26) = 0 and *B* (bit 28) = 0, specifies plain additive relocation: the relocation value is added to the subject field. In pseudo C:
+
+```
+subject_field = subject_field + relocation_value
+```
+
+*R* (bit 26) = 0 and *B* (bit 28) = 1, specifies based area 
+relocation. The relocation value must be an address within a based data 
+area. The subject field is incremented by the difference between this 
+value and the base address of the consolidated based area group (the 
+linker consolidates all areas based on the same base register into a 
+single, contiguous region of the output image). In pseudo C:
+
+```
+subject_field = subject_field + (relocation_value - base_of_area_group_containing(relocation_value))
+```
+
+For example, when generating reentrant code, the C compiler will place address constants in an adcon area based on register *sb*, and load them using *sb* relative LDRs. At link time, separate adcon areas will be merged and *sb* will no longer point where presumed at compile time. *B* type relocation of the LDR instructions corrects for this. For further details, refer to [Based area relocation](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF36445).
+
+Bits 29 and 30 of the relocation flags word shall be 0; bit 31 shall be 1.
+
+
+
+# Format of the symbol table chunk (OBJ_SYMT)
+
+The Number of Symbols field in the fixed part of the AOF header 
+(OBJ_HEAD chunk) defines how many entries there are in the symbol table.
+ Each symbol table entry has the following format:
+
+- `Name`
+- `Attributes`
+- `Value`
+- `Area Name` (4 words per entry)
+
+Name is the offset in the string table (in chunk OBJ_STRT) of the character string name of the symbol.
+
+Value is only meaningful if the symbol is a defining occurrence 
+(bit 0 of Attributes set), or a common symbol (bit 6 of Attributes set):
+
+- if the symbol is absolute (bits 0,2 of Attributes set), this field contains the value of the symbol;
+
+- if the symbol is a common symbol (bit 6 of Attributes set), this field contains the byte-length of the referenced common area;
+
+- otherwise, Value is interpreted as an offset from the base 
+  address of the area named by Area Name, which must be an area defined in
+   this object file.
+
+Area Name is meaningful only if the symbol is a non-absolute defining occurrence (bit 0 of Attributes
+ set, bit 2 unset). In this case it gives the index into the string 
+table for the name of the area in which the symbol is defined (which 
+must be an area in this object file).
+
+## Symbol attributes
+
+The *S*ymbol Attributes word is interpreted as follows:
+
+Bit 0 denotes that the symbol is defined in this object file.
+
+Bit 1 denotes that the symbol has global scope and can be matched by the
+ linker to a similarly named symbol from another object file. 
+Specifically:
+
+| Code | Description                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01   | (bit 1 unset, bit 0 set) denotes that the symbol is defined in this object file and has scope limited to this object file. When resolving symbol references, the linker will only match this symbol to references from within the same object file.                                                                                                                                                      |
+| 10   | (bit 1 set, bit 0 unset) denotes that the symbol is a reference to a symbol defined in another object file. If no defining instance of the symbol is found, the linker attempts to match the name of the symbol to the names of common blocks. If a match is found, it is as if there were defined an identically-named symbol of global scope, having as its value the base address of the common area. |
+| 11   | Denotes that the symbol is defined in this object file with global scope. When attempting to resolve unresolved references, the linker will match this definition to a reference from another object file.                                                                                                                                                                                               |
+| 00   | Reserved.                                                                                                                                                                                                                                                                                                                                                                                                |
+
+Bit 2 encodes the absolute attribute which is meaningful only if Bit 3 encodes the case insensitive reference attribute which is 
+meaningful only if bit 0 is unset (that is, if the symbol is an external
+ reference). If set, the linker will ignore the case of the symbol names
+ it tries to match when attempting to resolve this reference.
+
+Bit 4 encodes the weak attribute which is meaningful only if the symbol 
+is an external reference, (bits 1,0 = 10). It denotes that it is 
+acceptable for the reference to remain unsatisfied and for any fields 
+relocated via it to remain unrelocated. The linker ignores weak 
+references when deciding which members to load from an object library.
+
+Bit 5 encodes the strong attribute which is meaningful only if the 
+symbol is an external defining occurrence (if bits 1,0 = 11). In turn, 
+this attribute only has meaning if there is a non-strong, external 
+definition of the same symbol in another object file. In this case, 
+references to the symbol from outside of the file containing the strong 
+definition, resolve to the strong definition, while those within the 
+file containing the strong definition resolve to the non-strong 
+definition.
+
+This attribute allows a kind of link-time indirection to be enforced. 
+Usually, a strong definition will be absolute, and will be used to 
+implement an operating system's entry vector having the forever binary 
+property.
+
+Bit 6 encodes the common attribute, which is meaningful only if the 
+symbol is an external reference (bits 1,0 = 10). If set, the symbol is a
+ reference to a common area with the symbol's name. The length of the 
+common area is given by the symbol's *Value* field (see above). The
+ linker treats common symbols much as it treats areas having the Common 
+Reference attribute - all symbols with the same name are assigned the 
+same base address, and the length allocated is the maximum of all 
+specified lengths.
+
+If the name of a common symbol matches the name of a common area, then 
+these are merged and the symbol identifies the base of the area.
+
+All common symbols for which there is no matching common area (reference
+ or definition) are collected into an anonymous, linker-created, 
+pseudo-area.
+
+Bit 7 is reserved and shall be set to 0.
+
+Bits 8-11 encode additional attributes of symbols defined in code areas.
+
+Bit 8 encodes the code datum attribute which is meaningful only 
+if this symbol defines a location within an area having the Code 
+attribute. It denotes that the symbol identifies a (usually read-only) 
+datum, rather than an executable instruction.
+
+Bit 9 encodes the floating-point arguments in floating-point registers 
+attribute. This is meaningful only if the symbol identifies a function 
+entry point. A symbolic reference with this attribute cannot be matched 
+by the linker to a symbol definition which lacks the attribute.
+
+Bit 10 is reserved and shall be set to 0.
+
+Bit 11 is the simple leaf function attribute which is meaningful 
+only if this symbol defines the entry point of a sufficiently simple 
+leaf function (a leaf function is one which calls no other function). 
+For a reentrant leaf function it denotes that the function's 
+inter-link-unit entry point is the same as its intra-link-unit entry 
+point. For details of the significance of this attribute to the linker 
+refer to [Forcing use of an inter-link-unit entry point](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF41042).
+
+Bits 12-31 are reserved and shall be set to 0.
+
+## Symbol attribute summary
+
+| Bit | Mask       | Attribute Description          | Notes             |
+| --- | ---------- | ------------------------------ | ----------------- |
+| 0   | 0x00000001 | Symbol is defined in this file |                   |
+| 1   | 0x00000002 | Symbol has a global scope      |                   |
+| 2   | 0x00000004 | Absolute attribute             |                   |
+| 3   | 0x00000008 | Case-sensitive attribute       |                   |
+| 4   | 0x00000010 | Weak attribute                 |                   |
+| 5   | 0x00000020 | Strong attribute               |                   |
+| 6   | 0x00000040 | Common attribute               |                   |
+|     |            |                                |                   |
+| 8   | 0x00000010 | Code area datum attribute      | Code symbols only |
+| 9   | 0x00000020 | FP args in FP regs attribute   | Code symbols only |
+| 11  | 0x00000080 | Simple leaf function attribute | Code symbols only |
