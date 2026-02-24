@@ -355,11 +355,11 @@ about the direction of copy, and jumping to the copied copy code as soon
         ADD     lr, lr, r0              ; relocate return address
 ```
 
-Whether the image has moved itself or not, control eventually arrives 
-here, where the list of locations to be relocated is processed. Each 
-location is word sized and is relocated by the difference between the 
-address the image was loaded at (the address of the AIF header) and the 
-address the image was linked at (stored at offset 0x28 in the AIF 
+Whether the image has moved itself or not, control eventually arrives
+here, where the list of locations to be relocated is processed. Each
+location is word sized and is relocated by the difference between the
+address the image was loaded at (the address of the AIF header) and
+the address the image was linked at (stored at offset 0x28 in the AIF
 header).
 
 ```
