@@ -59,9 +59,9 @@ The criteria we have considered to be important are:
   programmers, and should support simple approaches to link editing,
   debugging and run-time error diagnosis.
 
-Overall, we have tended to rank compact code and a clear definition most
- highly, with simplicity and ease of use ahead of performance in matters
- of fine detail where the impact on performance is small.
+Overall, we have tended to rank compact code and a clear definition
+most highly, with simplicity and ease of use ahead of performance in
+matters of fine detail where the impact on performance is small.
 
 # The ARM procedure call standard
 
