@@ -1,20 +1,22 @@
 # ARM Procedure Call Standard
 
-The *ARM Procedure Call Standard* (*APCS*) is a set of rules 
-which regulate and facilitate calls between separately compiled or 
-assembled program fragments. The APCS defines:
+The *ARM Procedure Call Standard* (*APCS*) is a set of rules which
+regulate and facilitate calls between separately compiled or assembled
+program fragments. The APCS defines:
 
 - constraints on the use of registers;
-
 - stack conventions;
+- the format of a stack-based data structure, used by stack tracing
+  programs to reconstruct a sequence of outstanding calls;
+- the passing of machine-level arguments, and the return of
+  machine-level results at externally visible function/procedure
+  calls;
+- support for the ARM shared library mechanism; a standard way for
+  shared (reentrant) code to address the static data of its clients,
+  (See [The ARM
+  Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/arr3frst.html#XREF25184)
+  for details).
 
-- the format of a stack-based data structure, used by stack tracing programs to reconstruct a sequence of outstanding calls;
-
-- the passing of machine-level arguments, and the return of machine-level results at externally visible function/procedure calls;
-
-- support for the ARM shared library mechanism; a standard 
-  way for shared (reentrant) code to address the static data of its 
-  clients, (See [The ARM Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/arr3frst.html#XREF25184) for details).
 
 ## Chapter overview
 
@@ -596,3 +598,183 @@ malloc
 In this case, the optimisation avoids saving and restoring the 
 call-frame registers and saves 5 instructions (and many cycles-17 S 
 cycles on an uncached ARM with N=2S).
+
+
+
+# The APCS in non-user ARM modes
+
+There are some consequences of the ARM's architecture which, while not 
+explicit in the ARM Procedure Call Standard, need to be understood by 
+implementors of code intended to run in the ARM's SVC and IRQ modes.
+
+An IRQ corrupts r14_irq, so IRQ-mode code must run with IRQs off until r14_irq has been saved.
+
+A general solution to this problem is to enter and exit IRQ handlers 
+written in high-level languages via hand-crafted wrappers, which on 
+entry save r14_irq, change mode to SVC, and enable IRQs; and on exit 
+restore the saved r14_irq, IRQ mode and the IRQ-enable state. Thus the 
+handlers themselves run in SVC mode, avoiding the problem in compiled 
+code.
+
+SWIs corrupt r14_svc, so care has to be taken when calling SWIs in SVC mode.
+
+In high-level languages, SWIs are usually called out of line, so it 
+suffices to save and restore r14 in the calling veneer around the SWI. 
+If a compiler can generate in-line SWIs, then it should, of course, also
+ generate code to save and restore r14 in-line around the SWI, unless it
+ is known that the code will not be executed in SVC mode.
+
+## Aborts and pre-ARM6-based ARMs
+
+With pre-ARM6-based ARMs (ARM2, ARM3), aborts corrupt r14_svc. This 
+means that care has to be taken when causing aborts in SVC mode.
+
+An abort in SVC mode may be symptomatic of a fatal error, or it may be 
+caused by page faulting in SVC mode. Page faulting can occur because an 
+instruction needs to be fetched from a missing page (causing a prefetch 
+abort), or because of an attempted data access to a missing page. The 
+latter may occur even if the SVC-mode code is not itself paged, 
+(consider an unpaged kernel accessing a paged user-space).
+
+A data abort is recoverable provided r14 contains nothing of value at the instant of the abort. This can be ensured by:
+
+- saving R14 on entry to every function and restoring it on exit;
+- not using R14 as a temporary register in any function;
+- avoiding page faults (stack faults) in function entry sequences.
+
+A prefetch abort is harder to recover from, and an aborting BL 
+instruction cannot be recovered, so special action has to be taken to 
+protect page faulting function calls.
+
+In code compiled from C, r14 is saved in the 2nd or 3rd instruction of 
+an entry sequence. Aligning all functions at addresses which are 0 or 4 
+modulo 16, ensures the critical part of the entry sequence cannot 
+prefetch-abort. A compiler can do this by padding code sections to a 
+multiple of 16 bytes, and being careful about the alignment of functions
+ within code sections.
+
+Data-aborts early in function entry sequences can be avoided by using a software stack-limit check.
+
+A possible way to protect BL instructions from prefetch-aborts, is to precede each BL by a
+
+```
+MOV    ip, pc
+```
+
+instruction. If the BL faults, the prefetch abort handler can safely 
+overwrite r14 with ip before resuming execution at the target of the BL.
+ If the prefetch abort is not caused by a BL then this action is 
+harmless, as r14 has been corrupted anyway, (and, by design, contained 
+nothing of value at any instant a prefetch abort could occur).
+
+
+
+# APCS variants
+
+
+
+There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from four independent choices.
+
+The first choice - 32-bit PC vs 26-bit PC - is fixed by your ARM CPU.
+
+The second choice - implicit vs explicit stack-limit checking - is fixed
+ by a combination of memory-management hardware and operating system 
+software: if your ARM-based environment supports implicit stack-limit 
+checking then use it; otherwise use explicit stack-limit checking.
+
+The third choice - of how to pass floating-point arguments - supports 
+efficient argument passing in both of the following circumstances:
+
+- the floating point instruction set is emulated by software and floating point operations are dynamically very rare;
+- the floating point instruction set is supported by hardware or floating point operations are dynamically common.
+
+In each case, code conforming to one variant is not compatible with code conforming to the other.
+
+Only the choice between reentrant and non-reentrant variants is a true 
+user level choice. Further, as the alternatives are compatible, each may
+ be used where appropriate.
+
+## 32-bit PC vs 26-bit PC
+
+Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a 
+24-bit, word-address program counter, and pack the 4 status flags (NZCV)
+ and 2 interrupt-enable flags (IF) into the top 6 bits of r15, and the 2
+ mode bits (m0, m1) into the least-significant bits of r15. Thus r15 
+implements a combined PC + PSR.
+
+Newer ARM CPUs use a 32-bit program counter (in r15) and a separate PSR.
+
+In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch 
+with link instruction, so it is natural for the APCS to require the 
+reinstatement of the caller's PSR at function exit (a caller's PSR is 
+preserved across a function call).
+
+In 32-bit CPU modes this reinstatement would be unacceptably expensive 
+in comparison to the gain from it, so the APCS does not require it and a
+ caller's PSR flags may be corrupted by a function call.
+
+## Implicit vs explicit stack-limit checking
+
+ARM-based systems vary widely in the sophistication of their memory 
+management hardware. Some can easily support multiple, auto-extending 
+stacks, while others have no memory management hardware at all.
+
+Safe programming practices demand that stack overflow be detected.
+
+The APCS defines conventions for software stack-limit checking 
+sufficient to support efficiently most requirements (including those of 
+multiple threads and chunked stacks).
+
+The majority of ARM-based systems are expected to require software stack-limit checking.
+
+## Floating-point arguments in floating-point registers
+
+Historically, many ARM-based systems have made no use of the floating 
+point instruction set, or they used a software emulation of it.
+
+On systems using a slow software emulation and making little use of 
+floating-point, there is a small disadvantage to passing floating-point 
+arguments in floating-point registers: all variadic functions (such as 
+printf) become slower, while only function calls which actually take 
+floating-point arguments become faster.
+
+If your system has no floating-point hardware and is expected to make 
+little use of floating point, then it is better not to pass 
+floating-point arguments in floating-point registers. Otherwise, the 
+opposite choice is best.
+
+## Reentrant vs non-reentrant code
+
+The reentrant variant of the APCS supports the generation of code free 
+of relocation directives (position independent and addressing all data 
+(indirectly) via a static base register). Such code is ideal for 
+placement in ROM and can be multiply threaded (shared between several 
+client processes). See [ARM shared library format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382) for further details.
+
+In general, code to be placed in ROM or loaded into a shared library is 
+expected to be reentrant, while applications are expected not to be.
+
+See also [C language calling conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070).
+
+## APCS-2 compatibility
+
+(APCS-2 - the second definition of The ARM Procedure Call Standard - is recorded in Technical Memorandum *PLG-APCS, issue 4.00, 18-Apr-89*, reproduced in the following Acorn publications: *RISC OS Programmer's Reference Manual, vol IV, 1989*, (Acorn part number 0483,023); *ANSI C Release 3, September 1989*, (Acorn part number 0470,101)).
+
+APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of APCS-3:
+
+- 26-bit PC;
+- explicit stack-limit checking;
+- no passing of floating-point arguments in floating-point registers;
+- non-reentrant code;
+
+with the Acorn-specific constraints on the use of sl noted in APCS-2.
+
+APCS-U (APCS-2 for Acorn's RISCiX) is the following variant of APCS-3:
+
+- 26-bit PC;
+- implicit stack-limit checking (with sl reserved to Acorn);
+- no passing of floating-point arguments in floating-point registers;
+- non-reentrant code.
+
+The (in APCS-2) obsolescent APCS-A has no equivalent in APCS-3.
+
