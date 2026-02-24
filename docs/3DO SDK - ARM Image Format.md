@@ -7,8 +7,6 @@ followed by the image's initialised static data.
 
 # Properties of ARM image format
 
----
-
 Two variants of AIF exist:
 
 - *Executable AIF* (in which the header is part of the image itself)
