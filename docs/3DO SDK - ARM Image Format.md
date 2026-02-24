@@ -110,8 +110,6 @@ or moved by the debugger.
 
 # The layout of AIF
 
----
-
 The layout of a compressed AIF image is as follows:
 
 | Section              | Description                                  |
