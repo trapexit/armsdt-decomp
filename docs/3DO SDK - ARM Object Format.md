@@ -730,28 +730,26 @@ Specifically:
 
 # The string table chunk (OBJ_STRT)
 
-The string table chunk contains all the print names referred to from the
- header and symbol table chunks. This separation is made to factor out 
-the variable length characteristic of print names from the key data 
-structures.
+The string table chunk contains all the print names referred to from
+the header and symbol table chunks. This separation is made to factor
+out the variable length characteristic of print names from the key
+data structures.
 
-A print name is stored in the string table as a sequence of non-control 
-characters (codes 32-126 and 160-255) terminated by a NUL (0) byte, and 
-is identified by an offset from the start of the table. The first 4 
-bytes of the string table contain its length (including the length of 
-its length word), so no valid offset into the table is less than 4, and 
-no table has length less than 4.
+A print name is stored in the string table as a sequence of
+non-control characters (codes 32-126 and 160-255) terminated by a NUL
+(0) byte, and is identified by an offset from the start of the
+table. The first 4 bytes of the string table contain its length
+(including the length of its length word), so no valid offset into the
+table is less than 4, and no table has length less than 4.
 
-The endian-ness of the length word shall be identical to the endian-ness of the AOF and chunk files containing it.
-
+The endian-ness of the length word shall be identical to the
+endian-ness of the AOF and chunk files containing it.
 
 
 # The identification chunk (OBJ_IDFN)
 
-
-
-This chunk should contain a string of printable characters (codes 10-13 
-and 32-126) terminated by a NUL (0) byte, which gives information about 
-the name and version of the tool which generated the object file. Use of
- codes in the range 128-255 is discouraged, as the interpretation of 
-these values is host dependent.
+This chunk should contain a string of printable characters (codes
+10-13 and 32-126) terminated by a NUL (0) byte, which gives
+information about the name and version of the tool which generated the
+object file. Use of codes in the range 128-255 is discouraged, as the
+interpretation of these values is host dependent.
