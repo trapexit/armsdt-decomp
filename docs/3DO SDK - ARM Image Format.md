@@ -246,7 +246,7 @@ The Zero-initialisation code is as follows:
 
 ```
 ZeroInit
-        NOP                             
+        NOP
 ```
 
 or
@@ -314,9 +314,9 @@ and should be replaced by whatever code sequence is appropriate to the
 environment.
 
 ```
-    LDR    r0, [ip, #&20]                            ;image zero-init size
-    ADD    r9, r9, r0                            ;space to leave = min free + zero init
-    SWI    #&10                            ;return top of memory in r1.
+        LDR     r0, [ip, #&20]        ; image zero-init size
+        ADD     r9, r9, r0            ; space to leave = min free + zero-init
+        SWI     #&10                  ; return top of memory in r1
 ```
 
 The following code calculates the length of the image inclusive of its 
