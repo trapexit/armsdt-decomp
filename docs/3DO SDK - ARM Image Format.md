@@ -205,12 +205,13 @@ then back to read-only).
 
 The *image debug type* has the following meaning:
 
-```
-0: No debugging data are present.
-1: Low-level debugging data are present.
-2: Source level (ASD) debugging data are present.
-3: 1 and 2 are present together.
-```
+| Value | Meaning                                        |
+|-------|------------------------------------------------|
+| 0     | No debugging data are present.                 |
+| 1     | Low-level debugging data are present.          |
+| 2     | Source-level (ASD) debugging data are present. |
+| 3     | Both 1 and 2 are present together.             |
+
 
 All other values of image debug type are reserved to ARM Ltd.
 
