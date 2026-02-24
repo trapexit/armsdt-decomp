@@ -340,18 +340,19 @@ about the direction of copy, and jumping to the copied copy code as soon
  as it has copied itself.
 
 ```
-02  LDMDB  r2!, {r4-r7}
-    STMDB  r3!, {r4-r7}
-    CMPS   r2, r8                            ; copied the copy loop?
-    BGT    %B02                            ; not yet
-    ADD    r4, pc, r0
-    MOV    pc, r4                            ; jump to copied copy code
-03  LDMDB  r2!, {r4-r7}
-    STMDB  r3!, {r4-r7}
-    CMPS   r2, ip                            ; copied everything?
-    BGT    %B03                            ; not yet
-    ADD    ip, ip, r0                            ; load address of code
-    ADD    lr, lr, r0                            ; relocated return address
+02:     LDMDB   r2!, {r4-r7}            ; load from source (decrement before)
+        STMDB   r3!, {r4-r7}            ; store to destination (decrement before)
+        CMPS    r2, r8                  ; have we finished this copy loop?
+        BGT     %B02                     ; if not, continue loop
+        ADD     r4, pc, r0
+        MOV     pc, r4                  ; jump to copied copy code
+
+03:     LDMDB   r2!, {r4-r7}            ; load from source
+        STMDB   r3!, {r4-r7}            ; store to destination
+        CMPS    r2, ip                  ; have we copied everything?
+        BGT     %B03                     ; if not, continue loop
+        ADD     ip, ip, r0              ; load address of code
+        ADD     lr, lr, r0              ; relocate return address
 ```
 
 Whether the image has moved itself or not, control eventually arrives 
