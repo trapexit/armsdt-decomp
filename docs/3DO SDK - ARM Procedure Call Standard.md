@@ -17,6 +17,7 @@ program fragments. The APCS defines:
   Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/arr3frst.html#XREF25184)
   for details).
 
+
 ## Chapter overview
 
 Click on one of the topics below to select it:
@@ -33,12 +34,13 @@ variants" for details of the variants in the family. Implementors of
 run-time systems, operating systems, embedded control monitors, etc.,
 must choose the variant(s) most appropriate to their requirements.
 
-Naturally, there can be no binary compatibility between program 
-fragments which conform to different members of the APCS family. Those 
-concerned with long-term binary compatibility must choose their options 
-carefully.
+Naturally, there can be no binary compatibility between program
+fragments which conform to different members of the APCS family. Those
+concerned with long-term binary compatibility must choose their
+options carefully.
 
 *function* is used to mean function, procedure or subroutine.
+
 
 ## Design criteria
 
