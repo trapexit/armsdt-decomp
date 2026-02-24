@@ -94,7 +94,8 @@ defines five chunks:
 - the symbol table
 - the string table
 
-These are described in detail after the description of chunk file format.
+These are described in detail after the description of chunk file
+format.
 
 
 ## Chunk file format
@@ -140,8 +141,8 @@ word value must be byte- reversed before use).
 
 Each entry in the chunk file header consists of four words in order:
 
-| Field      | Description                                                                                                                                                                                                    |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Field      | Description |
+| ---------- | ----------- |
 | chunkId    | 8-byte field identifying what data the chunk contains; (note that this is an 8-byte field, not a 2-word field, so it has the same byte order independent of endian-ness)                                       |
 | fileOffset | is a one word field defining the byte offset within the file of the start of the chunk. All chunks are word-aligned, so it must be divisible by four. A value of zero indicates that the chunk entry is unused |
 | size       | is a one word field defining the exact byte size of the chunk's contents (which need not be a multiple of four)                                                                                                |
