@@ -385,16 +385,26 @@ table entry is four words long:
 
 ## 15.7 The String Table Chunk (OBJ_STRT)
 
-The string table chunk contains all the print names referred to from the header and symbol table chunks. A print name is stored as a sequence of non-control characters (codes 32–126 and 160–255) terminated by a NULL (0) byte, and is identified by an offset from the start of the table.
+The string table chunk contains all the print names referred to from
+the header and symbol table chunks. A print name is stored as a
+sequence of non-control characters (codes 32–126 and 160–255)
+terminated by a NULL (0) byte, and is identified by an offset from the
+start of the table.
 
-The first four bytes of the string table contain its length (including the length word itself), so no valid offset is less than four, and no table has length less than four.
+The first four bytes of the string table contain its length (including
+the length word itself), so no valid offset is less than four, and no
+table has length less than four.
 
-The endianness of the length word must be identical to the endianness of the AOF and chunk files containing it.
+The endianness of the length word must be identical to the endianness
+of the AOF and chunk files containing it.
 
----
 
 ## 15.8 The Identification Chunk (OBJ_IDFN)
 
-This chunk should contain a string of printable characters (codes 10–13 and 32–126) terminated by a NULL (0) byte, which gives information about the name and version of the tool which generated the object file.
+This chunk should contain a string of printable characters (codes
+10–13 and 32–126) terminated by a NULL (0) byte, which gives
+information about the name and version of the tool which generated the
+object file.
 
-Use of codes in the range 128–255 is discouraged, as the interpretation of these values is host-dependent.
+Use of codes in the range 128–255 is discouraged, as the
+interpretation of these values is host-dependent.
