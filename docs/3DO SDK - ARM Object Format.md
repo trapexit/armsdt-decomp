@@ -49,7 +49,6 @@ There are two sorts of AOF: *little-endian* and *big-endian*.
 - In little-endian AOF, the least significant byte of a word or
   half-word has the lowest address of any byte in the
   (half-)word. Used by DEC, Intel and Acorn, amongst others.
-
 - In big-endian AOF, the most significant byte of a (half-)word has
   the lowest address. Used by IBM, Motorola and Apple, amongst others.
 
