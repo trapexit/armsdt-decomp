@@ -45,36 +45,37 @@ The terms *byte, half word, word*, and *string* are used to mean:
 
 There are two sorts of AOF: *little-endian* and *big-endian*.
 
-- In little-endian AOF, the least significant byte of a word or 
-  half-word has the lowest address of any byte in the (half-)word. Used by
-   DEC, Intel and Acorn, amongst others.
+- In little-endian AOF, the least significant byte of a word or
+  half-word has the lowest address of any byte in the
+  (half-)word. Used by DEC, Intel and Acorn, amongst others.
 
-- In big-endian AOF, the most significant byte of a 
-  (half-)word has the lowest address. Used by IBM, Motorola and Apple, 
-  amongst others.
+- In big-endian AOF, the most significant byte of a (half-)word has
+  the lowest address. Used by IBM, Motorola and Apple, amongst others.
 
 For data in a file, *address* means offset from the start of the file.
 
-There is no guarantee that the endian-ness of an AOF file will be the 
-same as the endian-ness of the system used to process it (the 
-endian-ness of the file is always the same as the endian-ness of the 
+There is no guarantee that the endian-ness of an AOF file will be the
+same as the endian-ness of the system used to process it (the
+endian-ness of the file is always the same as the endian-ness of the
 target ARM system).
 
-The two sorts of AOF cannot, be mixed (the target system cannot have 
-mixed endian-ness: it must have one or the other). Thus the ARM linker 
-will accept inputs of either sex and produce an output of the same sex, 
-but will reject inputs of mixed endian-ness.
+The two sorts of AOF cannot, be mixed (the target system cannot have
+mixed endian-ness: it must have one or the other). Thus the ARM linker
+will accept inputs of either sex and produce an output of the same
+sex, but will reject inputs of mixed endian-ness.
+
 
 ## Alignment
 
 Strings and bytes may be aligned on any byte boundary.
 
-AOF fields defined in this document make no use of half-words and align words on 4-byte boundaries.
+AOF fields defined in this document make no use of half-words and
+align words on 4-byte boundaries.
 
-Within the contents of an AOF file the alignment of words and half-words
- is defined by the use to which AOF is being put. For all current 
-ARM-based systems, words are aligned on 4-byte boundaries and half-words
- on 2-byte boundaries.
+Within the contents of an AOF file the alignment of words and
+half-words is defined by the use to which AOF is being put. For all
+current ARM-based systems, words are aligned on 4-byte boundaries and
+half-words on 2-byte boundaries.
 
 
 
