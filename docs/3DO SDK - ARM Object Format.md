@@ -645,72 +645,70 @@ Specifically:
 | 10   | (bit 1 set, bit 0 unset) denotes that the symbol is a reference to a symbol defined in another object file. If no defining instance of the symbol is found, the linker attempts to match the name of the symbol to the names of common blocks. If a match is found, it is as if there were defined an identically-named symbol of global scope, having as its value the base address of the common area. |
 | 11   | Denotes that the symbol is defined in this object file with global scope. When attempting to resolve unresolved references, the linker will match this definition to a reference from another object file. |
 
-Bit 2 encodes the absolute attribute which is meaningful only if Bit 3 encodes the case insensitive reference attribute which is 
-meaningful only if bit 0 is unset (that is, if the symbol is an external
- reference). If set, the linker will ignore the case of the symbol names
- it tries to match when attempting to resolve this reference.
-
-Bit 4 encodes the weak attribute which is meaningful only if the symbol 
-is an external reference, (bits 1,0 = 10). It denotes that it is 
-acceptable for the reference to remain unsatisfied and for any fields 
-relocated via it to remain unrelocated. The linker ignores weak 
-references when deciding which members to load from an object library.
-
-Bit 5 encodes the strong attribute which is meaningful only if the 
-symbol is an external defining occurrence (if bits 1,0 = 11). In turn, 
-this attribute only has meaning if there is a non-strong, external 
-definition of the same symbol in another object file. In this case, 
-references to the symbol from outside of the file containing the strong 
-definition, resolve to the strong definition, while those within the 
-file containing the strong definition resolve to the non-strong 
-definition.
-
-This attribute allows a kind of link-time indirection to be enforced. 
-Usually, a strong definition will be absolute, and will be used to 
-implement an operating system's entry vector having the forever binary 
-property.
-
-Bit 6 encodes the common attribute, which is meaningful only if the 
-symbol is an external reference (bits 1,0 = 10). If set, the symbol is a
- reference to a common area with the symbol's name. The length of the 
-common area is given by the symbol's *Value* field (see above). The
- linker treats common symbols much as it treats areas having the Common 
-Reference attribute - all symbols with the same name are assigned the 
-same base address, and the length allocated is the maximum of all 
-specified lengths.
-
-If the name of a common symbol matches the name of a common area, then 
-these are merged and the symbol identifies the base of the area.
-
-All common symbols for which there is no matching common area (reference
- or definition) are collected into an anonymous, linker-created, 
-pseudo-area.
-
-Bit 7 is reserved and shall be set to 0.
-
-Bits 8-11 encode additional attributes of symbols defined in code areas.
-
-Bit 8 encodes the code datum attribute which is meaningful only 
-if this symbol defines a location within an area having the Code 
-attribute. It denotes that the symbol identifies a (usually read-only) 
-datum, rather than an executable instruction.
-
-Bit 9 encodes the floating-point arguments in floating-point registers 
-attribute. This is meaningful only if the symbol identifies a function 
-entry point. A symbolic reference with this attribute cannot be matched 
-by the linker to a symbol definition which lacks the attribute.
-
-Bit 10 is reserved and shall be set to 0.
-
-Bit 11 is the simple leaf function attribute which is meaningful 
-only if this symbol defines the entry point of a sufficiently simple 
-leaf function (a leaf function is one which calls no other function). 
-For a reentrant leaf function it denotes that the function's 
-inter-link-unit entry point is the same as its intra-link-unit entry 
-point. For details of the significance of this attribute to the linker 
-refer to [Forcing use of an inter-link-unit entry point](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF41042).
-
-Bits 12-31 are reserved and shall be set to 0.
+- Bit 2 encodes the absolute attribute which is meaningful only if Bit
+  3 encodes the case insensitive reference attribute which is
+  meaningful only if bit 0 is unset (that is, if the symbol is an
+  external reference). If set, the linker will ignore the case of the
+  symbol names it tries to match when attempting to resolve this
+  reference.
+- Bit 4 encodes the weak attribute which is meaningful only if the
+  symbol is an external reference, (bits 1,0 = 10). It denotes that it
+  is acceptable for the reference to remain unsatisfied and for any
+  fields relocated via it to remain unrelocated. The linker ignores
+  weak references when deciding which members to load from an object
+  library.
+- Bit 5 encodes the strong attribute which is meaningful only if the
+  symbol is an external defining occurrence (if bits 1,0 = 11). In
+  turn, this attribute only has meaning if there is a non-strong,
+  external definition of the same symbol in another object file. In
+  this case, references to the symbol from outside of the file
+  containing the strong definition, resolve to the strong definition,
+  while those within the file containing the strong definition resolve
+  to the non-strong definition.
+    
+  This attribute allows a kind of link-time indirection to be
+  enforced.  Usually, a strong definition will be absolute, and will
+  be used to implement an operating system's entry vector having the
+  forever binary property.
+- Bit 6 encodes the common attribute, which is meaningful only if the
+  symbol is an external reference (bits 1,0 = 10). If set, the symbol
+  is a reference to a common area with the symbol's name. The length
+  of the common area is given by the symbol's *Value* field (see
+  above). The linker treats common symbols much as it treats areas
+  having the Common Reference attribute - all symbols with the same
+  name are assigned the same base address, and the length allocated is
+  the maximum of all specified lengths.
+  
+  If the name of a common symbol matches the name of a common area,
+  then these are merged and the symbol identifies the base of the
+  area.
+  
+  All common symbols for which there is no matching common area
+   (reference or definition) are collected into an anonymous,
+   linker-created, pseudo-area.
+- Bit 7 is reserved and shall be set to 0.
+- Bits 8-11 encode additional attributes of symbols defined in code
+  areas.
+- Bit 8 encodes the code datum attribute which is meaningful only if
+  this symbol defines a location within an area having the Code
+  attribute. It denotes that the symbol identifies a (usually read-only)
+  datum, rather than an executable instruction.
+- Bit 9 encodes the floating-point arguments in floating-point
+  registers attribute. This is meaningful only if the symbol
+  identifies a function entry point. A symbolic reference with this
+  attribute cannot be matched by the linker to a symbol definition
+  which lacks the attribute.
+- Bit 10 is reserved and shall be set to 0.
+- Bit 11 is the simple leaf function attribute which is meaningful
+  only if this symbol defines the entry point of a sufficiently simple
+  leaf function (a leaf function is one which calls no other
+  function).  For a reentrant leaf function it denotes that the
+  function's inter-link-unit entry point is the same as its
+  intra-link-unit entry point. For details of the significance of this
+  attribute to the linker refer to [Forcing use of an inter-link-unit
+  entry
+  point](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arre.html#XREF41042).
+- Bits 12-31 are reserved and shall be set to 0.
 
 ## Symbol attribute summary
 
