@@ -81,11 +81,11 @@ load region descriptors within the file. The image loader should place
 each region at the location in memory specified by the load region
 descriptor.
 
----
 
 ## 13.3 The Layout of AIF
 
 This section describes the layout of AIF images.
+
 
 ### 13.3.1 AIF Image Layout
 
@@ -96,26 +96,44 @@ An AIF image has the following layout:
 - Read-write area
 - Debugging data (optional)
 - Self-relocation code (position-independent)
-- Relocation list — a list of byte offsets from the beginning of the AIF header, of words to be relocated, followed by a word containing `-1`. The relocation of non-word values is not supported.
+- Relocation list — a list of byte offsets from the beginning of the
+  AIF header, of words to be relocated, followed by a word containing
+  `-1`. The relocation of non-word values is not supported.
 
-> **Note:** An AIF image is restartable if, and only if, the program it contains is restartable (an AIF image is not reentrant). Following self-relocation, the second word of the header must be reset to NOP. This causes no additional problems with the read-only nature of the code section.
+> **Note:** An AIF image is restartable if, and only if, the program
+> it contains is restartable (an AIF image is not
+> reentrant). Following self-relocation, the second word of the header
+> must be reset to NOP. This causes no additional problems with the
+> read-only nature of the code section.
 
-On systems with memory protection, the self-relocation code must be bracketed by system calls to change the access status of the read-only section (first to writable, then back to read-only).
+On systems with memory protection, the self-relocation code must be
+bracketed by system calls to change the access status of the read-only
+section (first to writable, then back to read-only).
+
 
 ### 13.3.2 Debugging Data
 
-After the execution of the self-relocation code, or if the image is not self-relocating, the image has the following layout:
+After the execution of the self-relocation code, or if the image is
+not self-relocating, the image has the following layout:
 
 - Header
 - Read-only area
 - Read-write area
 - Debugging data (optional)
 
-AIF images support being debugged by an ARM debugger. Low-level and source-level support are orthogonal. An AIF image can have both, either, or neither kind of debugging support.
+AIF images support being debugged by an ARM debugger. Low-level and
+source-level support are orthogonal. An AIF image can have both,
+either, or neither kind of debugging support.
 
-References from debugging tables to code and data are in the form of relocatable addresses. After loading an image at its load address these values are effectively absolute.
+References from debugging tables to code and data are in the form of
+relocatable addresses. After loading an image at its load address
+these values are effectively absolute.
 
-References between debugger table entries are in the form of offsets from the beginning of the debugging data area. Following relocation of a whole image, the debugging data area itself is position-independent and may be copied or moved by the debugger.
+References between debugger table entries are in the form of offsets
+from the beginning of the debugging data area. Following relocation of
+a whole image, the debugging data area itself is position-independent
+and may be copied or moved by the debugger.
+
 
 ### 13.3.3 AIF Header
 
