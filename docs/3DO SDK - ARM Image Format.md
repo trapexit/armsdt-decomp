@@ -246,7 +246,37 @@ The Zero-initialisation code is as follows:
 
 ```
 ZeroInit
-    NOP                            ; or 
+        NOP                             
+```
+
+or
+
+```
+        SUB     ip, lr, pc              ; base+12+[PSR] - (ZeroInit+12+[PSR])
+                                        ; = base - ZeroInit
+
+        ADD     ip, pc, ip              ; (base - ZeroInit) + (ZeroInit + 16)
+                                        ; = base + 16
+
+        LDMIB   ip, {r0, r1, r2, r4}    ; load various section sizes
+
+        SUB     ip, ip, #16             ; ip = image base
+        ADD     ip, ip, r0              ; + RO size
+        ADD     ip, ip, r1              ; + RW size
+                                        ; = base of zero-init area
+
+        MOV     r0, #0
+        MOV     r1, #0
+        MOV     r2, #0
+        MOV     r3, #0
+
+        CMPS    r4, #0
+
+00:     MOVLE   pc, lr                  ; nothing left to zero
+
+        STMIA   ip!, {r0, r1, r2, r3}    ; zero 16 bytes per iteration
+        SUBS    r4, r4, #16
+        B       %B00
 ```
 
 ```
