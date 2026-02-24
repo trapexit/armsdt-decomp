@@ -1,6 +1,6 @@
 # ARM Image Format
 
-From **ARM DUI 0041C**
+From **ARM DUI0041C**
 
 ---
 
