@@ -104,7 +104,8 @@ contents of its chunks.
 
 #### Chunk File Header
 
-The chunk file header consists of two parts: a fixed length part of three words, and a four word entry for each chunk in the file.
+The chunk file header consists of two parts: a fixed length part of
+three words, and a four word entry for each chunk in the file.
 
 **First part (3 words):**
 
@@ -122,17 +123,24 @@ The chunk file header consists of two parts: a fixed length part of three words,
 | file_offset | A one-word field defining the byte offset within the file of the start of the chunk. Must be divisible by four. A value of zero indicates the chunk entry is unused. |
 | size | A one-word field defining the exact byte size of the chunk's contents (which need not be a multiple of four). |
 
+
 #### Identifying Data Types
 
-The chunkId field provides a conventional way of identifying what type of data a chunk contains. It has eight characters, split into two parts: the first four characters contain a unique name allocated by a central authority; the remaining four characters identify component chunks within this domain.
+The chunkId field provides a conventional way of identifying what type
+of data a chunk contains. It has eight characters, split into two
+parts: the first four characters contain a unique name allocated by a
+central authority; the remaining four characters identify component
+chunks within this domain.
 
-The eight characters are stored in ascending address order, as if they formed part of a NULL-terminated string, independent of endianness.
+The eight characters are stored in ascending address order, as if they
+formed part of a NULL-terminated string, independent of endianness.
 
 For AOF files, the first part of each chunk name is `OBJ_`.
 
 ### 15.2.2 ARM Object Format
 
-Each piece of an object file is stored in a separate, identifiable chunk. AOF defines five chunks:
+Each piece of an object file is stored in a separate, identifiable
+chunk. AOF defines five chunks:
 
 | Chunk | Chunk Name |
 |-------|-----------|
@@ -142,19 +150,29 @@ Each piece of an object file is stored in a separate, identifiable chunk. AOF de
 | Symbol Table | `OBJ_SYMT` |
 | String Table | `OBJ_STRT` |
 
-Only the AOF Header and AREAS chunks must be present, but a typical object file contains all five.
+Only the AOF Header and AREAS chunks must be present, but a typical
+object file contains all five.
 
-Each name in an object file is encoded as an offset into the string table, stored in the `OBJ_STRT` chunk. This allows the variable-length nature of names to be factored out from primary data formats.
+Each name in an object file is encoded as an offset into the string
+table, stored in the `OBJ_STRT` chunk. This allows the variable-length
+nature of names to be factored out from primary data formats.
 
-A feature of ARM Object Format is that chunks may appear in any order in the file. A language translator or other utility may add additional chunks to an object file. Space for eight chunks is conventional when the AOF file is produced by a language processor which generates all five chunks.
+A feature of ARM Object Format is that chunks may appear in any order
+in the file. A language translator or other utility may add additional
+chunks to an object file. Space for eight chunks is conventional when
+the AOF file is produced by a language processor which generates all
+five chunks.
 
-> **Note:** The AOF header chunk should not be confused with the chunk file header.
+> **Note:** The AOF header chunk should not be confused with the chunk
+> file header.
 
----
 
 ## 15.3 The AOF Header Chunk (OBJ_HEAD)
 
-The AOF header consists of two contiguous parts: a fixed size part of six words, and a variable length part consisting of a sequence of area headers.
+The AOF header consists of two contiguous parts: a fixed size part of
+six words, and a variable length part consisting of a sequence of area
+headers.
+
 
 ### Part One — Fixed Header (6 words)
 
@@ -167,6 +185,7 @@ The AOF header consists of two contiguous parts: a fixed size part of six words,
 | Entry Area Index | 1-origin index in the array of area headers of the area containing the entry point. A value of 0 signifies that no program entry address is defined by this AOF file. |
 | Entry Offset | The entry address is defined to be the base address of the entry area plus Entry Offset. |
 
+
 ### Part Two — Area Headers (5 words each)
 
 | Field | Description |
@@ -177,9 +196,13 @@ The AOF header consists of two contiguous parts: a fixed size part of six words,
 | Number of Relocations | Number of relocation directives that apply to this area. |
 | Base Address | Unused unless the area has the absolute attribute; records the base address. An unused Base Address is denoted by the value 0. |
 
+
 ### 15.3.1 Attributes and Alignment
 
-Each area has a set of attributes encoded in the most significant 24 bits of the Attributes + Alignment word. The least significant eight bits encode the alignment of the start of the area as a power of 2 (value between 2 and 32).
+Each area has a set of attributes encoded in the most significant 24
+bits of the Attributes + Alignment word. The least significant eight
+bits encode the alignment of the start of the area as a power of 2
+(value between 2 and 32).
 
 | Bit | Mask | Attribute |
 |-----|------|-----------|
@@ -199,9 +222,12 @@ Each area has a set of attributes encoded in the most significant 24 bits of the
 | 21 | `0x00200000` | Area may contain ARM halfword instructions |
 | 22 | `0x00400000` | Area suitable for ARM/Thumb interworking |
 
-Some combinations of attributes are meaningless (e.g., read-only and zero-initialized).
+Some combinations of attributes are meaningless (e.g., read-only and
+zero-initialized).
 
-The linker orders areas in a generated image by: attributes, then lexicographic order of area names (case-significant), then position of the containing object module in the link list.
+The linker orders areas in a generated image by: attributes, then
+lexicographic order of area names (case-significant), then position of
+the containing object module in the link list.
 
 **Bit descriptions:**
 
@@ -223,11 +249,13 @@ The linker orders areas in a generated image by: attributes, then lexicographic 
   - **Bit 22** — Suitable for ARM/Thumb interworking.
 - **Bits 23–31** — Reserved, set to 0.
 
----
 
 ## 15.4 The AREAS Chunk (OBJ_AREA)
 
-The AREAS chunk contains the actual area contents (code, data, debugging data) together with their associated relocation data. An area is simply a sequence of bytes. The endianness of the words and halfwords within it must agree with that of the containing AOF file.
+The AREAS chunk contains the actual area contents (code, data,
+debugging data) together with their associated relocation data. An
+area is simply a sequence of bytes. The endianness of the words and
+halfwords within it must agree with that of the containing AOF file.
 
 Layout:
 
@@ -239,15 +267,23 @@ Area n
 Area n Relocation
 ```
 
-An area is followed by its associated table of relocation directives (if any). An area is either completely initialized by the values from the file or is initialized to zero (as specified by bit 12 of its area attributes). Both area contents and table of relocation directives are aligned to 4-byte boundaries.
+An area is followed by its associated table of relocation directives
+(if any). An area is either completely initialized by the values from
+the file or is initialized to zero (as specified by bit 12 of its area
+attributes). Both area contents and table of relocation directives are
+aligned to 4-byte boundaries.
 
----
 
 ## 15.5 Relocation Directives
 
-A relocation directive describes a value which is computed at link time or load time, but which cannot be fixed when the object module is created. In the absence of applicable relocation directives, the value of a byte, halfword, word or instruction from the preceding area is exactly the value that will appear in the final image.
+A relocation directive describes a value which is computed at link
+time or load time, but which cannot be fixed when the object module is
+created. In the absence of applicable relocation directives, the value
+of a byte, halfword, word or instruction from the preceding area is
+exactly the value that will appear in the final image.
 
 A field may be subject to more than one relocation.
+
 
 ### Relocation Directive Format
 
@@ -255,9 +291,9 @@ A field may be subject to more than one relocation.
 ┌────────────────────────────────────────────────┐
 │  Offset (word)                                 │
 ├──┬──┬──┬──┬──┬──┬──────────────────────────────┤
-│31│30│29│28│27│26│25│24│23        ...          0 │
+│31│30│29│28│27│26│25│24│23        ...         0 │
 │ II  │ B│ A│ R│  FT │       SID (24 bits)       │
-└──┴──┴──┴──┴──┴──┴──┴──────────────────────────-┘
+└──┴──┴──┴──┴──┴──┴──┴───────────────────────────┘
 ```
 
 **Offset** — byte offset in the preceding area of the subject field to be relocated.
