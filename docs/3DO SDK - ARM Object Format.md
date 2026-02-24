@@ -642,8 +642,8 @@ Specifically:
 | ---- | ----------- |
 | 01   | (bit 1 unset, bit 0 set) denotes that the symbol is defined in this object file and has scope limited to this object file. When resolving symbol references, the linker will only match this symbol to references from within the same object file. |
 | 10   | (bit 1 set, bit 0 unset) denotes that the symbol is a reference to a symbol defined in another object file. If no defining instance of the symbol is found, the linker attempts to match the name of the symbol to the names of common blocks. If a match is found, it is as if there were defined an identically-named symbol of global scope, having as its value the base address of the common area. |
-| 11   | Denotes that the symbol is defined in this object file with global scope. When attempting to resolve unresolved references, the linker will match this definition to a reference from another object file.                                                                                                                                                                                               |
-| 00   | Reserved.                                                                                                                                                                                                                                                                                                                                                                                                |
+| 11   | Denotes that the symbol is defined in this object file with global scope. When attempting to resolve unresolved references, the linker will match this definition to a reference from another object file. |
+| 00   | Reserved. |
 
 Bit 2 encodes the absolute attribute which is meaningful only if Bit 3 encodes the case insensitive reference attribute which is 
 meaningful only if bit 0 is unset (that is, if the symbol is an external
