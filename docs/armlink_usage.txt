@@ -1,0 +1,68 @@
+ARM Linker vsn 5.20 (ARM Ltd SDT2.51) [Build number 130]
+
+Usage: armlink option-list input-file-list
+
+where
+
+    option-list      is a list of case-insensitive options.
+    input-file-list  is a list of input object and library files.
+
+List of options (abbreviations shown capitalised):
+
+General options:
+
+    -Help              Print this summary.
+    -Output file       Specify the name of the output file.
+    -vsn               Print version information.
+
+Options for selecting output file format:
+
+    -elf       Generate the image in ELF format.(Default).
+    -aof       Generate the consolidated object in AOF.
+    -aif       Generate the image in Executable AIF Format.
+    -aif -bin  Generate the image in Non-executable AIF Format.
+    -bin       Generate the image in plain binary format.
+
+Options for specifying memory map information:
+
+    -scatter file  Create the memory map as described in file.
+    -ro-base n     Set execution address of the region containing the RO section to n.
+    -rw-base n     Set execution address of the second execution region to n.
+
+Options for controlling image construction:
+
+    -debug         Include debug information in the output.(Default).
+    -nodebug       Do not include debug information in the output.
+    -nozeropad     Do not expand zero-init areas in a binary image.
+    -noremove      Do not remove unused areas from the image.
+    -remove        Remove unused areas from the image.
+    -dupok         Allow duplicate symbols.
+    -entry         See product documentation for details.
+    -first         See product documentation for details.
+    -last          See product documentation for details.
+
+Options for generating image-related information:
+
+    -info topic-list  Print information about each comma separated topic keyword.
+
+          Totals      Report the total code and data sizes in the image.
+          Sizes       Give a detailed breakdown of the code and data sizes per input object.
+          Interwork   List all calls requiring ARM/Thumb interworking veneers.
+          Unused      List all unused AREAs, when used with the -remove option.
+
+    -map              Create an image map listing the base and size of each constituent area.
+    -symbols file     Lists each symbol and its value to file.
+    -xref             Lists cross references between input areas.
+
+Options for controlling the linker:
+
+    -errors file        Redirect stderr to file.
+    -list file          Redirect stdout to file.Useful in conjunction with -map, -xrefs and -symbols
+    -verbose            Print messages indicating progress of the link operation.
+    -via file           Read a further list of input filenames from file.
+    -case               Use case-sensitive symbol name matching.(Default).
+    -nocase             Use case-insensitive symbol name matching.
+    -match flags        Sets the symbol-matching options. See product documentation for details.
+    -unresolved symbol  Match references to undefined symbols to the global definition of symbol.
+    -u symbol           As for -unresolved, but displays warnings for each unused symbol encountered.
+
