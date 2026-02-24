@@ -488,7 +488,9 @@ the value that will appear in the final image.
 
 A field may be subject to more than one relocation.
 
-Pictorially, a relocation directive looks like:
+A relocation directive looks like:
+
+A word for offset then another word as defined below.
 
 | Bit       | 31  | 30,29 | 28  | 27  | 26  | 25,24 | 24-0      |
 | --------- | --- | ----- | --- | --- | --- | ----- | --------- |
