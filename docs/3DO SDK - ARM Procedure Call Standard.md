@@ -512,59 +512,72 @@ a caller's PSR flags may be corrupted by a function call.
 
 ## Implicit vs explicit stack-limit checking
 
-ARM-based systems vary widely in the sophistication of their memory 
-management hardware. Some can easily support multiple, auto-extending 
+ARM-based systems vary widely in the sophistication of their memory
+management hardware. Some can easily support multiple, auto-extending
 stacks, while others have no memory management hardware at all.
 
 Safe programming practices demand that stack overflow be detected.
 
-The APCS defines conventions for software stack-limit checking 
-sufficient to support efficiently most requirements (including those of 
-multiple threads and chunked stacks).
+The APCS defines conventions for software stack-limit checking
+sufficient to support efficiently most requirements (including those
+of multiple threads and chunked stacks).
 
-The majority of ARM-based systems are expected to require software stack-limit checking.
+The majority of ARM-based systems are expected to require software
+stack-limit checking.
+
 
 ## Floating-point arguments in floating-point registers
 
-Historically, many ARM-based systems have made no use of the floating 
+Historically, many ARM-based systems have made no use of the floating
 point instruction set, or they used a software emulation of it.
 
-On systems using a slow software emulation and making little use of 
-floating-point, there is a small disadvantage to passing floating-point 
-arguments in floating-point registers: all variadic functions (such as 
-printf) become slower, while only function calls which actually take 
-floating-point arguments become faster.
+On systems using a slow software emulation and making little use of
+floating-point, there is a small disadvantage to passing
+floating-point arguments in floating-point registers: all variadic
+functions (such as printf) become slower, while only function calls
+which actually take floating-point arguments become faster.
 
-If your system has no floating-point hardware and is expected to make 
-little use of floating point, then it is better not to pass 
-floating-point arguments in floating-point registers. Otherwise, the 
+If your system has no floating-point hardware and is expected to make
+little use of floating point, then it is better not to pass
+floating-point arguments in floating-point registers. Otherwise, the
 opposite choice is best.
+
 
 ## Reentrant vs non-reentrant code
 
-The reentrant variant of the APCS supports the generation of code free 
-of relocation directives (position independent and addressing all data 
-(indirectly) via a static base register). Such code is ideal for 
-placement in ROM and can be multiply threaded (shared between several 
-client processes). See [ARM shared library format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382) for further details.
+The reentrant variant of the APCS supports the generation of code free
+of relocation directives (position independent and addressing all data
+(indirectly) via a static base register). Such code is ideal for
+placement in ROM and can be multiply threaded (shared between several
+client processes). See [ARM shared library
+format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382)
+for further details.
 
-In general, code to be placed in ROM or loaded into a shared library is 
-expected to be reentrant, while applications are expected not to be.
+In general, code to be placed in ROM or loaded into a shared library
+is expected to be reentrant, while applications are expected not to
+be.
 
-See also [C language calling conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070).
+See also [C language calling
+conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070).
+
 
 ## APCS-2 compatibility
 
-(APCS-2 - the second definition of The ARM Procedure Call Standard - is recorded in Technical Memorandum *PLG-APCS, issue 4.00, 18-Apr-89*, reproduced in the following Acorn publications: *RISC OS Programmer's Reference Manual, vol IV, 1989*, (Acorn part number 0483,023); *ANSI C Release 3, September 1989*, (Acorn part number 0470,101)).
+(APCS-2 - the second definition of The ARM Procedure Call Standard -
+is recorded in Technical Memorandum *PLG-APCS, issue 4.00, 18-Apr-89*,
+reproduced in the following Acorn publications: *RISC OS Programmer's
+Reference Manual, vol IV, 1989*, (Acorn part number 0483,023); *ANSI C
+Release 3, September 1989*, (Acorn part number 0470,101)).
 
-APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of APCS-3:
+APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of
+APCS-3:
 
 - 26-bit PC;
 - explicit stack-limit checking;
 - no passing of floating-point arguments in floating-point registers;
 - non-reentrant code;
 
-with the Acorn-specific constraints on the use of sl noted in APCS-2.
+With the Acorn-specific constraints on the use of sl noted in APCS-2.
 
 APCS-U (APCS-2 for Acorn's RISCiX) is the following variant of APCS-3:
 
@@ -576,67 +589,72 @@ APCS-U (APCS-2 for Acorn's RISCiX) is the following variant of APCS-3:
 The (in APCS-2) obsolescent APCS-A has no equivalent in APCS-3.
 
 
-
 # C language calling conventions
 
 ## Argument representation
 
-A floating point value occupies 1, 2, or 3 words, as appropriate to its 
-type. Floating point values are encoded in IEEE 754 format, with the 
-most significant word of a double having the lowest address.
+A floating point value occupies 1, 2, or 3 words, as appropriate to
+its type. Floating point values are encoded in IEEE 754 format, with
+the most significant word of a double having the lowest address.
 
-The C compiler widens arguments of type float to type double to support inter-working between ANSI C and classic C.
+The C compiler widens arguments of type float to type double to
+support inter-working between ANSI C and classic C.
 
-Char, short, pointer and other integral values occupy 1 word in an 
-argument list. Char and short values are widened by the C compiler 
+Char, short, pointer and other integral values occupy 1 word in an
+argument list. Char and short values are widened by the C compiler
 during argument marshalling.
 
-On the ARM, characters are naturally unsigned. In -pcc mode, the C 
-compiler treats a plain char as signed, widening its value appropriately
- when used as an argument, (classic C lacks the signed char type, so 
-plain chars are considered signed; ANSI C has signed, unsigned and plain
- chars, the third, conventionally reflecting the natural signedness of 
-characters).
+On the ARM, characters are naturally unsigned. In -pcc mode, the C
+compiler treats a plain char as signed, widening its value
+appropriately when used as an argument, (classic C lacks the signed
+char type, so plain chars are considered signed; ANSI C has signed,
+unsigned and plain chars, the third, conventionally reflecting the
+natural signedness of characters).
 
-A structured value occupies an integral number of integer words (even if it contains only floating point values).
+A structured value occupies an integral number of integer words (even
+if it contains only floating point values).
+
 
 ## Argument list marshalling
 
-Argument values are marshalled in the order written in the source program.
+Argument values are marshalled in the order written in the source
+program.
 
-If passing floating-point (FP) arguments in FP registers, the first 4 FP arguments are loaded into FP registers.
+If passing floating-point (FP) arguments in FP registers, the first 4
+FP arguments are loaded into FP registers.
 
-The first 4 of the remaining argument words are loaded into a1-a4, and 
-the remainder are pushed on to the stack in reverse order (so that 
-arguments later in the argument list have higher addresses than those 
-earlier in the argument list). As a consequence, a FP value can be 
-passed in integer registers, or even split between an integer register 
+The first 4 of the remaining argument words are loaded into a1-a4, and
+the remainder are pushed on to the stack in reverse order (so that
+arguments later in the argument list have higher addresses than those
+earlier in the argument list). As a consequence, a FP value can be
+passed in integer registers, or even split between an integer register
 and the stack.
 
-This follows from the need to support variadic functions, (functions 
-having a variable number of arguments, such as printf, scanf, etc.). 
-Alternatives which avoid the passing of FP values in integer registers 
-require that a caller know that a variadic function is being called, and
- use different argument marshalling conventions for variadic and 
+This follows from the need to support variadic functions, (functions
+having a variable number of arguments, such as printf, scanf, etc.).
+Alternatives which avoid the passing of FP values in integer registers
+require that a caller know that a variadic function is being called,
+and use different argument marshalling conventions for variadic and
 non-variadic functions.
+
 
 ## Non-simple value return
 
-A non-simple type is any non-floating-point type of size greater than 1 
-word (including structures containing only floating-point fields), and 
-certain 1 word structured types.
+A non-simple type is any non-floating-point type of size greater than
+1 word (including structures containing only floating-point fields),
+and certain 1 word structured types.
 
-A structure is called integer-like if its size is less than or equal to 
-one word, and the offset of each of its addressable sub-fields is zero. 
-An integer-like structured result is considered simple and is returned 
-in a1.
+A structure is called integer-like if its size is less than or equal
+to one word, and the offset of each of its addressable sub-fields is
+zero.  An integer-like structured result is considered simple and is
+returned in a1.
 
-struct {int a:8, b:8, c:8, d:8;} and union {int i; char *p;} are both 
+struct {int a:8, b:8, c:8, d:8;} and union {int i; char *p;} are both
 integer-like; struct {char a; char b; char c; char d;} is not.
 
-A multi-word or non-integer-like result is returned to an address passed
- as an additional first argument to the function call. At the machine 
-level:
+A multi-word or non-integer-like result is returned to an address
+passed as an additional first argument to the function call. At the
+machine level:
 
 ```
 TT tt = f(x, ...);
@@ -648,9 +666,11 @@ is implemented as:
 TT tt; f(&tt, x, ...);
 ```
 
+
 ## Function entry
 
-A complete discussion of function entry is complex; here we discuss a few of the most important issues and special cases.
+A complete discussion of function entry is complex; here we discuss a
+few of the most important issues and special cases.
 
 The important issues for function entry are:
 
@@ -661,39 +681,48 @@ The important issues for function entry are:
 
 A function is called *leaf* if its body contains no function calls.
 
-If function F calls function G immediately before an exit from F, the call- exit sequence can often be replaced instead by a *return to G*. After this transformation, the return to G is called a *tail call* or *tail continuation*.
+If function F calls function G immediately before an exit from F, the
+call- exit sequence can often be replaced instead by a *return to
+G*. After this transformation, the return to G is called a *tail call*
+or *tail continuation*.
 
-There are many subtle difficulties with tail continuations. Suppose 
-stacked arguments are unstacked by callers (almost mandatory for 
-variadic callees), then G cannot be directly tail-called if G itself 
-takes stacked arguments. This is because there is no return to F to 
-unstack them. Of course, if this call to G takes fewer arguments than 
-the current call to F, then some of F's stacked arguments can be 
-replaced by G's stacked arguments. However, this can be hard to assert 
-if F is variadic. More straightforwardly, there may be no tail-call of G
- if the address of any of F's arguments or local variables has "leaked 
-out" of F. This is because on return to G, the address may be 
-invalidated by adjustment of the stack pointer. In general, this 
-precludes tail calls if any local variable or argument has its address 
+There are many subtle difficulties with tail continuations. Suppose
+stacked arguments are unstacked by callers (almost mandatory for
+variadic callees), then G cannot be directly tail-called if G itself
+takes stacked arguments. This is because there is no return to F to
+unstack them. Of course, if this call to G takes fewer arguments than
+the current call to F, then some of F's stacked arguments can be
+replaced by G's stacked arguments. However, this can be hard to assert
+if F is variadic. More straightforwardly, there may be no tail-call of
+G if the address of any of F's arguments or local variables has
+"leaked out" of F. This is because on return to G, the address may be
+invalidated by adjustment of the stack pointer. In general, this
+precludes tail calls if any local variable or argument has its address
 taken.
 
-If a function is a leaf function, or all function calls from its body 
-are tail calls and, in both cases, the function uses no v-registers 
-(v1-v7) then the function need create no stack backtrace structure (such
- functions will also be termed *frameless*).
+If a function is a leaf function, or all function calls from its body
+are tail calls and, in both cases, the function uses no v-registers
+(v1-v7) then the function need create no stack backtrace structure
+(such functions will also be termed *frameless*).
 
-A leaf function which makes no use of static data need not establish a static base.
+A leaf function which makes no use of static data need not establish a
+static base.
+
 
 ## Function entry
 
-(See also [The shared library addressing architecture](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31509)).
+(See also [The shared library addressing
+architecture](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31509)).
 
-The ARM shared library mechanism supports both the direct linking together of functions into a *link unit*, and the indirect linking of functions with the *stubs* of other link units. Thus a reentrant function can be entered directly 
-via a call from the same link unit (an intra-link-unit call), or 
-indirectly via a function pointer or direct call from another link unit 
-(an inter-link-unit call).
+The ARM shared library mechanism supports both the direct linking
+together of functions into a *link unit*, and the indirect linking of
+functions with the *stubs* of other link units. Thus a reentrant
+function can be entered directly via a call from the same link unit
+(an intra-link-unit call), or indirectly via a function pointer or
+direct call from another link unit (an inter-link-unit call).
 
-The general scheme for establishing the static base in reentrant code is:
+The general scheme for establishing the static base in reentrant code
+is:
 
 ```
 intra MOV ip, sb         ; intra link unit (LU) calls target here
@@ -705,14 +734,15 @@ inter                    ; inter-LU calls target here, having loaded
       MOV sb, ip         ; establish sb for this LU
 ```
 
-Code which is not required to be reentrant need not use a static base. 
-Code which is reentrant is marked as such, which allows the linker to 
-create the inter-LU veneers needed between independent reentrant link 
+Code which is not required to be reentrant need not use a static base.
+Code which is reentrant is marked as such, which allows the linker to
+create the inter-LU veneers needed between independent reentrant link
 units, and between reentrant and non-reentrant code.
 
 ## Function entry
 
-For non-reentrant, non-variadic functions the stack backtrace structure can be created in just 3 instructions, as follows:
+For non-reentrant, non-variadic functions the stack backtrace
+structure can be created in just 3 instructions, as follows:
 
 ```
 MOV    ip, sp             ; save current sp, ready to save as old sp
@@ -721,31 +751,31 @@ STMFD  sp!, {a1-a4, v1-v5, sb, fp, ip, lr, pc
 SUB    fp, ip, #4
 ```
 
-Each argument register a1-a4 need only be saved if a memory location is 
-needed for the corresponding parameter (because it has been spilled by 
-the register allocator or because its address has been taken).
+Each argument register a1-a4 need only be saved if a memory location
+is needed for the corresponding parameter (because it has been spilled
+by the register allocator or because its address has been taken).
 
-Each of the registers v1-v7 need only be saved if it used by the called 
-function. The minimum set of registers to be saved is {fp, old-sp, lr, 
-pc}.
+Each of the registers v1-v7 need only be saved if it used by the
+called function. The minimum set of registers to be saved is {fp,
+old-sp, lr, pc}.
 
 A reentrant function must avoid using ip in its entry sequence:
 
 ```
 STMFD  sp!, {sp, lr, pc}
-STMFD  sp!, {a1-a4, v1-v5, sb, fp}                                                ; as needed
+STMFD  sp!, {a1-a4, v1-v5, sb, fp}          ; as needed
 ADD    fp, sp, #8+4*|{a1-a4, v1-v5, sb, f                                                ; as used above
 ```
 
-sb (aka v6) must be saved by a reentrant function if it calls any 
-function from another link unit (which would alter the value in sb). 
-This means that, in general, sb must be saved on entry to all non-leaf, 
-reentrant functions.
+sb (aka v6) must be saved by a reentrant function if it calls any
+function from another link unit (which would alter the value in sb).
+This means that, in general, sb must be saved on entry to all
+non-leaf, reentrant functions.
 
-For variadic functions the entry sequence is more complicated again. 
-Usually, it will be desired or required to make a contiguous argument 
-list on the stack. For non-reentrant variadic functions this can be done
- by:
+For variadic functions the entry sequence is more complicated again.
+Usually, it will be desired or required to make a contiguous argument
+list on the stack. For non-reentrant variadic functions this can be
+done by:
 
 ```
 MOV    ip, sp                  ; save current sp, ready to save as old sp
@@ -756,30 +786,37 @@ STMFD  sp!, {v1-v6, fp, ip, lr, pc}
 SUB    fp, ip, #20             ; if all of a1-a4 pushed...
 ```
 
-It is not necessary to push arguments corresponding to fixed parameters 
-(though saving a1-a4 is little more expensive than just saving, say, 
-a3-a4).
+It is not necessary to push arguments corresponding to fixed
+parameters (though saving a1-a4 is little more expensive than just
+saving, say, a3-a4).
 
-If floating point arguments are not being passed in floating point 
-registers then there is no need for the SFMFD. SFM is not supported by 
-the issue-1 floating-point instruction set and must be simulated by 4 
-STFEs. See the next section,[Function entry- saving and restoring floating point registers](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF21797).
+If floating point arguments are not being passed in floating point
+registers then there is no need for the SFMFD. SFM is not supported by
+the issue-1 floating-point instruction set and must be simulated by 4
+STFEs. See the next section,[Function entry- saving and restoring
+floating point
+registers](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF21797).
 
-For reentrant variadic functions, the requirements are yet more complicated and the sequence becomes less elegant.
+For reentrant variadic functions, the requirements are yet more
+complicated and the sequence becomes less elegant.
+
 
 ## Function entry
 
-The issue-2 floating-point instruction set defines two new instructions, *Store Floating Multiple* (SFM) and *Load Floating Multiple* (LFM), for saving and restoring the floating-point registers, as follows:
+The issue-2 floating-point instruction set defines two new
+instructions, *Store Floating Multiple* (SFM) and *Load Floating
+Multiple* (LFM), for saving and restoring the floating-point
+registers, as follows:
 
 - SFM and LFM are exact inverses;
-- a SFM will never trap, whatever the IEEE trap mode and the 
-  value transferred (unlike a STFE which can trap on storing a signalling 
+- a SFM will never trap, whatever the IEEE trap mode and the value
+  transferred (unlike a STFE which can trap on storing a signalling
   NaN);
-- SFM and LFM transfer 3-word internal representations of 
-  floating point values which vary from implementation to implementation, 
-  and which, in general, are unrelated to any of the supported IEEE 
+- SFM and LFM transfer 3-word internal representations of floating
+  point values which vary from implementation to implementation, and
+  which, in general, are unrelated to any of the supported IEEE
   representations;
-- any 1-4, cyclically contiguous floating-point registers can be 
+- any 1-4, cyclically contiguous floating-point registers can be
   transferred by SFM/LFM (e.g. {f4-f7}, {f6, f7, f0}, {f7, f0}, {f1}).
 
 On function entry, a typical use of SFM might be as follows:
@@ -796,36 +833,44 @@ LFMEA  f4, 4, [fp, #-N] ; restore f4-f7; fp-N points just
                         ; above the floating point save area.
 ```
 
-On function exit, sp-relative addressing may be unavailable if the stack has been discontiguously extended.
+On function exit, sp-relative addressing may be unavailable if the
+stack has been discontiguously extended.
 
-In issue-1 instruction set compatibility modes, SFM and LFM have to be simulated using sequences of STFEs and LDFEs.
+In issue-1 instruction set compatibility modes, SFM and LFM have to be
+simulated using sequences of STFEs and LDFEs.
+
 
 ## Function entry
 
-In some environments, stack overflow detection will be implicit: an off 
-stack reference will cause an address error or memory fault which may, 
-in turn, cause stack extension or program termination.
+In some environments, stack overflow detection will be implicit: an
+off stack reference will cause an address error or memory fault which
+may, in turn, cause stack extension or program termination.
 
-In other environments, the validity of the stack must be checked on 
+In other environments, the validity of the stack must be checked on
 function entry and, perhaps at other times. There are three cases:
 
 - the function uses 256 bytes or less of stack space;
-- the function uses more than 256 bytes of stack space, but the amount is known and bounded at compile time;
+- the function uses more than 256 bytes of stack space, but the amount
+  is known and bounded at compile time;
 - the function uses an amount of stack space unknown until run time.
 
-The third case does not arise in C, save with stack-based 
-implementations of the non-standard, BSD-Unix alloca() function. The 
+The third case does not arise in C, save with stack-based
+implementations of the non-standard, BSD-Unix alloca() function. The
 APCS does not support alloca() in a straightforward manner.
 
-In Modula-2, Pascal and other languages there may be arrays created on block entry or passed as *o**pen array arguments,* the size of which is unknown until run time. Spiritually, these are 
-located in the callee's stack frame, so impact stack limit checking. In 
-practice, this adds little complication, as discussed in [Stack limit checking-Vari-sized frames](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF35382).
+In Modula-2, Pascal and other languages there may be arrays created on
+block entry or passed as *o**pen array arguments,* the size of which
+is unknown until run time. Spiritually, these are located in the
+callee's stack frame, so impact stack limit checking. In practice,
+this adds little complication, as discussed in [Stack limit
+checking-Vari-sized
+frames](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF35382).
 
-The check for stack limit violation is made at the end of the function 
-entry sequence, by which time ip is available as a work register. If the
- check fails, a standard run-time support function 
-("__rt_stkovf_split_small" or "__rt_stkovf_split_big") is called. Each 
-environment which supports explicit stack limit checking must provide 
+The check for stack limit violation is made at the end of the function
+entry sequence, by which time ip is available as a work register. If
+the check fails, a standard run-time support function
+("__rt_stkovf_split_small" or "__rt_stkovf_split_big") is called. Each
+environment which supports explicit stack limit checking must provide
 these functions, which can do one of the following:
 
 - terminate execution;
@@ -833,6 +878,7 @@ these functions, which can do one of the following:
 - allocate a new stack chunk, resetting sp and sl to point into 
   it, and guaranteeing that an immediate repeat of the limit check will 
   succeed.
+
 
 ## Stack limit checking
 
@@ -844,11 +890,13 @@ BLLT   |__rt_stkovf_split_small|
 SUB    sp, sp, #
 ```
 
-This adds 2 instructions and, in general, only 2 cycles to function entry.
+This adds 2 instructions and, in general, only 2 cycles to function
+entry.
 
-After a call to __rt_stkovf_split_small, fp and sp do not, necessarily, 
-point into the same stack chunk. Arguments passed on the stack must be 
-addressed by offsets from fp, not by offsets from sp.
+After a call to __rt_stkovf_split_small, fp and sp do not,
+necessarily, point into the same stack chunk. Arguments passed on the
+stack must be addressed by offsets from fp, not by offsets from sp.
+
 
 ## Stack limit checking
 
@@ -861,102 +909,116 @@ BLLT   |__rt_stkovf_split_big|
 SUB    sp, sp, #InitFrameSize              ; may take more than 1 instr
 ```
 
-FrameSizeBound can be any convenient constant at least as big as the 
-largest frame the function will use. Note that functions containing 
-nested blocks may use different amounts of stack at different instants 
+FrameSizeBound can be any convenient constant at least as big as the
+largest frame the function will use. Note that functions containing
+nested blocks may use different amounts of stack at different instants
 during their execution.
 
-InitFrameSize is the initial stack frame size: subsequent adjustments within the called function require no limit check.
+InitFrameSize is the initial stack frame size: subsequent adjustments
+within the called function require no limit check.
 
-After a call to __rt_stkovf_split_big, fp and sp do not, necessarily, 
-point into the same stack chunk. Arguments passed on the stack must be 
+After a call to __rt_stkovf_split_big, fp and sp do not, necessarily,
+point into the same stack chunk. Arguments passed on the stack must be
 addressed by offsets from fp, not by offsets from sp.
+
 
 ## Stack limit checking
 
 (For Pascal-like languages).
 
-The handling of frames the size of which is unknown at compile time, is identical to the handling of large frames, save that:
+The handling of frames the size of which is unknown at compile time,
+is identical to the handling of large frames, save that:
 
-- the computation of the proposed new stack pointer is more complicated, involving arguments to the function itself;
-- the addressing of the vari-sized objects is more complicated than the addressing of fixed size objects need be;
-- the vari-sized objects have to be initialised by the called function.
+- the computation of the proposed new stack pointer is more
+  complicated, involving arguments to the function itself;
+- the addressing of the vari-sized objects is more complicated than
+  the addressing of fixed size objects need be;
+- the vari-sized objects have to be initialised by the called
+  function.
 
 The general scheme for stack layout in this case is as follows:
 
-| Section                                                                | Notes          |
-| ---------------------------------------------------------------------- | -------------- |
-| Stack-based arguments                                                  |                |
-| Stack backtrace data structure… register save area…                    | fp points here |
-|                                                                        |                |
-| Area for vari-sized objects, passed by value or created on block entry |                |
-| Fixed size remainder of frame                                          | sp points here |
+| Section | Notes |
+| ------- | ----- |
+| Stack-based arguments | |
+| Stack backtrace data structure… register save area… | fp points here |
+| | |
+| Area for vari-sized objects, passed by value or created on block entry | |
+| Fixed size remainder of frame | sp points here |
 
 
+Objects notionally passed by value are actually passed by reference
+and copied by the callee.
 
-Objects notionally passed by value are actually passed by reference and copied by the callee.
-
-The callee addresses the copied objects via pointers located in the 
-fixed size part of the stack frame, immediately above sp. These can be 
-addressed relative to sp. The original arguments are all addressable 
+The callee addresses the copied objects via pointers located in the
+fixed size part of the stack frame, immediately above sp. These can be
+addressed relative to sp. The original arguments are all addressable
 relative to fp.
 
-After a call to __rt_stkovf_split_big, fp and sp do not, necessarily, 
-point into the same stack chunk. Arguments passed on the stack must be 
+After a call to __rt_stkovf_split_big, fp and sp do not, necessarily,
+point into the same stack chunk. Arguments passed on the stack must be
 addressed by offsets from fp, not by offsets from sp.
 
-If a nested block extends the stack by an amount which can't be known 
+If a nested block extends the stack by an amount which can't be known
 until run time then the block entry must include a stack limit check.
+
 
 ## Function exit
 
-A great deal of design effort has been devoted to ensuring that function
- exit can usually be implemented in a single instruction (this is not 
-the case if floating-point registers have to be restored). Typically, 
-there are at least as many function exits as entries, so it is always 
-advantageous to move an instruction from an exit sequence to an entry 
-sequence, (Fortran may violate this rule by virtue of multiple entries, 
-but on average the rule still holds true). If exit is a single 
-instruction then, in multi-exit functions, further instructions can be 
-saved by replacing branches to a single exit by the exit instructions 
-themselves.
+A great deal of design effort has been devoted to ensuring that
+function exit can usually be implemented in a single instruction (this
+is not the case if floating-point registers have to be
+restored). Typically, there are at least as many function exits as
+entries, so it is always advantageous to move an instruction from an
+exit sequence to an entry sequence, (Fortran may violate this rule by
+virtue of multiple entries, but on average the rule still holds
+true). If exit is a single instruction then, in multi-exit functions,
+further instructions can be saved by replacing branches to a single
+exit by the exit instructions themselves.
 
-Exit from functions which use no stack and save no floating point registers is particularly simple:
+Exit from functions which use no stack and save no floating point
+registers is particularly simple:
 
 ```
 MOV    pc, lr
 ```
 
-(26-bit compatibility demands `MOVS pc`, lr to reinstate the caller's PSR flags, but this must not be used in 32-bit modes).
+(26-bit compatibility demands `MOVS pc`, lr to reinstate the caller's
+PSR flags, but this must not be used in 32-bit modes).
 
-Exit from other functions which save no floating-point registers is by:
+Exit from other functions which save no floating-point registers is
+by:
 
 ```
-LDMEA  fp, {v1-v5, sb, fp, sp, pc}                                            ; as saved
+LDMEA  fp, {v1-v5, sb, fp, sp, pc}           ; as saved
 ```
 
-Here, it is crucial that fp points just below the *save code pointer*, as this value is not restored, (`LDMEA` is a pre-decrement multiple load).
+Here, it is crucial that fp points just below the *save code pointer*,
+as this value is not restored, (`LDMEA` is a pre-decrement multiple
+load).
 
-(26-bit compatibility demands `LDMEA fp, {regs}^`, to reinstate the caller's PSR flags, but this must not be used in 32-bit modes).
+(26-bit compatibility demands `LDMEA fp, {regs}^`, to reinstate the
+caller's PSR flags, but this must not be used in 32-bit modes).
 
-The saving and restoring of floating-point registers is discussed above.
-
+The saving and restoring of floating-point registers is discussed
+above.
 
 
 # Some examples
 
-This section is not intended to be a general guide to the writing of 
-code generators, but it seems worthwhile to highlight some of the 
-optimisations that appear particularly relevant to the ARM and to this 
+This section is not intended to be a general guide to the writing of
+code generators, but it seems worthwhile to highlight some of the
+optimisations that appear particularly relevant to the ARM and to this
 standard.
 
-In order to make effective use of the APCS, compilers must compile code a
- procedure at a time. Line at a time compilation is insufficient.
+In order to make effective use of the APCS, compilers must compile
+code a procedure at a time. Line at a time compilation is
+insufficient.
 
-In the case of leaf functions, much of the standard entry sequence can 
-be omitted. In very small functions, such as those that frequently occur
- implementing data abstractions, the function-call overhead can be tiny.
- Consider:
+In the case of leaf functions, much of the standard entry sequence can
+be omitted. In very small functions, such as those that frequently
+occur implementing data abstractions, the function-call overhead can
+be tiny.  Consider:
 
 ```
 typedef struct {...; int a; ...} foo;
@@ -967,12 +1029,13 @@ The function foo_get_a can compile to just:
 
 ```
 LDR    a1, [a1, #aOffset]
-MOV    pc, lr                                    ; MOVS in 26-bit modes
+MOV    pc, lr                     ; MOVS in 26-bit modes
 ```
 
-In functions with a conditional as the top level statement, in which one
- or other arm of the conditional is leaf (calls no functions), the 
-formation of a stack frame can be delayed. For example, the C function:
+In functions with a conditional as the top level statement, in which
+one or other arm of the conditional is leaf (calls no functions), the
+formation of a stack frame can be delayed. For example, the C
+function:
 
 ```
 int get(Stream *s
@@ -988,7 +1051,7 @@ int get(Stream *s
 }
 ```
 
-... could be compiled (non-reentrantly) into:
+could be compiled (non-reentrantly) into:
 
 ```
 get MOV    a3, a1
@@ -1011,12 +1074,12 @@ get MOV    a3, a1
     LDMEA  fp, {v1-v3, fp, sp, pc}
 ```
 
-This is only worthwhile if the test can be compiled using any spare of 
-a1-a4 and ip, as scratch registers. This technique can significantly 
-accelerate certain speed-critical functions, such as read and write 
+This is only worthwhile if the test can be compiled using any spare of
+a1-a4 and ip, as scratch registers. This technique can significantly
+accelerate certain speed-critical functions, such as read and write
 character.
 
-Finally, it is often worth applying the tail call optimisation, 
+Finally, it is often worth applying the tail call optimisation,
 especially to procedures which need to save no registers. For example:
 
 ```
@@ -1026,7 +1089,7 @@ extern void *malloc(size_t n)
 }
 ```
 
-...is compiled (non-reentrantly) by the C compiler into:
+is compiled (non-reentrantly) by the C compiler into:
 
 ```
 malloc
@@ -1036,166 +1099,194 @@ malloc
     B      primitive_alloc                  ; 1N+2S = 4S
 ```
 
-In this case, the optimisation avoids saving and restoring the 
-call-frame registers and saves 5 instructions (and many cycles-17 S 
+In this case, the optimisation avoids saving and restoring the
+call-frame registers and saves 5 instructions (and many cycles-17 S
 cycles on an uncached ARM with N=2S).
+
 
 # The APCS in non-user ARM modes
 
-There are some consequences of the ARM's architecture which, while not 
-explicit in the ARM Procedure Call Standard, need to be understood by 
+There are some consequences of the ARM's architecture which, while not
+explicit in the ARM Procedure Call Standard, need to be understood by
 implementors of code intended to run in the ARM's SVC and IRQ modes.
 
-An IRQ corrupts r14_irq, so IRQ-mode code must run with IRQs off until r14_irq has been saved.
+An IRQ corrupts r14_irq, so IRQ-mode code must run with IRQs off until
+r14_irq has been saved.
 
-A general solution to this problem is to enter and exit IRQ handlers 
-written in high-level languages via hand-crafted wrappers, which on 
-entry save r14_irq, change mode to SVC, and enable IRQs; and on exit 
-restore the saved r14_irq, IRQ mode and the IRQ-enable state. Thus the 
-handlers themselves run in SVC mode, avoiding the problem in compiled 
+A general solution to this problem is to enter and exit IRQ handlers
+written in high-level languages via hand-crafted wrappers, which on
+entry save r14_irq, change mode to SVC, and enable IRQs; and on exit
+restore the saved r14_irq, IRQ mode and the IRQ-enable state. Thus the
+handlers themselves run in SVC mode, avoiding the problem in compiled
 code.
 
-SWIs corrupt r14_svc, so care has to be taken when calling SWIs in SVC mode.
+SWIs corrupt r14_svc, so care has to be taken when calling SWIs in SVC
+mode.
 
-In high-level languages, SWIs are usually called out of line, so it 
-suffices to save and restore r14 in the calling veneer around the SWI. 
-If a compiler can generate in-line SWIs, then it should, of course, also
- generate code to save and restore r14 in-line around the SWI, unless it
- is known that the code will not be executed in SVC mode.
+In high-level languages, SWIs are usually called out of line, so it
+suffices to save and restore r14 in the calling veneer around the SWI.
+If a compiler can generate in-line SWIs, then it should, of course,
+also generate code to save and restore r14 in-line around the SWI,
+unless it is known that the code will not be executed in SVC mode.
+
 
 ## Aborts and pre-ARM6-based ARMs
 
-With pre-ARM6-based ARMs (ARM2, ARM3), aborts corrupt r14_svc. This 
+With pre-ARM6-based ARMs (ARM2, ARM3), aborts corrupt r14_svc. This
 means that care has to be taken when causing aborts in SVC mode.
 
-An abort in SVC mode may be symptomatic of a fatal error, or it may be 
-caused by page faulting in SVC mode. Page faulting can occur because an 
-instruction needs to be fetched from a missing page (causing a prefetch 
-abort), or because of an attempted data access to a missing page. The 
-latter may occur even if the SVC-mode code is not itself paged, 
-(consider an unpaged kernel accessing a paged user-space).
+An abort in SVC mode may be symptomatic of a fatal error, or it may be
+caused by page faulting in SVC mode. Page faulting can occur because
+an instruction needs to be fetched from a missing page (causing a
+prefetch abort), or because of an attempted data access to a missing
+page. The latter may occur even if the SVC-mode code is not itself
+paged, (consider an unpaged kernel accessing a paged user-space).
 
-A data abort is recoverable provided r14 contains nothing of value at the instant of the abort. This can be ensured by:
+A data abort is recoverable provided r14 contains nothing of value at
+the instant of the abort. This can be ensured by:
 
 - saving R14 on entry to every function and restoring it on exit;
 - not using R14 as a temporary register in any function;
 - avoiding page faults (stack faults) in function entry sequences.
 
-A prefetch abort is harder to recover from, and an aborting BL 
-instruction cannot be recovered, so special action has to be taken to 
+A prefetch abort is harder to recover from, and an aborting BL
+instruction cannot be recovered, so special action has to be taken to
 protect page faulting function calls.
 
-In code compiled from C, r14 is saved in the 2nd or 3rd instruction of 
-an entry sequence. Aligning all functions at addresses which are 0 or 4 
-modulo 16, ensures the critical part of the entry sequence cannot 
-prefetch-abort. A compiler can do this by padding code sections to a 
-multiple of 16 bytes, and being careful about the alignment of functions
- within code sections.
+In code compiled from C, r14 is saved in the 2nd or 3rd instruction of
+an entry sequence. Aligning all functions at addresses which are 0 or
+4 modulo 16, ensures the critical part of the entry sequence cannot
+prefetch-abort. A compiler can do this by padding code sections to a
+multiple of 16 bytes, and being careful about the alignment of
+functions within code sections.
 
-Data-aborts early in function entry sequences can be avoided by using a software stack-limit check.
+Data-aborts early in function entry sequences can be avoided by using
+a software stack-limit check.
 
-A possible way to protect BL instructions from prefetch-aborts, is to precede each BL by a
+A possible way to protect BL instructions from prefetch-aborts, is to
+precede each BL by a
 
 ```
 MOV    ip, pc
 ```
 
-instruction. If the BL faults, the prefetch abort handler can safely 
-overwrite r14 with ip before resuming execution at the target of the BL.
- If the prefetch abort is not caused by a BL then this action is 
-harmless, as r14 has been corrupted anyway, (and, by design, contained 
+instruction. If the BL faults, the prefetch abort handler can safely
+overwrite r14 with ip before resuming execution at the target of the
+BL.  If the prefetch abort is not caused by a BL then this action is
+harmless, as r14 has been corrupted anyway, (and, by design, contained
 nothing of value at any instant a prefetch abort could occur).
+
 
 # APCS variants
 
-There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from four independent choices.
+There are, currently, 2 x 2 x 2 x 2 = 16 APCS variants, derived from
+four independent choices.
 
 The first choice - 32-bit PC vs 26-bit PC - is fixed by your ARM CPU.
 
-The second choice - implicit vs explicit stack-limit checking - is fixed
- by a combination of memory-management hardware and operating system 
-software: if your ARM-based environment supports implicit stack-limit 
-checking then use it; otherwise use explicit stack-limit checking.
+The second choice - implicit vs explicit stack-limit checking - is
+fixed by a combination of memory-management hardware and operating
+system software: if your ARM-based environment supports implicit
+stack-limit checking then use it; otherwise use explicit stack-limit
+checking.
 
-The third choice - of how to pass floating-point arguments - supports 
+The third choice - of how to pass floating-point arguments - supports
 efficient argument passing in both of the following circumstances:
 
-- the floating point instruction set is emulated by software and floating point operations are dynamically very rare;
-- the floating point instruction set is supported by hardware or floating point operations are dynamically common.
+- the floating point instruction set is emulated by software and
+  floating point operations are dynamically very rare;
+- the floating point instruction set is supported by hardware or
+  floating point operations are dynamically common.
 
-In each case, code conforming to one variant is not compatible with code conforming to the other.
+In each case, code conforming to one variant is not compatible with
+code conforming to the other.
 
-Only the choice between reentrant and non-reentrant variants is a true 
-user level choice. Further, as the alternatives are compatible, each may
- be used where appropriate.
+Only the choice between reentrant and non-reentrant variants is a true
+user level choice. Further, as the alternatives are compatible, each
+may be used where appropriate.
+
 
 ## 32-bit PC vs 26-bit PC
 
-Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a 
-24-bit, word-address program counter, and pack the 4 status flags (NZCV)
- and 2 interrupt-enable flags (IF) into the top 6 bits of r15, and the 2
- mode bits (m0, m1) into the least-significant bits of r15. Thus r15 
-implements a combined PC + PSR.
+Older ARM CPUs and the 26-bit compatibility mode of newer CPUs use a
+24-bit, word-address program counter, and pack the 4 status flags
+(NZCV) and 2 interrupt-enable flags (IF) into the top 6 bits of r15,
+and the 2 mode bits (m0, m1) into the least-significant bits of
+r15. Thus r15 implements a combined PC + PSR.
 
-Newer ARM CPUs use a 32-bit program counter (in r15) and a separate PSR.
+Newer ARM CPUs use a 32-bit program counter (in r15) and a separate
+PSR.
 
-In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch 
-with link instruction, so it is natural for the APCS to require the 
-reinstatement of the caller's PSR at function exit (a caller's PSR is 
+In 26-bit CPU modes, the PC + PSR is written to r14 by an ARM branch
+with link instruction, so it is natural for the APCS to require the
+reinstatement of the caller's PSR at function exit (a caller's PSR is
 preserved across a function call).
 
-In 32-bit CPU modes this reinstatement would be unacceptably expensive 
-in comparison to the gain from it, so the APCS does not require it and a
- caller's PSR flags may be corrupted by a function call.
+In 32-bit CPU modes this reinstatement would be unacceptably expensive
+in comparison to the gain from it, so the APCS does not require it and
+a caller's PSR flags may be corrupted by a function call.
+
 
 ## Implicit vs explicit stack-limit checking
 
-ARM-based systems vary widely in the sophistication of their memory 
-management hardware. Some can easily support multiple, auto-extending 
+ARM-based systems vary widely in the sophistication of their memory
+management hardware. Some can easily support multiple, auto-extending
 stacks, while others have no memory management hardware at all.
 
 Safe programming practices demand that stack overflow be detected.
 
-The APCS defines conventions for software stack-limit checking 
-sufficient to support efficiently most requirements (including those of 
-multiple threads and chunked stacks).
+The APCS defines conventions for software stack-limit checking
+sufficient to support efficiently most requirements (including those
+of multiple threads and chunked stacks).
 
-The majority of ARM-based systems are expected to require software stack-limit checking.
+The majority of ARM-based systems are expected to require software
+stack-limit checking.
+
 
 ## Floating-point arguments in floating-point registers
 
-Historically, many ARM-based systems have made no use of the floating 
+Historically, many ARM-based systems have made no use of the floating
 point instruction set, or they used a software emulation of it.
 
-On systems using a slow software emulation and making little use of 
-floating-point, there is a small disadvantage to passing floating-point 
-arguments in floating-point registers: all variadic functions (such as 
-printf) become slower, while only function calls which actually take 
-floating-point arguments become faster.
+On systems using a slow software emulation and making little use of
+floating-point, there is a small disadvantage to passing
+floating-point arguments in floating-point registers: all variadic
+functions (such as printf) become slower, while only function calls
+which actually take floating-point arguments become faster.
 
-If your system has no floating-point hardware and is expected to make 
-little use of floating point, then it is better not to pass 
-floating-point arguments in floating-point registers. Otherwise, the 
+If your system has no floating-point hardware and is expected to make
+little use of floating point, then it is better not to pass
+floating-point arguments in floating-point registers. Otherwise, the
 opposite choice is best.
+
 
 ## Reentrant vs non-reentrant code
 
-The reentrant variant of the APCS supports the generation of code free 
-of relocation directives (position independent and addressing all data 
-(indirectly) via a static base register). Such code is ideal for 
-placement in ROM and can be multiply threaded (shared between several 
-client processes). See [ARM shared library format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382) for further details.
+The reentrant variant of the APCS supports the generation of code free
+of relocation directives (position independent and addressing all data
+(indirectly) via a static base register). Such code is ideal for
+placement in ROM and can be multiply threaded (shared between several
+client processes). See [ARM shared library
+format](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/3arrj.html#XREF31382)
+for further details.
 
-In general, code to be placed in ROM or loaded into a shared library is 
-expected to be reentrant, while applications are expected not to be.
+In general, code to be placed in ROM or loaded into a shared library
+is expected to be reentrant, while applications are expected not to
+be.
 
 See also [C language calling conventions](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/atsfldr/4atsc.html#XREF36070).
 
+
 ## APCS-2 compatibility
 
-(APCS-2 - the second definition of The ARM Procedure Call Standard - is recorded in Technical Memorandum *PLG-APCS, issue 4.00, 18-Apr-89*, reproduced in the following Acorn publications: *RISC OS Programmer's Reference Manual, vol IV, 1989*, (Acorn part number 0483,023); *ANSI C Release 3, September 1989*, (Acorn part number 0470,101)).
+(APCS-2 - the second definition of The ARM Procedure Call Standard -
+is recorded in Technical Memorandum *PLG-APCS, issue 4.00, 18-Apr-89*,
+reproduced in the following Acorn publications: *RISC OS Programmer's
+Reference Manual, vol IV, 1989*, (Acorn part number 0483,023); *ANSI C
+Release 3, September 1989*, (Acorn part number 0470,101)).
 
-APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of APCS-3:
+APCS-R (APCS-2 for Acorn's RISC OS) is the following variant of
+APCS-3:
 
 - 26-bit PC;
 - explicit stack-limit checking;
