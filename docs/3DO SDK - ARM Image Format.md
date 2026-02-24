@@ -152,8 +152,6 @@ word of the AIF header (see [AIF Header Layout](https://ext.3dodev.com/3DO/Portf
 
 ## AIF Header Layout
 
-
-
 | Offset (hex) | Field                                   | Description                                                                                                                  |
 |--------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
 | 0x00         | BL DecompressCode                        | NOP if the image is not compressed.                                                                                          |
