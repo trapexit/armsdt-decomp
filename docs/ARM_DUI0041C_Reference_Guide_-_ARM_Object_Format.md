@@ -5,7 +5,8 @@ From **ARM DUI0041C**
 
 ## Chapter 15: ARM Object Format
 
-This chapter describes the ARM Object Format (AOF). It contains the following sections:
+This chapter describes the ARM Object Format (AOF). It contains the
+following sections:
 
 - ARM Object Format
 - Overall structure of an AOF file
@@ -16,54 +17,90 @@ This chapter describes the ARM Object Format (AOF). It contains the following se
 - The String Table Chunk (OBJ_STRT)
 - The Identification Chunk (OBJ_IDFN)
 
----
 
 ## 15.1 ARM Object Format
 
 The following terms apply throughout this section:
 
 - **object file** — refers to a file in ARM Object Format.
-- **address** — for data in a file, this means offset from the start of the file.
+- **address** — for data in a file, this means offset from the start
+  of the file.
+
 
 ### 15.1.1 Areas
 
-An object file written in AOF consists of any number of named, attributed areas. Attributes include: read-only, reentrant, code, data, and position-independent. See section on Attributes and Alignment for details.
+An object file written in AOF consists of any number of named,
+attributed areas. Attributes include: read-only, reentrant, code,
+data, and position-independent. See section on Attributes and
+Alignment for details.
 
-Typically, a compiled AOF file contains a read-only code area, and a read-write data area (a zero-initialized data area is also common, and reentrant code uses a separate based area for address constants).
+Typically, a compiled AOF file contains a read-only code area, and a
+read-write data area (a zero-initialized data area is also common, and
+reentrant code uses a separate based area for address constants).
+
 
 ### 15.1.2 Relocation Directives
 
-Associated with each area is a (possibly empty) list of relocation directives which describe locations that the linker will have to update when a non-zero base address is assigned to the area, or a symbolic reference is resolved.
+Associated with each area is a (possibly empty) list of relocation
+directives which describe locations that the linker will have to
+update when a non-zero base address is assigned to the area, or a
+symbolic reference is resolved.
 
-Each relocation directive may be given relative to the (not yet assigned) base address of an area in the same AOF file, or relative to a symbol in the symbol table. Each symbol may:
+Each relocation directive may be given relative to the (not yet
+assigned) base address of an area in the same AOF file, or relative to
+a symbol in the symbol table. Each symbol may:
 
-- have a definition within its containing object file which is local to the object file
-- have a definition within the object file which is visible globally (to all object files in the link step)
+- have a definition within its containing object file which is local
+  to the object file
+- have a definition within the object file which is visible globally
+  (to all object files in the link step)
 - be a reference to a symbol defined in some other object file
+
 
 ### 15.1.3 Byte Sex or Endianness
 
-An AOF file can be produced in either little-endian or big-endian format.
+An AOF file can be produced in either little-endian or big-endian
+format.
 
-There is no guarantee that the endianness of an AOF file will be the same as the endianness of the system used to process it (the endianness of the file is always the same as the endianness of the target ARM system).
+There is no guarantee that the endianness of an AOF file will be the
+same as the endianness of the system used to process it (the
+endianness of the file is always the same as the endianness of the
+target ARM system).
+
 
 ### 15.1.4 Alignment
 
-Strings and bytes may be aligned on any byte boundary. AOF fields defined in this document make no use of halfwords and align words on 4-byte boundaries.
+Strings and bytes may be aligned on any byte boundary. AOF fields
+defined in this document make no use of halfwords and align words on
+4-byte boundaries.
 
-Within the contents of an AOF file, the alignment of words and halfwords is defined by the use to which AOF is being put. For all current ARM-based systems, words are aligned on 4-byte boundaries and halfwords on 2-byte boundaries.
+Within the contents of an AOF file, the alignment of words and
+halfwords is defined by the use to which AOF is being put. For all
+current ARM-based systems, words are aligned on 4-byte boundaries and
+halfwords on 2-byte boundaries.
 
----
 
 ## 15.2 Overall Structure of an AOF File
 
-An AOF file contains a number of separate pieces of data. The object file format is layered on Chunk File Format, which provides a simple and efficient means of accessing and updating distinct chunks of data within a single file.
+An AOF file contains a number of separate pieces of data. The object
+file format is layered on Chunk File Format, which provides a simple
+and efficient means of accessing and updating distinct chunks of data
+within a single file.
+
 
 ### 15.2.1 Chunk File Format
 
-A file written in chunk file format consists of a header, and one or more chunks. The header is always positioned at the beginning of the file. A chunk is accessed through the header. The header contains the number, size, location, and identity of each chunk in the file.
+A file written in chunk file format consists of a header, and one or
+more chunks. The header is always positioned at the beginning of the
+file. A chunk is accessed through the header. The header contains the
+number, size, location, and identity of each chunk in the file.
 
-The size of the header may vary between different chunk files, but it is fixed for each file. Not all entries in a header need be used, thus limited expansion of the number of chunks is permitted without a wholesale copy. A chunk file can be copied without knowledge of the contents of its chunks.
+The size of the header may vary between different chunk files, but it
+is fixed for each file. Not all entries in a header need be used, thus
+limited expansion of the number of chunks is permitted without a
+wholesale copy. A chunk file can be copied without knowledge of the
+contents of its chunks.
+
 
 #### Chunk File Header
 
