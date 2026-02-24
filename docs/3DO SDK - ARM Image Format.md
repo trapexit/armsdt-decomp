@@ -293,18 +293,20 @@ On entry, the relocation code calculates the address of the AIF header
  moved. If the image doesn't need to be moved, the code branches to *R**elocateOnly*.
 
 ```
-RelocCode
-    NOP                          ; required by ensure_byte_order()
-                          ; and used below.
-    SUB    ip, lr, pc                         ; base+8+[PSR]-(RelocCode+12+[PSR])
-                          ; = base-4-RelocCode
-    ADD    ip, pc, ip                         ; base-4-RelocCode+RelocCode+16 = base+12
-    SUB    ip, ip, #12                         ; -> header address
-    LDR    r0, RelocCode                         ; NOP
-    STR    r0, [ip, #4]                        ; won't be called again on image re-entry
-    LDR    r9, [ip, #&2C]                         ; min free space requirement
-    CMPS   r9, #0                          ; 0 => no move, just relocate
-    BEQ    RelocateOnly
+RelocCode:
+        NOP                             ; required by ensure_byte_order() and used below
+
+        SUB     ip, lr, pc              ; base+8+[PSR] - (RelocCode+12+[PSR])
+                                        ; = base - 4 - RelocCode
+        ADD     ip, pc, ip              ; base - 4 - RelocCode + RelocCode + 16 = base + 12
+        SUB     ip, ip, #12             ; -> header address
+
+        LDR     r0, RelocCode           ; load NOP instruction
+        STR     r0, [ip, #4]            ; overwrite header, won't be called again on image re-entry
+
+        LDR     r9, [ip, #&2C]          ; load min free space requirement
+        CMPS    r9, #0                  ; 0 => no move, just relocate
+        BEQ     RelocateOnly
 ```
 
 If the image needs to be moved up memory, then the top of memory has to 
