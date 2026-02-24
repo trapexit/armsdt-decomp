@@ -326,17 +326,18 @@ Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfl
 - Bit 11 - defines the area to be a reference to a common block, and
   precludes the area having initialising data (see Bit 12, below). In
   effect, bit 11 implies bit 12. If both bits 10 and 11 are set, bit 11
-  is ignored.
-
-Common areas with the same name are overlaid on each other by the
-linker. The *Area Size* field of a common definition area defines the
-size of a common block.  All other references to this common block
-must specify a size which is smaller or equal to the definition
-size. If, in a link step, there is more than one definition of an area
-with the common definition attribute (area of the given name with bit
-10 set), then each of these areas must have exactly the same
-contents. If there is no definition of a common area, its size will be
-the size of the largest common reference to it.
+  is ignored. 
+   
+  Common areas with the same name are overlaid on each other by the
+  linker. The *Area Size* field of a common definition area defines
+  the size of a common block.  All other references to this common
+  block must specify a size which is smaller or equal to the
+  definition size. If, in a link step, there is more than one
+  definition of an area with the common definition attribute (area of
+  the given name with bit 10 set), then each of these areas must have
+  exactly the same contents. If there is no definition of a common
+  area, its size will be the size of the largest common reference to
+  it.
 
 Although common areas conventionally hold data, it is quite legal to
 use bit 10 in conjunction with bit 9 to define a common block
