@@ -463,16 +463,18 @@ Area n
 Area n Relocation
 ```
 
-An area is simply a sequence of byte values. The endian-ness of the 
-words and half-words within it shall agree with that of the containing 
+An area is simply a sequence of byte values. The endian-ness of the
+words and half-words within it shall agree with that of the containing
 AOF file.
 
-An area is followed by its associated table of relocation directives (if
- any). An area is either completely initialised by the values from the 
-file or is initialised to zero, as specified by bit 12 of its area 
+An area is followed by its associated table of relocation directives
+(if any). An area is either completely initialised by the values from
+the file or is initialised to zero, as specified by bit 12 of its area
 attributes.
 
-Both the area contents and the table of relocation directives are aligned to 4-byte boundaries.
+Both the area contents and the table of relocation directives are
+aligned to 4-byte boundaries.
+
 
 ## Relocation directives
 
