@@ -160,7 +160,6 @@ For AOF files, the first part of each chunk's name is "OBJ_"; the
 second components are defined in the next section.
 
 
-
 # ARM object format
 
 Each piece of an object file is stored in a separate, identifiable, chunk. AOF defines five chunks as follows:
