@@ -303,8 +303,7 @@ Each area has a set of attributes encoded in the most-significant 24
 bits of the *Attributes + Alignment* word. The least-significant 8
 bits of this word encode the alignment of the start of the area as a
 power of 2 and shall have a value between 2 and 32 (this value denotes
-that the area should start at an address divisible by 2 ()
-*alignment*).
+that the area should start at an address divisible by 2 *alignment*).
 
 The linker orders areas in a generated image first by attributes, then 
 by the (case-significant) lexicographic order of area names, then by 
