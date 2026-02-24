@@ -305,51 +305,54 @@ bits of this word encode the alignment of the start of the area as a
 power of 2 and shall have a value between 2 and 32 (this value denotes
 that the area should start at an address divisible by 2 *alignment*).
 
-The linker orders areas in a generated image first by attributes, then 
-by the (case-significant) lexicographic order of area names, then by 
-position of the containing object module in the link list. The position 
-in the link list of an object module loaded from a library is not 
-predictable.
+The linker orders areas in a generated image first by attributes, then
+by the (case-significant) lexicographic order of area names, then by
+position of the containing object module in the link list. The
+position in the link list of an object module loaded from a library is
+not predictable.
 
-The precise significance to the linker of area attributes depends on the output being generated. For details see [The ARM Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/arr3frst.html#XREF25184).
+The precise significance to the linker of area attributes depends on
+the output being generated. For details see [The ARM
+Linker](https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/arrfldr/arr3frst.html#XREF25184).
 
-Bit 8-encodes the absolute attribute and denotes that the area must be 
-placed at its Base Address. This bit is not usually set by language 
-processors.
+- Bit 8 - encodes the absolute attribute and denotes that the area must
+  be placed at its Base Address. This bit is not usually set by language
+  processors.
+- Bit 9 - encodes the *code* attribute: if set the area contains code;
+  otherwise it contains data.
+- Bits 10, 11 - encode the common block definition and common block
+  reference attributes, respectively.
+- Bit 10 - specifies that the area is a common definition.
+- Bit 11 - defines the area to be a reference to a common block, and
+  precludes the area having initialising data (see Bit 12, below). In
+  effect, bit 11 implies bit 12. If both bits 10 and 11 are set, bit 11
+  is ignored.
 
-Bit 9*-*encodes the *code* attribute: if set the area contains code; otherwise it contains data.
+Common areas with the same name are overlaid on each other by the
+linker. The *Area Size* field of a common definition area defines the
+size of a common block.  All other references to this common block
+must specify a size which is smaller or equal to the definition
+size. If, in a link step, there is more than one definition of an area
+with the common definition attribute (area of the given name with bit
+10 set), then each of these areas must have exactly the same
+contents. If there is no definition of a common area, its size will be
+the size of the largest common reference to it.
 
-Bits 10, 11-encode the common block definition and common block reference attributes, respectively.
+Although common areas conventionally hold data, it is quite legal to
+use bit 10 in conjunction with bit 9 to define a common block
+containing code. This is most useful for defining a code area which
+must be generated in several compilation units but which should be
+included in the final image only once.
 
-Bit 10*-*specifies that the area is a common definition.
-
-Bit 11- defines the area to be a reference to a common block, and
- precludes the area having initialising data (see Bit 12, below). In 
-effect, bit 11 implies bit 12. If both bits 10 and 11 are set, bit 11 is ignored.
-
-Common areas with the same name are overlaid on each other by the linker. The *Area Size* field of a common definition area defines the size of a common block. 
-All other references to this common block must specify a size which is 
-smaller or equal to the definition size. If, in a link step, there is 
-more than one definition of an area with the common definition attribute
- (area of the given name with bit 10 set), then each of these areas must
- have exactly the same contents. If there is no definition of a common 
-area, its size will be the size of the largest common reference to it.
-
-Although common areas conventionally hold data, it is quite legal to use
- bit 10 in conjunction with bit 9 to define a common block containing 
-code. This is most useful for defining a code area which must be 
-generated in several compilation units but which should be included in 
-the final image only once.
-
-Bit 12-encodes the zero-initialised attribute, specifying that the area 
-has no initialising data in this object file, and that the area contents
- are missing from the OBJ_AREA chunk. Typically, this attribute is given
- to large uninitialised data areas. When an uninitialised area is 
-included in an image, the linker either includes a read-write area of 
-binary zeroes of appropriate size, or maps a read-write area of 
-appropriate size that will be zeroed at image start-up time. This 
-attribute is incompatible with the read-only attribute (see Bit 13, 
-below).
+Bit 12-encodes the zero-initialised attribute, specifying that the
+area has no initialising data in this object file, and that the area
+contents are missing from the OBJ_AREA chunk. Typically, this
+attribute is given to large uninitialised data areas. When an
+uninitialised area is included in an image, the linker either includes
+a read-write area of binary zeroes of appropriate size, or maps a
+read-write area of appropriate size that will be zeroed at image
+start-up time. This attribute is incompatible with the read-only
+attribute (see Bit 13, below).
 
 Whether or not a zero-initialised area is re-zeroed if the image is 
 re-entered is a property of the relevant image format and/or the system 
