@@ -156,10 +156,11 @@ versions of the ARM object library format:
   allows for it. Even then, the contents of a time stamp should be
   treated cautiously and not assumed to be sensible.
 
-Applications which write LIB_DIRY or OFL_SYMT entries should ensure that
- padding is done with NUL (0) bytes; applications which read LIB_DIRY or
- OFL_SYMT entries should make no assumptions about the values of padding
- bytes beyond the first, string-terminating NUL byte.
+Applications which write LIB_DIRY or OFL_SYMT entries should ensure
+that padding is done with NUL (0) bytes; applications which read
+LIB_DIRY or OFL_SYMT entries should make no assumptions about the
+values of padding bytes beyond the first, string-terminating NUL byte.
+
 
 ## Time stamps
 
@@ -168,33 +169,38 @@ A library time stamp is a pair of words encoding the following:
 - a 6-byte count of centi-seconds since the start of the 20th century;
 - a 2-byte count of microseconds since the last centi-second (usually 0).
 
-The first word stores the most significant 4 bytes of the 6-byte count; 
-the least significant 2 bytes of the count are in the most significant 
-half of the second word.
+The first word stores the most significant 4 bytes of the 6-byte
+count; the least significant 2 bytes of the count are in the most
+significant half of the second word.
 
-The least significant half of the second word contains the microsecond count and is usually 0.
+The least significant half of the second word contains the microsecond
+count and is usually 0.
 
-Time stamp words are stored in target system byte order: they must have the same *endianness* as the containing chunk file.
+Time stamp words are stored in target system byte order: they must
+have the same *endianness* as the containing chunk file.
+
 
 ## LIB_TIME
 
-The LIB_TIME chunk contains a 2-word time stamp recording when the library was last modified. It is, hence, 8 bytes long.
+The LIB_TIME chunk contains a 2-word time stamp recording when the
+library was last modified. It is, hence, 8 bytes long.
+
 
 ## LIB_VSRN
 
 The version chunk contains a single word whose value is 1.
 
+
 ## LIB_DATA
 
-A LIB_DATA chunk contains one of the library members indexed by the 
-LIB_DIRY chunk. The endian-ness or byte order of this data is, by 
-assumption, the same as the byte order of the containing library/chunk 
+A LIB_DATA chunk contains one of the library members indexed by the
+LIB_DIRY chunk. The endian-ness or byte order of this data is, by
+assumption, the same as the byte order of the containing library/chunk
 file.
 
-No other interpretation is placed on the contents of a member by the 
-library management tools. A member could itself be a file in chunk file 
-format or even another library.
-
+No other interpretation is placed on the contents of a member by the
+library management tools. A member could itself be a file in chunk
+file format or even another library.
 
 
 # Object code libraries
