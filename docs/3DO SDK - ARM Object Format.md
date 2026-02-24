@@ -78,7 +78,6 @@ current ARM-based systems, words are aligned on 4-byte boundaries and
 half-words on 2-byte boundaries.
 
 
-
 # The overall structure of an AOF file
 
 An AOF file contains a number of separate but related pieces of data. To
