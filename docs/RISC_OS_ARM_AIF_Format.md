@@ -392,25 +392,46 @@ typedef struct {
 
 ## Conclusions
 
-From this brief introduction to the AIF format we can clearly see it’s a really simple format, for instance:
+From this brief introduction to the AIF format we can clearly see it’s
+a really simple format, for instance:
 
-- There is no standardised fields in the AIF format related to security and validation of an exectuable.
-- There is no fields dedicated to store information about the compiler or assembler used to produce the AIF itself
-- It also lack fields for ABI target and/or operating system target or release.
-- Another missing section in the AIF format is the AIF format version used for a specific file
-- It also lacks dynamic linking information (althought if those could be added in the image section)
+- There is no standardised fields in the AIF format related to
+  security and validation of an exectuable.
+- There is no fields dedicated to store information about the compiler
+  or assembler used to produce the AIF itself
+- It also lack fields for ABI target and/or operating system target or
+  release.
+- Another missing section in the AIF format is the AIF format version
+  used for a specific file
+- It also lacks dynamic linking information (althought if those could
+  be added in the image section)
 
-AIF was mostly designed for **RISC OS**, however it has been used also on consoles like the **3DO**, as well as setop boxes and other devices. So, it should have had some extention over the years, but AFAICT it did not and therefore it should probably be considered obsolete. Luckly RISC OS 5 supports [ELF32](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#:~:text=The%20ELF%20header%20defines%20whether,and%2064%2Dbit%20binaries%20respectively.), which is a much more mature object file format and that also allow Dynamic Linking.
+AIF was mostly designed for **RISC OS**, however it has been used also
+on consoles like the **3DO**, as well as setop boxes and other
+devices. So, it should have had some extention over the years, but
+AFAICT it did not and therefore it should probably be considered
+obsolete. Luckly RISC OS 5 supports
+[ELF32](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#:~:text=The%20ELF%20header%20defines%20whether,and%2064%2Dbit%20binaries%20respectively.),
+which is a much more mature object file format and that also allow
+Dynamic Linking.
 
-Ok that’s it for now, thanks for reading and I hope you’ve found some useful information here. If you enjoyed this post, please don’t forget to support my blog by:
+Ok that’s it for now, thanks for reading and I hope you’ve found some
+useful information here. If you enjoyed this post, please don’t forget
+to support my blog by:
 
-- Visiting my on-line hacking and engineering merchandise shop on [redbubble.com by clicking here](http://www.redbubble.com/people/softwareguru/shop)
-- Or you can also make a donation with the PayPal link in the column on your right
+- Visiting my on-line hacking and engineering merchandise shop
+  on [redbubble.com by clicking
+  here](http://www.redbubble.com/people/softwareguru/shop)
+- Or you can also make a donation with the PayPal link in the column
+  on your right
 - Or share this article
 
-If you like my articles and want to keep getting informed on new ones you can follow me on on of those 21st Century thingies called [Facebook](https://www.facebook.com/Paolo-Fabio-Zaino-104703188259807/), [Twitter](https://twitter.com/PaoloFabioZaino), [Instagram](https://www.instagram.com/paolofabiozaino/) or [Pinterest](https://www.pinterest.co.uk/paolofabiozaino/)
+If you like my articles and want to keep getting informed on new ones
+you can follow me on on of those 21st Century thingies called
+[Facebook](https://www.facebook.com/Paolo-Fabio-Zaino-104703188259807/), [Twitter](https://twitter.com/PaoloFabioZaino), [Instagram](https://www.instagram.com/paolofabiozaino/) or [Pinterest](https://www.pinterest.co.uk/paolofabiozaino/)
 
-And as always if you have any questions please feel free to use the comments section below.
+And as always if you have any questions please feel free to use the
+comments section below.
 
 Thank you! 
 
@@ -421,9 +442,15 @@ Thank you! 
 
 ## More references:
 
-- [ARM Software Development Toolkit Reference Guide](https://developer.arm.com/documentation/dui0041/c/)
-- RISC OS Programmer’s Reference Manuals (Available in PDF format and/or paper format from the [ROOL On-Line Shop](https://www.riscosopen.org/content/sales), sometimes also on Amazon or eBay, there is also a CD ROM with the files in PDF format available also from CJEMicros on-line shop I believe)
-- [ARM AIF on wikipedia, very little useful info here, but still a resource](https://en.wikipedia.org/wiki/Arm_Image_Format)
+- [ARM Software Development Toolkit Reference
+  Guide](https://developer.arm.com/documentation/dui0041/c/)
+- RISC OS Programmer’s Reference Manuals (Available in PDF format
+  and/or paper format from the [ROOL On-Line
+  Shop](https://www.riscosopen.org/content/sales), sometimes also on
+  Amazon or eBay, there is also a CD ROM with the files in PDF format
+  available also from CJEMicros on-line shop I believe)
+- [ARM AIF on wikipedia, very little useful info here, but still a
+  resource](https://en.wikipedia.org/wiki/Arm_Image_Format)
 - To practice and have fun:
   - Any RISC OS application in AIF format
   - ARMalyser to analyse it on your RISC OS computer
