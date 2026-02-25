@@ -2,7 +2,11 @@
 
 *By Paolo Fabio Zaino — August 7, 2020*
 
-In this post we’ll see some details about the ARM Image File Format (or AIF) useful to new RISC OS software developers when coding with Assembly and/or compiled languages.
+https://paolozaino.wordpress.com/2020/08/07/risc-os-introduction-to-the-arm-aif-object-file-format/
+
+In this post we’ll see some details about the ARM Image File Format
+(or AIF) useful to new RISC OS software developers when coding with
+Assembly and/or compiled languages.
 
 ## Disclaimer
 
