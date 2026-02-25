@@ -201,10 +201,6 @@ extern _3DOBinHeader __my_3DOBinHeader;
 
 #define aif_MD4DataSize		aif_Reserved[0]
 
-EXTERN_C_BEGIN
-
 extern AIFHeader *FindImage(AIFHeader *aifp, uint32 pagemask, char *aifname);
-  
-EXTERN_C_END
 
 #define	nextImage(aifp,pagemask) FindImage(aifp,pagemask,(char *)NULL)
