@@ -253,66 +253,140 @@ official docs (for your reference):
         B      %B00
 ```
 
-Ok, below I wrote a detailed analysis of the ZeroInit code (above) as it would have been applied to the example AIF file in the DDT screenshot (described previously). That will help the reader to understand the ZeroInit code, as well as to see that, even if a linker or compiler could produce a slightly different ZeroInit code, its function stays exactly the same.
+Ok, below I wrote a detailed analysis of the ZeroInit code (above) as
+it would have been applied to the example AIF file in the DDT
+screenshot (described previously). That will help the reader to
+understand the ZeroInit code, as well as to see that, even if a linker
+or compiler could produce a slightly different ZeroInit code, its
+function stays exactly the same.
 
-**1st line** is a NOP instruction, remember this is the DBGInit instruction and in this case it’s unused, so NOP.
+**1st line** is a NOP instruction, remember this is the DBGInit
+instruction and in this case it’s unused, so NOP.
 
-**2nd line** the SUB instruction is used to calculate the base address for the Zero Initialised data. The math is relatively simple:
+**2nd line** the SUB instruction is used to calculate the base address
+for the Zero Initialised data. The math is relatively simple:
 
-- The current address in PC (Program Counter, in AArch32 **R15**, should contain the value 0x8044) is subtracted to the current address in LR (Link Register, in AArch32 **R14**, which in this case should contain the value 0x800c which is the location with the BL instruction to the Binary Image entry-point address) and the result is placed in IP (Intra Procedure call scratch Register, in AArch32 **R12**)
-- At the end of this, in the example code, IP should contain 0xFFFFFFc0 (note this is a negative number!)
+- The current address in PC (Program Counter, in AArch32 **R15**,
+  should contain the value 0x8044) is subtracted to the current
+  address in LR (Link Register, in AArch32 **R14**, which in this case
+  should contain the value 0x800c which is the location with the BL
+  instruction to the Binary Image entry-point address) and the result
+  is placed in IP (Intra Procedure call scratch Register, in AArch32
+  **R12**)
+- At the end of this, in the example code, IP should contain
+  0xFFFFFFc0 (note this is a negative number!)
 
-**3rd Line** add the value stored in IP to the value stored in PC (PC now has 0x8048, FYI, while IP still has the value calculated above) and put the result in IP (the  result should be 0x8010, which also explains why on the 2nd line we tried to get a negative value for IP). The value in IP clearly shows the base address which correspond to the last location used by our header for the exit instruction, in our case SWI OS\_Exit.
+**3rd Line** add the value stored in IP to the value stored in PC (PC
+now has 0x8048, FYI, while IP still has the value calculated above)
+and put the result in IP (the  result should be 0x8010, which also
+explains why on the 2nd line we tried to get a negative value for
+IP). The value in IP clearly shows the base address which correspond
+to the last location used by our header for the exit instruction, in
+our case SWI OS\_Exit.
 
-> **For beginners:** Given that an AIF is *relocatable* it is necessary to calculate base-addresses because it may not be the one we’d expect. In this example they are the standard virtual addresses because our AIF did not try to relocate.
+> **For beginners:** Given that an AIF is *relocatable* it is
+> necessary to calculate base-addresses because it may not be the one
+> we’d expect. In this example they are the standard virtual addresses
+> because our AIF did not try to relocate.
 
-On the **4th line** we load multiple registers (R0,R1,R2 and R4) with values contained in the memory locations starting with the one pointed by IP + 1 WORD. So, basically, from location 0x8014. To do that we use LDMIB instruction (ASM simple trick, LDMIB LoaD Multiple Increment BEFORE) which will increment the value in IP before using it. This makes sense because, as we have seen before, the value in IP when the 3rd line starts to get executed is the address pointing at the last instruction from the AIF header, so we need to move to the next address after that one to start our zero initialisation.
+On the **4th line** we load multiple registers (R0,R1,R2 and R4) with
+values contained in the memory locations starting with the one pointed
+by IP + 1 WORD. So, basically, from location 0x8014. To do that we use
+LDMIB instruction (ASM simple trick, LDMIB LoaD Multiple Increment
+BEFORE) which will increment the value in IP before using it. This
+makes sense because, as we have seen before, the value in IP when the
+3rd line starts to get executed is the address pointing at the last
+instruction from the AIF header, so we need to move to the next
+address after that one to start our zero initialisation.
 
 So, after the above line we have:
 
-- **R0** should contain the value 0x00a0 (which is the size of the ReadOnly area, look at the AIF header details table above, row 0x14, for info)
-- **R1** should contain 0x0000 (this is the Image ReadWrite area size, look at the AIF details table above row 0x18 for more info)
-- **R2** should contain 0x0298 (this is the Debug are size, look at the AIF details table above for info, row 0x1c).
-- **R4** should contain 0x0000 (This is the Image ZeroInit size, have a look at the AIF details table above, row 0x20, for more info), in our case do not consider this value given that the ZeroInit code we are describing is different than the one used by the executable in the DDT screenshot.
+- **R0** should contain the value 0x00a0 (which is the size of the
+  ReadOnly area, look at the AIF header details table above, row 0x14,
+  for info)
+- **R1** should contain 0x0000 (this is the Image ReadWrite area size,
+  look at the AIF details table above row 0x18 for more info)
+- **R2** should contain 0x0298 (this is the Debug are size, look at
+  the AIF details table above for info, row 0x1c).
+- **R4** should contain 0x0000 (This is the Image ZeroInit size, have
+  a look at the AIF details table above, row 0x20, for more info), in
+  our case do not consider this value given that the ZeroInit code we
+  are describing is different than the one used by the executable in
+  the DDT screenshot.
 
-On the **5th line** we decrement IP of 16 (in some case you may see this value represented as #&10 which is the hexadecimal representation for the decimal 16). IP should contain the base address for the AIF Image (in our case 0x8000, which in RISC OS is the standard virtual base address for all applications executables).
+On the **5th line** we decrement IP of 16 (in some case you may see
+this value represented as #&10 which is the hexadecimal representation
+for the decimal 16). IP should contain the base address for the AIF
+Image (in our case 0x8000, which in RISC OS is the standard virtual
+base address for all applications executables).
 
-On the **6th line** we add the value contained in R0 to the value contained in IP and we store the result in IP. Now IP should contain the AIF image base virtual address + the size of the ReadOnly area, which in our case should be 0x80a0.
+On the **6th line** we add the value contained in R0 to the value
+contained in IP and we store the result in IP. Now IP should contain
+the AIF image base virtual address + the size of the ReadOnly area,
+which in our case should be 0x80a0.
 
-On the **7th line** we add the value contained in IP with the value contained in R1 and we put the result in IP. Now IP should contain the value of virtual base address of the AIF image + the size of the ReadOnly area + the size of the ReadWrite area, which in our case is still 0x80a0 because our ReadWrite area size was 0. This value is the base virtual address of our ***ZeroInit area.***
+On the **7th line** we add the value contained in IP with the value
+contained in R1 and we put the result in IP. Now IP should contain the
+value of virtual base address of the AIF image + the size of the
+ReadOnly area + the size of the ReadWrite area, which in our case is
+still 0x80a0 because our ReadWrite area size was 0. This value is the
+base virtual address of our ***ZeroInit area.***
 
-From line **8 to line 11** we simply set Registers R0,R1,R2 and R3 values to zero (if you are wondering why also R3, that’s because we want to do a zeroInit that is a multiple of 16 when we’ll do the STMIA at line 14).
+From line **8 to line 11** we simply set Registers R0,R1,R2 and R3
+values to zero (if you are wondering why also R3, that’s because we
+want to do a zeroInit that is a multiple of 16 when we’ll do the STMIA
+at line 14).
 
-At **line 12** we check if the value in R4 is zero, if it is then CMPS will set flag Z in the CPSR register to 1 otherwise it’ll be set to 0. Please note: the S condition at the end of CMP is irrelevant in modern ARM ASM, given that CMP always updates CPSR flags (Current Program Status Register), so the example code is old.
+At **line 12** we check if the value in R4 is zero, if it is then CMPS
+will set flag Z in the CPSR register to 1 otherwise it’ll be set
+to 0. Please note: the S condition at the end of CMP is irrelevant in
+modern ARM ASM, given that CMP always updates CPSR flags (Current
+Program Status Register), so the example code is old.
 
-At **line 13** we execute a MOVLE (LE stays for *Less than or Equal, if you’re not familiar with ARM AArch32 ASM* it can have conditional bits on each instructions which will determine if an instruction is going to be executed or not at runtime) of LR Register to PC (which basically creates a conditional return instruction that should be read like: if we are done doing the zeroInit lets return to the caller) if R4 is equal or less than 0.
+At **line 13** we execute a MOVLE (LE stays for *Less than or Equal,
+if you’re not familiar with ARM AArch32 ASM* it can have conditional
+bits on each instructions which will determine if an instruction is
+going to be executed or not at runtime) of LR Register to PC (which
+basically creates a conditional return instruction that should be read
+like: if we are done doing the zeroInit lets return to the caller) if
+R4 is equal or less than 0.
 
-At **line 14** we initialise memory addresses from IP pointed one to zero by storing the content of Registers R0,R1,R2,R3 (in a multiple of 16 fashion) and we increment IP value so that at the next round we’ll zero the next 4 locations after the one we initialised now.
+At **line 14** we initialise memory addresses from IP pointed one to
+zero by storing the content of Registers R0,R1,R2,R3 (in a multiple of
+16 fashion) and we increment IP value so that at the next round we’ll
+zero the next 4 locations after the one we initialised now.
 
-At **line 15** we subtract 16 from the value contained in R4. Given that we used a SUBS (note the S) the result of the operation will also influence the Flags in CPSR (in this case the S is needed for the MOVLE at line 13 where we’ll jump to on line 16).
+At **line 15** we subtract 16 from the value contained in R4. Given
+that we used a SUBS (note the S) the result of the operation will also
+influence the Flags in CPSR (in this case the S is needed for the
+MOVLE at line 13 where we’ll jump to on line 16).
 
-At **line 16** we jump back to line 13 and we repeat the initialisation process until all the zeroInit area is set to 0 🙂
+At **line 16** we jump back to line 13 and we repeat the
+initialisation process until all the zeroInit area is set to 0 🙂
+
 
 ## AIF Header for C developers
 
-The following struct represent an AIF32 header in C, there is a full implemented one in ROOL DDE in C:DDTLib.h.AIFHeader if you want to include it in your own code.
+The following struct represent an AIF32 header in C, there is a full
+implemented one in ROOL DDE in C:DDTLib.h.AIFHeader if you want to
+include it in your own code.
 
 ```arm
-typedef struct {  
-    uint32_t BL_decompress_code;  
-    uint32_t BL_selfreloc_code;  
-    uint32_t BL_zeroinit_code;  
-    uint32_t BL_imageentrypoint;  
-    uint32_t swi_OSExit;  
-    uint32_t size_ro;  
-    uint32_t size_rw;  
-    uint32_t size_debug;  
-    uint32_t size_zeroinit;  
-    uint32_t debug_type;  
-    uint32_t image_base;  
-    uint32_t workspace;  
-    uint32_t reserved[ 4];  
-    uint32_t zeroinitcode[16];  
+typedef struct {
+    uint32_t BL_decompress_code;
+    uint32_t BL_selfreloc_code;
+    uint32_t BL_zeroinit_code;
+    uint32_t BL_imageentrypoint;
+    uint32_t swi_OSExit;
+    uint32_t size_ro;
+    uint32_t size_rw;
+    uint32_t size_debug;
+    uint32_t size_zeroinit;
+    uint32_t debug_type;
+    uint32_t image_base;
+    uint32_t workspace;
+    uint32_t reserved[ 4];
+    uint32_t zeroinitcode[16];
 } AIF32HeaderBlock;
 ```
 
