@@ -206,7 +206,7 @@ extern _3DOBinHeader	__my_3DOBinHeader;
 extern "C" {
 #endif  /* __cplusplus */
 
-  extern AIFHeader *FindImage(AIFHeader *aifp, uint32 pagemask, char *aifname);
+extern AIFHeader *FindImage(AIFHeader *aifp, uint32 pagemask, char *aifname);
 
 #ifdef  __cplusplus
 }
