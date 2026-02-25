@@ -63,13 +63,18 @@ An AIF file layout is composed by:
 - Header (more details later on)
 - A read-only area
 - A read-write area
-- Debugging data (this is optional and populated when asking compilers, assemblers and linkers to add such info to the output file)
+- Debugging data (this is optional and populated when asking
+  compilers, assemblers and linkers to add such info to the output
+  file)
 - Self-relocation code (position independent)
 - Relocation list (a list of words to relocate terminated by a -1)
 
+
 ## Characteristics of the AIF files
 
-The ARM STD Reference Guide reports that there are 3 types of AIF files:
+The ARM STD Reference Guide reports that there are 3 types of AIF
+files.
+
 
 ### Executable AIF file
 
