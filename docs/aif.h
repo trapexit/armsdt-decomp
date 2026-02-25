@@ -174,19 +174,19 @@ extern AIFHeader	__my_AIFHeader;
 typedef struct _3DOBinHeader
 {
   ItemNode _3DO_Item;
-  uint8	_3DO_Flags;
-  uint8	_3DO_OS_Version;	/* compiled for this OS release */
-  uint8	_3DO_OS_Revision;
-  uint8	_3DO_Reserved;
-  uint32	_3DO_Stack;		/* stack requirements */
-  uint32	_3DO_FreeSpace;		/* preallocate bytes for FreeList */
-  uint32	_3DO_Signature;		/* if privileged, offset to beginning of sig */
-  uint32	_3DO_SignatureLen;	/* length of signature */
-  uint32	_3DO_MaxUSecs;		/* max usecs before task switch */
-  uint32	_3DO_Reserved0;		/* must be zero */
-  char	_3DO_Name[32];		/* optional task name on startup */
-  uint32	_3DO_Time;		/* seconds since 1/1/93 00:00:00 GMT */
-  uint32	_3DO_Reserved1[7];	/* must be zero */
+  uint8    _3DO_Flags;
+  uint8    _3DO_OS_Version;	/* compiled for this OS release */
+  uint8    _3DO_OS_Revision;
+  uint8    _3DO_Reserved;
+  uint32   _3DO_Stack;		/* stack requirements */
+  uint32   _3DO_FreeSpace;	/* preallocate bytes for FreeList */
+  uint32   _3DO_Signature;	/* if privileged, offset to beginning of sig */
+  uint32   _3DO_SignatureLen;	/* length of signature */
+  uint32   _3DO_MaxUSecs;	/* max usecs before task switch */
+  uint32   _3DO_Reserved0;	/* must be zero */
+  char     _3DO_Name[32];	/* optional task name on startup */
+  uint32   _3DO_Time;		/* seconds since 1/1/93 00:00:00 GMT */
+  uint32   _3DO_Reserved1[7];	/* must be zero */
 } _3DOBinHeader;
 
 extern _3DOBinHeader	__my_3DOBinHeader;
