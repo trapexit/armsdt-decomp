@@ -110,21 +110,30 @@ files.
 > time I’ll add an article about the details of how this mechanism
 > works.
 
+
 ### Non-Executable AIF file
 
-- This type of AIF needs to be prepared for execution by an *image loader*.
-- When the image loader has prepared this type of AIF by following the header, the header will be discarded
-- The base address of this type of AIF is the address where it should be loaded
+- This type of AIF needs to be prepared for execution by an *image
+  loader*.
+- When the image loader has prepared this type of AIF by following the
+  header, the header will be discarded
+- The base address of this type of AIF is the address where it should
+  be loaded
+
 
 ### Extended AIF file
 
 - This type of AIF is a special type of Non-Executable AIF.
 - This type of AIF contains a *scatter-loaded image*.
-- It has a header that points to a chain of descriptors within the file.
+- It has a header that points to a chain of descriptors within the
+  file.
+
 
 ## The AIF header
 
-The AIF header, which may also be displayed in some debuggers on RISC OS, has a word (32bit) structure. Having some knowledge of it will help understanding what’s going on when we start a debugging session.
+The AIF header, which may also be displayed in some debuggers on RISC
+OS, has a word (32bit) structure. Having some knowledge of it will
+help understanding what’s going on when we start a debugging session.
 
 The AIF header is generally composed by:
 
