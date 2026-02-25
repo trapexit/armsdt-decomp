@@ -157,40 +157,81 @@ The AIF header is generally composed by:
 | 0x40 | DBGInit / NOP | Debug Initialisation Instruction OR No Operation if DBGInit is unused |
 | 0x44 | ZeroInit code 15 words | Header is 32 words long |
 
-AIF Header details Table
 
 ## The Binary Image
 
-The binary image is fundamentally our code and, given that most of the compilers available for RISC OS only support static linking, it also contains all the libraries you may have used during the static linking phase.
+The binary image is fundamentally our code and, given that most of the
+compilers available for RISC OS only support static linking, it also
+contains all the libraries you may have used during the static linking
+phase.
 
-The Image EntryPoint may also depend on the runtime library used with our code, for example if we used a compiler that links against the SharedCLibrary then the AIF header EntryPoint will be the initialisation of the SharedCLibrary that, when done, will call our code’s main function.
+The Image EntryPoint may also depend on the runtime library used with
+our code, for example if we used a compiler that links against the
+SharedCLibrary then the AIF header EntryPoint will be the
+initialisation of the SharedCLibrary that, when done, will call our
+code’s main function.
 
-The Image EntryPoint for a simple Assembly binary code (for example from the ObjAsm) will be the EntryPoint of our code.
+The Image EntryPoint for a simple Assembly binary code (for example
+from the ObjAsm) will be the EntryPoint of our code.
+
 
 ## Practical Example
 
-The picture here below displays a typical HelloWorld program AIF header (source is ARM ASM) and the Binary Image (Figure generated in the Acorn / ROOL DDT debugger). The beginning of the code is called *symbolic disassembly of the run-time system initialisation code*.
+The picture here below displays a typical HelloWorld program AIF
+header (source is ARM ASM) and the Binary Image (Figure generated in
+the Acorn / ROOL DDT debugger). The beginning of the code is called
+*symbolic disassembly of the run-time system initialisation code*.
 
 - At location 0x8000 (locations are on your left, first window’s column) we find the first NOP (mind that the NOP instruction gets disassembled as MOV r0,r0 on ARM). This generally tells us that the executable AIF above is not compressed.   
-  **Please note:** Some very old Assembler may assemble NOP as BL instruction with the NV condition (NV = Never) **BLNV**. NV condition will force the instruction to never execute. This was the very old recommendation to assemble the NOP instruction. Basically BLNV will never jump hence it’s equivalent to NOP. Given that on old ARMs, MOV without condition flags is fully decoded by the PLA (while condition’s bits are processed after the pseudo microcode is decoded), one could argue that internally MOV r0,r0 is probably a sligthely better way to encode NOP.
-- The second NOP at 0x8000 + 0x04 tells us that this AIF is NOT self-relocating.
-- The BL at 0x8000 + 0x08 tells us this AIF has a ZeroInit section at 0x8040 which starts with the NOP and then, when the ZeroInit has completed at 0x8070, we load the *Link Register* (lr) back into the *Program Counter* (pc) which in ARM Assembly is the same as a “return” instruction, so we’ll return back to 0x800c.
-- At 0x800c execution will jump to our Binary Image EntryPoint  which has label main (don’t get confused between this label and the C main function entry point, in this case the main label correspond to the ASM directive ENTRY).
+  **Please note:** Some very old Assembler may assemble NOP as BL
+  instruction with the NV condition (NV = Never) **BLNV**. NV
+  condition will force the instruction to never execute. This was the
+  very old recommendation to assemble the NOP instruction. Basically
+  BLNV will never jump hence it’s equivalent to NOP. Given that on old
+  ARMs, MOV without condition flags is fully decoded by the PLA (while
+  condition’s bits are processed after the pseudo microcode is
+  decoded), one could argue that internally MOV r0,r0 is probably a
+  sligthely better way to encode NOP.
+- The second NOP at 0x8000 + 0x04 tells us that this AIF is NOT
+  self-relocating.
+- The BL at 0x8000 + 0x08 tells us this AIF has a ZeroInit section at
+  0x8040 which starts with the NOP and then, when the ZeroInit has
+  completed at 0x8070, we load the *Link Register* (lr) back into the
+  *Program Counter* (pc) which in ARM Assembly is the same as a
+  “return” instruction, so we’ll return back to 0x800c.
+- At 0x800c execution will jump to our Binary Image EntryPoint  which
+  has label main (don’t get confused between this label and the C main
+  function entry point, in this case the main label correspond to the
+  ASM directive ENTRY).
 - At 0x8080 our HelloWorld code starts and does its job.
-- At location 0x8030 we can see that the Address mode is set to 0, this is because when I assembled and linked the ASM source, I did not specify any external library and so no APCS (ARM Procedure Call Standard) was set for this Executable AIF.
-- At location 0x8010 we can see the SWI (Service call) OS\_Exit that will return to the OS when the execution of our code will complete.
+- At location 0x8030 we can see that the Address mode is set to 0,
+  this is because when I assembled and linked the ASM source, I did
+  not specify any external library and so no APCS (ARM Procedure Call
+  Standard) was set for this Executable AIF.
+- At location 0x8010 we can see the SWI (Service call) OS\_Exit that
+  will return to the OS when the execution of our code will complete.
+
 
 ### The DBGInit Instruction
 
-At 0x8040 the Debug Initialisation Instruction is optional and generally this field is left as NOP. However, from the official RISC OS documentation, this field, if used, is expected to be a SWI instruction which should alert a debugger that a debuggable image is starting execution. This however doesn’t seem to be required for debuggers on RISC OS.
+At 0x8040 the Debug Initialisation Instruction is optional and
+generally this field is left as NOP. However, from the official RISC
+OS documentation, this field, if used, is expected to be a SWI
+instruction which should alert a debugger that a debuggable image is
+starting execution. This however doesn’t seem to be required for
+debuggers on RISC OS.
+
 
 ### The ZeroInit code
 
-This code is generally standard and is added by the Linker when we link our object file generated either by a compiler or an assembler.
+This code is generally standard and is added by the Linker when we
+link our object file generated either by a compiler or an assembler.
 
-It basically is a simplified version of a self-move code and make sure the AIF can be tailored easily to new environments.
+It basically is a simplified version of a self-move code and make sure
+the AIF can be tailored easily to new environments.
 
-Below there is an example with comments extracted from the ARM official docs (for your reference):
+Below there is an example with comments extracted from the ARM
+official docs (for your reference):
 
 ```arm
         NOP                       ; or  
