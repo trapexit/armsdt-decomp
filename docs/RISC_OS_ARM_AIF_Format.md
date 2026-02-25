@@ -78,15 +78,37 @@ files.
 
 ### Executable AIF file
 
-- This type of AIF is the most common (and it’s basically used for most `!RunImage` files for RISC OS applications) can be loaded at its load address and entered or executed from there
+- This type of AIF is the most common (and it’s basically used for
+  most `!RunImage` files for RISC OS applications) can be loaded at
+  its load address and entered or executed from there
 - When executed it can relocate itself if required.
-- It can create its own *zero-initialized* area (using the ZeroInit code subroutine, explained later here).
-- The image header contains code that ensures that the image is setup correctly for execution before being executed at its entry-point.
-- The 4th word of an executable AIF header is always: `BL entry-point-address`
-- The base address of this AIF is where the AIF header is loaded, while the code address is at *base\_address* + 0x80
-- On RISC OS the base address for our Executable AIF header is always 0x8000 unless it relocates itself.
+- It can create its own *zero-initialized* area (using the ZeroInit
+  code subroutine, explained later here).
+- The image header contains code that ensures that the image is setup
+  correctly for execution before being executed at its entry-point.
+- The 4th word of an executable AIF header is always: `BL
+  entry-point-address`
+- The base address of this AIF is where the AIF header is loaded,
+  while the code address is at *base\_address* + 0x80
+- On RISC OS the base address for our Executable AIF header is always
+  0x8000 unless it relocates itself.
 
-> **For Beginners:** If you are wondering how it is possible that all applications load to the same address (0x8000) without overwriting each-other, this is because RISC OS has been designed from the beginning around the concept of using an MMU (Memory Management Unit) and Virtual Memory Address space (although if such concept is quite rudimental in RISC OS compared to modern Operating Systems). In other words that 0x8000 is actually a virtual address which gets mapped into different physical addresses in memory by the MMU using page allocation tables created by RISC OS itself at startup (it seems to be using a mechanism similar to bank switching if that helps to clarify the concept). This mechanism, however, is available only when using the WIMP (RIS COS Desktop), it is not available when using the old fashioned CLI. So, when using the CLI, only one Absolute file can be executed at any given time. If I have time I’ll add an article about the details of how this mechanism works.
+> **For Beginners:** If you are wondering how it is possible that all
+> applications load to the same address (0x8000) without overwriting
+> each-other, this is because RISC OS has been designed from the
+> beginning around the concept of using an MMU (Memory Management
+> Unit) and Virtual Memory Address space (although if such concept is
+> quite rudimental in RISC OS compared to modern Operating
+> Systems). In other words that 0x8000 is actually a virtual address
+> which gets mapped into different physical addresses in memory by the
+> MMU using page allocation tables created by RISC OS itself at
+> startup (it seems to be using a mechanism similar to bank switching
+> if that helps to clarify the concept). This mechanism, however, is
+> available only when using the WIMP (RIS COS Desktop), it is not
+> available when using the old fashioned CLI. So, when using the CLI,
+> only one Absolute file can be executed at any given time. If I have
+> time I’ll add an article about the details of how this mechanism
+> works.
 
 ### Non-Executable AIF file
 
