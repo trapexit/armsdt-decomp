@@ -1,5 +1,5 @@
-#pragma force_top_level
-#pragma once
+#ifndef __AIF_H
+#define __AIF_H
 
 /*
 ** WARNING!  Some mac folks (Bill Duvall, David Maynard, etc.) have
@@ -103,6 +103,9 @@
   Confidential and Proprietary.  DO NOT DISTRIBUTE EXTERNALLY.
 */
 
+#pragma force_top_level
+#pragma include_only_once
+
 #include "types.h"
 #include "nodes.h"
 
@@ -125,29 +128,28 @@
 #define AIF_DBG_LL	1
 
 
-typedef struct AIFHeader AIFHeader;
-struct AIFHeader
+typedef struct AIFHeader
 {
-  uint32 aif_blDecompress;	/* NOP if image not compressed */
-  uint32 aif_blSelfReloc;	/* NOP if image not self-relocating */
-  uint32 aif_blZeroInit;	/* NOP if image has none */
-  uint32 aif_blEntry;
-  uint32 aif_SWIexit;		/* in case of return from main() */
-  int32  aif_ImageROsize;	/* includes header */
-  int32  aif_ImageRWsize;	/* exact size */
-  int32  aif_DebugSize;		/* exact size */
-  int32  aif_ZeroInitSize;	/* exact size, (right...) */
-  int32  aif_ImageDebugType;	/* 0, 1, 2, or 3 */
-  uint32 aif_ImageBase;		/* addr image linked at */
-  int32  aif_WorkSpace;         /* initial stack size recommended */
-  uint32 aif_AddressMode;
-  uint32 aif_DataBaseAddr;	/* Addr image data linked at */
-  uint32 aif_Reserved[2];
-  uint32 aif_DebugInit;		/* NOP if unused */
-  uint32 aif_ZeroInitCode[15];
-};
+  uint32	aif_blDecompress;	/* NOP if image not compressed */
+  uint32	aif_blSelfReloc;	/* NOP if image not self-relocating */
+  uint32	aif_blZeroInit;		/* NOP if image has none */
+  uint32	aif_blEntry;
+  uint32	aif_SWIexit;		/* in case of return from main() */
+  int32	aif_ImageROsize;	/* includes header */
+  int32	aif_ImageRWsize;	/* exact size */
+  int32	aif_DebugSize;		/* exact size */
+  int32	aif_ZeroInitSize;	/* exact size, (right...) */
+  int32	aif_ImageDebugType;	/* 0, 1, 2, or 3 */
+  uint32	aif_ImageBase;		/* addr image linked at */
+  int32	aif_WorkSpace;	/* initial stack size recommended */
+  uint32	aif_AddressMode;
+  uint32	aif_DataBaseAddr;	/* Addr image data linked at */
+  uint32	aif_Reserved[2];
+  uint32	aif_DebugInit;		/* NOP if unused */
+  uint32	aif_ZeroInitCode[15];
+} AIFHeader;
 
-extern AIFHeader __my_AIFHeader;
+extern AIFHeader	__my_AIFHeader;
 
 /* AddressMode flags */
 #define AIF_DATABASAT	0x00000100	/* if has separate data base */
@@ -169,26 +171,25 @@ extern AIFHeader __my_AIFHeader;
 /* needed task parameters from the following structure */
 /* above stack WS/aif encoded stack is ignored */
 
-typedef struct _3DOBinHeader _3DOBinHeader;
-struct _3DOBinHeader
+typedef struct _3DOBinHeader
 {
   ItemNode _3DO_Item;
-  uint8    _3DO_Flags;
-  uint8    _3DO_OS_Version;	/* compiled for this OS release */
-  uint8    _3DO_OS_Revision;
-  uint8    _3DO_Reserved;
-  uint32   _3DO_Stack;		/* stack requirements */
-  uint32   _3DO_FreeSpace;	/* preallocate bytes for FreeList */
-  uint32   _3DO_Signature;	/* if privileged, offset to beginning of sig */
-  uint32   _3DO_SignatureLen;	/* length of signature */
-  uint32   _3DO_MaxUSecs;	/* max usecs before task switch */
-  uint32   _3DO_Reserved0;	/* must be zero */
-  char     _3DO_Name[32];	/* optional task name on startup */
-  uint32   _3DO_Time;		/* seconds since 1/1/93 00:00:00 GMT */
-  uint32   _3DO_Reserved1[7];	/* must be zero */
-};
+  uint8	_3DO_Flags;
+  uint8	_3DO_OS_Version;	/* compiled for this OS release */
+  uint8	_3DO_OS_Revision;
+  uint8	_3DO_Reserved;
+  uint32	_3DO_Stack;		/* stack requirements */
+  uint32	_3DO_FreeSpace;		/* preallocate bytes for FreeList */
+  uint32	_3DO_Signature;		/* if privileged, offset to beginning of sig */
+  uint32	_3DO_SignatureLen;	/* length of signature */
+  uint32	_3DO_MaxUSecs;		/* max usecs before task switch */
+  uint32	_3DO_Reserved0;		/* must be zero */
+  char	_3DO_Name[32];		/* optional task name on startup */
+  uint32	_3DO_Time;		/* seconds since 1/1/93 00:00:00 GMT */
+  uint32	_3DO_Reserved1[7];	/* must be zero */
+} _3DOBinHeader;
 
-extern _3DOBinHeader __my_3DOBinHeader;
+extern _3DOBinHeader	__my_3DOBinHeader;
 
 /* _3DO_Flags */
 #define	_3DO_DATADISCOK	32	/* App willing to accept data discs */
@@ -201,6 +202,16 @@ extern _3DOBinHeader __my_3DOBinHeader;
 
 #define aif_MD4DataSize		aif_Reserved[0]
 
-extern AIFHeader *FindImage(AIFHeader *aifp, uint32 pagemask, char *aifname);
+#ifdef  __cplusplus
+extern "C" {
+#endif  /* __cplusplus */
 
-#define	nextImage(aifp,pagemask) FindImage(aifp,pagemask,(char *)NULL)
+  extern AIFHeader *FindImage(AIFHeader *aifp, uint32 pagemask, char *aifname);
+
+#ifdef  __cplusplus
+}
+#endif  /* __cplusplus */
+
+#define	nextImage(aifp,pagemask)	FindImage(aifp,pagemask,(char *)NULL)
+
+#endif
