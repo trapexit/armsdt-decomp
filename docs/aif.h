@@ -130,23 +130,23 @@
 
 typedef struct AIFHeader
 {
-  uint32	aif_blDecompress;	/* NOP if image not compressed */
-  uint32	aif_blSelfReloc;	/* NOP if image not self-relocating */
-  uint32	aif_blZeroInit;		/* NOP if image has none */
-  uint32	aif_blEntry;
-  uint32	aif_SWIexit;		/* in case of return from main() */
-  int32	aif_ImageROsize;	/* includes header */
-  int32	aif_ImageRWsize;	/* exact size */
-  int32	aif_DebugSize;		/* exact size */
-  int32	aif_ZeroInitSize;	/* exact size, (right...) */
-  int32	aif_ImageDebugType;	/* 0, 1, 2, or 3 */
-  uint32	aif_ImageBase;		/* addr image linked at */
-  int32	aif_WorkSpace;	/* initial stack size recommended */
-  uint32	aif_AddressMode;
-  uint32	aif_DataBaseAddr;	/* Addr image data linked at */
-  uint32	aif_Reserved[2];
-  uint32	aif_DebugInit;		/* NOP if unused */
-  uint32	aif_ZeroInitCode[15];
+  uint32 aif_blDecompress;	/* NOP if image not compressed */
+  uint32 aif_blSelfReloc;	/* NOP if image not self-relocating */
+  uint32 aif_blZeroInit;	/* NOP if image has none */
+  uint32 aif_blEntry;
+  uint32 aif_SWIexit;		/* in case of return from main() */
+  int32  aif_ImageROsize;	/* includes header */
+  int32  aif_ImageRWsize;	/* exact size */
+  int32  aif_DebugSize;		/* exact size */
+  int32  aif_ZeroInitSize;	/* exact size, (right...) */
+  int32  aif_ImageDebugType;	/* 0, 1, 2, or 3 */
+  uint32 aif_ImageBase;		/* addr image linked at */
+  int32  aif_WorkSpace;         /* initial stack size recommended */
+  uint32 aif_AddressMode;
+  uint32 aif_DataBaseAddr;	/* Addr image data linked at */
+  uint32 aif_Reserved[2];
+  uint32 aif_DebugInit;		/* NOP if unused */
+  uint32 aif_ZeroInitCode[15];
 } AIFHeader;
 
 extern AIFHeader	__my_AIFHeader;
