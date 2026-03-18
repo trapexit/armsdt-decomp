@@ -1079,19 +1079,32 @@ second pass will begin. Failing to end a file with END is an error.
 ORG numeric-expression
 ```
 
-A program's origin is determined by the ORG directive, which sets the initial value of the program location counter. Only one ORG is allowed in an assembly and no ARM instructions or store initialisation directives may precede it. If there is no ORG, the program is relocatable and the program counter is initialised to 0.
+A program's origin is determined by the ORG directive, which sets the
+initial value of the program location counter. Only one ORG is allowed
+in an assembly and no ARM instructions or store initialisation
+directives may precede it. If there is no ORG, the program is
+relocatable and the program counter is initialised to 0.
 
 ```text
 LTORG
 ```
 
-LTORG directs that the current literal pool be assembled immediately following it. A default LTORG is executed at every END directive which is not part of a nested assembly, but large programs may need several literal pools, each closer to where their literals are used to avoid violating LDR's 4KB offset limit.
+LTORG directs that the current literal pool be assembled immediately
+following it. A default LTORG is executed at every END directive which
+is not part of a nested assembly, but large programs may need several
+literal pools, each closer to where their literals are used to avoid
+violating LDR's 4KB offset limit.
 
 ```text
 KEEP {symbol}
 ```
 
-The assembler does not by default describe local (*non-exported*, see [Links to other object files - IMPORT and EXPORT](#links-to-other-object-files)) symbols in its output object file. However, they can be retained in the object file's symbol table by using the KEEP directive. If the directive is used alone all symbols are kept; if only a specific symbol needs to be kept it can be specified by name.
+The assembler does not by default describe local (*non-exported*, see
+"Links to other object files - IMPORT and EXPORT") symbols in its
+output object file. However, they can be retained in the object file's
+symbol table by using the KEEP directive. If the directive is used
+alone all symbols are kept; if only a specific symbol needs to be kept
+it can be specified by name.
 
 ### Links to other object files
 
@@ -1100,9 +1113,21 @@ IMPORT symbol{[FPREGARGS]}{,WEAK}
 EXPORT symbol{[FPREGARGS,DATA,LEAF]}
 ```
 
-IMPORT provides the assembler with a name (symbol) which is not defined in this assembly, but will be resolved at link time to a symbol defined in another, separate object file. The symbol is treated as a program address; if the WEAK attribute is given the Linker will not fault an unresolved reference to this symbol, but will zero the location referring to it. If [FPREGARGS] is present, the symbol defines a function which expects floating point arguments passed to it in floating point registers.
+IMPORT provides the assembler with a name (symbol) which is not
+defined in this assembly, but will be resolved at link time to a
+symbol defined in another, separate object file. The symbol is treated
+as a program address; if the WEAK attribute is given the Linker will
+not fault an unresolved reference to this symbol, but will zero the
+location referring to it. If [FPREGARGS] is present, the symbol
+defines a function which expects floating point arguments passed to it
+in floating point registers.
 
-EXPORT declares a symbol for use at link time by other, separate object files. FPREGARGS signifies that the symbol defines a function which expects floating point arguments to be passed to it in floating point registers. DATA denotes that the symbol defines a code-segment datum rather than a function or a procedure entry point, and LEAF that it is a leaf function which calls no other functions.
+EXPORT declares a symbol for use at link time by other, separate
+object files. FPREGARGS signifies that the symbol defines a function
+which expects floating point arguments to be passed to it in floating
+point registers. DATA denotes that the symbol defines a code-segment
+datum rather than a function or a procedure entry point, and LEAF that
+it is a leaf function which calls no other functions.
 
 ### Links to other source files
 
@@ -1111,7 +1136,10 @@ GET filename
 INCLUDE filename
 ```
 
-GET includes a file within the file being assembled. This file may in turn use GET directives to include further files. Once assembly of the included file is complete, assembly continues in the including file at the line following the GET directive. INCLUDE is a synonym for GET.
+GET includes a file within the file being assembled. This file may in
+turn use GET directives to include further files. Once assembly of the
+included file is complete, assembly continues in the including file at
+the line following the GET directive. INCLUDE is a synonym for GET.
 
 ### Diagnostic generation
 
@@ -1120,13 +1148,27 @@ ASSERT logical-expression
 ! arithmetic-expression, string-expression
 ```
 
-ASSERT supports diagnostic generation. If the *logical expression* returns {FALSE}, a diagnostic is generated during the second pass of the assembly. ASSERT can be used both inside and outside macros.
+ASSERT supports diagnostic generation. If the *logical expression*
+returns {FALSE}, a diagnostic is generated during the second pass of
+the assembly. ASSERT can be used both inside and outside macros.
 
-! is related to ASSERT but is inspected on both passes of the assembly, providing a more flexible means for creating custom error messages. The arithmetic expression is evaluated; if it equals zero, no action is taken during pass one, but the string is printed as a warning during pass two; if the expression does not equal zero, the string is printed as a diagnostic and the assembly halts after pass one.
+! is related to ASSERT but is inspected on both passes of the
+assembly, providing a more flexible means for creating custom error
+messages. The arithmetic expression is evaluated; if it equals zero,
+no action is taken during pass one, but the string is printed as a
+warning during pass two; if the expression does not equal zero, the
+string is printed as a diagnostic and the assembly halts after pass
+one.
 
 ### Dynamic listing options - OPT
 
-The OPT directive is used to set listing options from within the source code, providing that listing is turned on. The default setting is to produce a normal listing including the declaration of variables, macro expansions, call-conditioned directives and MEND directives, but without producing a pass one listing. These settings can be altered by adding the appropriate values from the list below, and using them with the OPT directive as follows:
+The OPT directive is used to set listing options from within the
+source code, providing that listing is turned on. The default setting
+is to produce a normal listing including the declaration of variables,
+macro expansions, call-conditioned directives and MEND directives, but
+without producing a pass one listing. These settings can be altered by
+adding the appropriate values from the list below, and using them with
+the OPT directive as follows:
 
 | OPT n | Effect |
 | --- | --- |
@@ -1149,7 +1191,11 @@ The OPT directive is used to set listing options from within the source code, pr
 
 ### Titles - TTL and SUBT
 
-Titles can be specified within the code using the TTL (title) and SUBT (subtitle) directives. Each is used on all pages until a new title or subtitle is called. If more than one appears on a page, only the latest will be used: the directives alone create blank lines at the top of the page. The syntax is:
+Titles can be specified within the code using the TTL (title) and SUBT
+(subtitle) directives. Each is used on all pages until a new title or
+subtitle is called. If more than one appears on a page, only the
+latest will be used: the directives alone create blank lines at the
+top of the page. The syntax is:
 
 ```text
 TTL title
@@ -1162,13 +1208,24 @@ SUBT subtitle
 ALIGN {power-of-two{,offset-expression}}
 ```
 
-After store-loading directives have been used, the program counter (PC) will not necessarily point to a word boundary. If an instruction mnemonic is then encountered, the assembler will insert up to three bytes of zeros to achieve alignment. However, an intervening label may not then address the following instruction. If this label is required, ALIGN should be used. On its own, ALIGN sets the instruction location to the next word boundary; the optional power-of-two parameter can be used to align with a coarser byte boundary, and the *offset expression* parameter to define a byte offset from that boundary.
+After store-loading directives have been used, the program counter
+(PC) will not necessarily point to a word boundary. If an instruction
+mnemonic is then encountered, the assembler will insert up to three
+bytes of zeros to achieve alignment. However, an intervening label may
+not then address the following instruction. If this label is required,
+ALIGN should be used. On its own, ALIGN sets the instruction location
+to the next word boundary; the optional power-of-two parameter can be
+used to align with a coarser byte boundary, and the *offset
+expression* parameter to define a byte offset from that boundary.
 
 ```text
 NOFP
 ```
 
-In some circumstances there will be no support in either target hardware or software for floating point instructions. In these cases the NOFP directive can be used to ensure that no floating point instructions or directives are allowed in the code.
+In some circumstances there will be no support in either target
+hardware or software for floating point instructions. In these cases
+the NOFP directive can be used to ensure that no floating point
+instructions or directives are allowed in the code.
 
 ```text
 RLIST
@@ -1180,7 +1237,10 @@ The syntax of this directive is:
 label RLIST list-of-registers
 ```
 
-The RLIST (register list) directive can be used to give a name to a set of registers to be transferred by LDM or STM. *List-of-registers* is a list of register names or ranges enclosed in {} (see [Block data transfer - LDM and STM](#block-data-transfer)).
+The RLIST (register list) directive can be used to give a name to a
+set of registers to be transferred by LDM or STM. *List-of-registers*
+is a list of register names or ranges enclosed in {} (see "Block data
+transfer - LDM and STM").
 
 ```text
 ENTRY
