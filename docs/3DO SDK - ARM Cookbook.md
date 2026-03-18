@@ -345,7 +345,7 @@ entry in a table of words and then loads the desired word:
         LDR  R1, =StartOfTable
         MOV  R3, #4
         MLA  R1, R0, R3, R1
-        LDR  R2, [R1]
+        LDR  R2, "R1"
         ...
     StartOfTable
         DCD table data
@@ -358,7 +358,7 @@ can be performed by the barrel shifter more efficiently as follows:
 
     ; R0 holds the entry number [0,1,2,...]
         LDR  R1, =StartOfTable
-        LDR  R2, [R1, R0, LSL #2]
+        LDR  R2, "R1, R0, LSL #2"
         ...
     StartOfTable
         DCD table data
@@ -697,12 +697,12 @@ comment is the ARM instruction which gets produced by **armasm**.
       AREA Example, CODE, REL
     
       LDR R0, =42                  ;=> MOV R0, #42
-      LDR R1, =&55555555           ;=> LDR R1, [PC, #offset to Literal Pool 1]
+      LDR R1, =&55555555           ;=> LDR R1, "PC, #offset to Literal Pool 1"
       LDR R2, =&FFFFFFFF           ; => MVN R2, #0
     
       LTORG                        ; Literal Pool 1 contains literal &55555555
     
-      LDR R3, =&55555555           ; => LDR R3, [PC, #offset to Literal Pool 1]
+      LDR R3, =&55555555           ; => LDR R3, "PC, #offset to Literal Pool 1"
     ; LDR R4, =&66666666           ; If this is uncommented it fails, Literal
                                    ; Pool 2 is not accessible (out of reach)
     
@@ -743,8 +743,8 @@ ADRL). If no suitable literal is already available, then the literal
 placed into the next literal pool will be the offset into the AREA,
 and an AREA relative relocation directive will be added to ensure that
 the constant is appropriate wherever the containing AREA gets located
-by the linker. See [The handling of relocation
-directives](../arrfldr/3arre.html#XREF31016) for more information
+by the linker. See "The handling of relocation
+directives" for more information
 about relocation directives.
 
 As an example consider the code below. The instruction listed in the
@@ -863,7 +863,7 @@ that decaof dissassemble the code area.
 ## Related topics
 
 For more information on the capabilities of the barrel shifter see
-[Using the Barrel Shifter.
+"Using the Barrel Shifter."
 
 # Integer to string conversion
 
@@ -1086,8 +1086,8 @@ This discussion raises another delicacy. The stacking technique
 illustrated here conforms to the ARM Procedure Call Standard only if
 the function using it makes no function calls. **utoa** calls both
 **udiv10** and itself; it really ought to establish a proper stack
-frame (see [ARM Procedure Call
-Standard](../atsfldr/ats4frst.html#XREF28151)). If you really want to
+frame (see "ARM Procedure Call
+Standard"). If you really want to
 be safe and write functions that can 'plug and play together' you have
 to follow the APCS exactly.
 
@@ -1105,8 +1105,8 @@ doesn't conform to the APCS.
 Note however: if you call any function whose stack use is unknown (but
 which is believed to be APCS conforming), you court disaster unless
 you establish a proper APCS call frame and perform APCS stack limit
-checking on function entry. Please refer to [ARM Procedure Call
-Standard](../atsfldr/ats4frst.html#XREF28151) for further details.
+checking on function entry. Please refer to "ARM Procedure Call
+Standard" for further details.
 
 ## Related topics
 
@@ -2257,7 +2257,7 @@ the alignment of the data address, by using the ARM's byte saving
 instructions:
 
        STRB   R0, [R2, #0]       ; 16-bit value is stored to the address
-       MOV    R0, R0, ROR #8     ; in R2.STRB   R0, [R2, #1]
+       MOV    R0, R0, ROR #8     ; in R2.STRB   R0, "R2, #1"
     ;  MOV    R0, R0, ROR #24
 
 The second MOV instruction is not needed if the data is no longer
@@ -2392,7 +2392,7 @@ the alignment of the data address:
 
         STRB   R0, [R2, #1]           ; 16-bit value is stored to the
         MOV    R0, R0, ROR #8         ; address in R2.
-        STRB   R0, [R2, #0]
+        STRB   R0, "R2, #0"
     ;   MOV    R0, R0, ROR #24
 
 The second MOV instruction is not needed if the data is no longer
@@ -2697,7 +2697,7 @@ have already been configured appropriately.
 *armsd* can be used to run this program as follows:
 
     > armsd -li randtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file randtest
@@ -2804,7 +2804,7 @@ to be *examples* and then use the following commands:
 
     >armcc bytedemo.c -o bytedemo -li -apcs 3/32bit
     >armsd -li bytedemo
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little endian.
     Object program file bytedemo
     armsd: go
@@ -2925,8 +2925,8 @@ y\[i+1\]. Below is a code fragment which performs this:
 
         LDR    R2, [R0]                                 ; Preload y[i]
     Loop
-        LDR    R3, [R0, #4]!!                           ; Load y[i+1]
-        SUB    R2, R2, R3                               ; x[i] = y[i] - y[i+1]
+        LDR    R3, [R0, #4]!!                           ; Load y"i+1"
+        SUB    R2, R2, R3                               ; x[i] = y[i] - y"i+1"
         STR    R2, [R1], #4                             ; Store x[i]
         MOV    R2, R3                                   ; y[i+1] is the next y[i]
         CMP    R0, R4                                   ; Finished ?
@@ -2988,11 +2988,11 @@ above:
 
         LDR     R2, [R0], #4                          ; Preload y[i]
     Loop
-        LDMIA   R0!, {R3-R5}                          ; Load y[i+1] to y[i+3]
-        SUB     R2, R2, R3                            ; x[i]   = y[i]   - y[i+1]
-        SUB     R3, R3, R4                            ; x[i+1] = y[i+1] - y[i+2]
-        SUB     R4, R4, R5                            ; x[i+2] = y[i+2] - y[i+3]
-        STMIA   R1!, {R2-R4}                          ; Store x[i] to x[i+2]
+        LDMIA   R0!, {R3-R5}                          ; Load y[i+1] to y"i+3"
+        SUB     R2, R2, R3                            ; x[i]   = y[i]   - y"i+1"
+        SUB     R3, R3, R4                            ; x[i+1] = y[i+1] - y"i+2"
+        SUB     R4, R4, R5                            ; x[i+2] = y[i+2] - y"i+3"
+        STMIA   R1!, {R2-R4}                          ; Store x[i] to x"i+2"
         MOV     R2, R5                                ; y[i+3] is the next y[i]
         CMP     R0, R6                                ; Finished ?
         BLT     Loop
@@ -3009,18 +3009,18 @@ way:
 
         LDR     R2, [R0], #4                               ; Preload y[i]
     Loop
-        LDMIA   R0!, {R3-R12}                              ; Load y[i+1] to y[i+10]
-        SUB     R2,  R2,  R3                               ; x[i]   = y[i]   - y[i+1]
-        SUB     R3,  R3,  R4                               ; x[i+1] = y[i+1] - y[i+2]
-        SUB     R4,  R4,  R5                               ; x[i+2] = y[i+2] - y[i+3]
-        SUB     R5,  R5,  R6                               ; x[i+3] = y[i+3] - y[i+4]
-        SUB     R6,  R6,  R7                               ; x[i+4] = y[i+4] - y[i+5]
-        SUB     R7,  R7,  R8                               ; x[i+5] = y[i+5] - y[i+6]
-        SUB     R8,  R8,  R9                               ; x[i+6] = y[i+6] - y[i+7]
-        SUB     R9,  R9,  R10                              ; x[i+7] = y[i+7] - y[i+8]
-        SUB     R10, R10, R11                              ; x[i+8] = y[i+8] - y[i+9]
-        SUB     R11, R11, R12                              ; x[i+9] = y[i+9] - y[i+10]
-        STMIA   R1!, {R2-R11}                              ; Store x[i] to x[i+9]
+        LDMIA   R0!, {R3-R12}                              ; Load y[i+1] to y"i+10"
+        SUB     R2,  R2,  R3                               ; x[i]   = y[i]   - y"i+1"
+        SUB     R3,  R3,  R4                               ; x[i+1] = y[i+1] - y"i+2"
+        SUB     R4,  R4,  R5                               ; x[i+2] = y[i+2] - y"i+3"
+        SUB     R5,  R5,  R6                               ; x[i+3] = y[i+3] - y"i+4"
+        SUB     R6,  R6,  R7                               ; x[i+4] = y[i+4] - y"i+5"
+        SUB     R7,  R7,  R8                               ; x[i+5] = y[i+5] - y"i+6"
+        SUB     R8,  R8,  R9                               ; x[i+6] = y[i+6] - y"i+7"
+        SUB     R9,  R9,  R10                              ; x[i+7] = y[i+7] - y"i+8"
+        SUB     R10, R10, R11                              ; x[i+8] = y[i+8] - y"i+9"
+        SUB     R11, R11, R12                              ; x[i+9] = y[i+9] - y"i+10"
+        STMIA   R1!, {R2-R11}                              ; Store x[i] to x"i+9"
         MOV     R2,  R12                                   ; y[i+10] is the next y[i]
         CMP     R0,  R13                                   ; Finished ?
         BLT     Loop
@@ -3263,8 +3263,8 @@ the APCS required:
 Code which conforms to one APCS variant conforms to none of the other
 variants.
 
-For the full specification of the APCS see [ARM Procedure Call
-Standard](../atsfldr/ats4frst.html#XREF28151).
+For the full specification of the APCS see "ARM Procedure Call
+Standard".
 
 ## Register names and usage under the APCS
 
@@ -3384,14 +3384,14 @@ This will produce the source in **add64_2.s**, which will include the
 following code:
 
     add_64
-        LDR    a4,[a2,#0]
-        LDR    ip,[a3,#0]
+        LDR    a4,"a2,#0"
+        LDR    ip,"a3,#0"
         ADD    a4,a4,ip
-        STR    a4,[a1,#0]
-        LDR    a2,[a2,#4]
-        LDR    a3,[a3,#4]
+        STR    a4,"a1,#0"
+        LDR    a2,"a2,#4"
+        LDR    a3,"a3,#4"
         ADD    a2,a2,a3
-        STR    a2,[a1,#4]
+        STR    a2,"a1,#4"
         MOV    pc,lr
 
 Looking at this carefully comparing it to the C source we can see that
@@ -3531,13 +3531,13 @@ Here is the code which **armcc** produces:
         MOV    ip,sp
         STMDB  sp!,{a1-a3,fp,ip,lr,pc}
         SUB    fp,ip,#4
-        LDRB   a3,[fp,#-&14]
-        LDRB   a2,[fp,#-&10]
+        LDRB   a3,"fp,#-&14"
+        LDRB   a2,"fp,#-&10"
         CMP    a3,a2
         SUBLE  a2,fp,#&10
         SUBGT  a2,fp,#&14
-        LDR    a2,[a2,#0]
-        STR    a2,[a1,#0]
+        LDR    a2,"a2,#0"
+        STR    a2,"a1,#0"
         LDMDB  fp,{fp,sp,pc}
 
 The STMDB instruction saves the arguments onto the stack, together
@@ -3550,8 +3550,8 @@ in memory in which the resulting struct is placed - all as expected.
 
 For a basic explanation of register naming and usage under the APCS,
 see Register usage under the ARM procedure call standard. Detailed
-information can be found in [C language calling
-conventions](../atsfldr/4atsc.html#XREF36070).
+information can be found in "C language calling
+conventions".
 
 ## The optimisation of integer-like structures
 
@@ -3713,7 +3713,7 @@ appropriately.
 **multest** can then be run under **armsd** as follows:
 
     > armsd -li multest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file multest
@@ -3851,7 +3851,7 @@ The code produced for the readline function is:
         CMP    a1,#&d
         BNE    |L000008.J4.readline|
         MOV    a1,#0
-        STRB   a1,[lr,#0]
+        STRB   a1,"lr,#0"
         LDMIA  sp!,{pc}
 
 ## Using a SWI which returns 2-4 results
@@ -4021,7 +4021,7 @@ You can run the program (technically an AIF Image) using
 **armsd**. You should follow the sample dialog below:
 
     host-prompt> armsd -li hellow
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file hellow
@@ -4719,7 +4719,7 @@ provide an executable image, **errtest**:
 We can then execute this image under the **armsd** as follows:
 
     > armsd -li errtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file errtest
@@ -4767,7 +4767,7 @@ DIVIDE_ERROR macro:
 Again, we can now execute this image under the **armsd** as follows:
 
     > armsd -li errtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file errtest
@@ -4818,7 +4818,7 @@ Then rerun **errtest** under **armsd**. We expect the integer divide
 by zero to occur once again:
 
     > armsd -li errtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file errtest
@@ -4869,7 +4869,7 @@ The resulting executable, **errtest**, can be run under **armsd** as
 before:
 
     > armsd -li errtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file errtest
@@ -4923,7 +4923,7 @@ repeatedly request more memory, until there is none left:
 This can be run under **armsd** in the usual way:
 
     > armsd -li memtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file memtest
@@ -4965,7 +4965,7 @@ To recompile and link **memtest.c** issue the following commands:
 Running this program under **armsd** produces the following output:
 
     > armsd -li memtest
-    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) [Aug 26 1992]
+    A.R.M. Source-level Debugger, version 4.10 (A.R.M.) "Aug 26 1992"
     ARMulator V1.20, 512 Kb RAM, MMU present, Demon 1.01, FPE, Little 
     endian.
     Object program file memtest
@@ -5149,8 +5149,8 @@ dynamic linker to it. In practice, this is quite straightforward:
 - a basic dynamic linker with neither location nor failure reporting
   mechanisms is a mere 42 ARM instructions.
 
-Please refer to [ARM shared library
-format](../arrfldr/3arrj.html#XREF31382) for a full explanation of
+Please refer to "ARM shared library
+format" for a full explanation of
 parameter blocks.
 
 ### How the dynamic linker works
@@ -5256,8 +5256,8 @@ time. During linking, the linker symbols SHL\$\$data\$\$Size and
 \$\$0\$\$Base describe this length and relocatable address.
 
 Obviously, any data included in your shared library must be free of
-relocation directives. Please refer to [ARM shared library
-format](../arrfldr/3arrj.html#XREF31382) for a full explanation of
+relocation directives. Please refer to "ARM shared library
+format" for a full explanation of
 what kind of data can be included in a shared library.
 
 You specify a parameter block when you describe to the linker how to
@@ -5276,8 +5276,8 @@ which describes:
 - what data areas to include;
 - what entry points to export.
 
-For precise details of how to do this, please refer to [ARM shared
-library format](../arrfldr/3arrj.html#XREF31382). Below is an
+For precise details of how to do this, please refer to "ARM shared
+library format". Below is an
 intuitive example you can work with and adapt:
 
     ; First, give the name of the file to contain the library -
@@ -5293,8 +5293,8 @@ intuitive example you can work with and adapt:
     strtok
 
 The name of this file is passed to **armlink** as the argument to the
--SHL command line option (please refer to the chapter [The ARM Linker
-(armlink)](../augfldr/aug3frst.html#XREF21025) for further details).
+-SHL command line option (please refer to the chapter "The ARM Linker
+(armlink)" for further details).
 
 ## Making a toy string library
 
@@ -5423,8 +5423,8 @@ the library which contains:
 
 Hint: when you link this area with the other library contents you have
 to ensure that it wil precede all other areas in the library. Please
-refer to [Area placement and sorting
-rules](../arrfldr/3arrc.html#XREF13307) for further details.
+refer to "Area placement and sorting
+rules" for further details.
 
 Your dynamic linker could now search a list of libraries loaded at
 0x40000 onwards.
