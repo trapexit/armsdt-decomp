@@ -78,7 +78,10 @@ AREA attributes:
   conventionally R9. Any label defined within this AREA becomes a
   register-relative expression which can be used with LDR and STR
   instructions.
-- `ALIGN=expression`: Force area alignment to power-of-two boundary (2..12, default word aligned)
+- `ALIGN=expression`: The ALIGN sub-directive forces the start on of
+  the area to be aligned on a power-of-two byte-address boundary. By
+  default AREAs are aligned on a 4-byte word boundary, but the
+  expression can have any value between 2 and 12 inclusive.
 
 ### ORG and ABS
 
