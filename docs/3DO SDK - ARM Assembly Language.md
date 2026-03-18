@@ -469,9 +469,9 @@ In user mode the instructions behave as follows:
 MSR CPSR_all, op2                    ; CPSR{N,Z,C,V} <- op2
 MSR CPSR_flg, op2                    ; CPSR{N,Z,C,V} <- op2
 MSR CPSR_ctl, op2                    ; No effect
-MRS Rd, CPSR                    ; Rd <- CPSR{N,Z,C,V,I,F,M[4:0]}
-MSR SPSR, op2                    ; Not valid in user mode
-MRS Rd, SPSR                    ; Not valid in user mode
+MRS Rd, CPSR                         ; Rd <- CPSR{N,Z,C,V,I,F,M[4:0]}
+MSR SPSR, op2                        ; Not valid in user mode
+MRS Rd, SPSR                         ; Not valid in user mode
 ```
 
 In privileged modes the instructions behave as follows:
@@ -480,11 +480,11 @@ In privileged modes the instructions behave as follows:
 MSR CPSR_all, op2                    ; CPSR{N,Z,C,V,I,F,M[4:0]} <- op2
 MSR CPSR_flg, op2                    ; CPSR{N,Z,C,V} <- op2
 MSR CPSR_ctl, op2                    ; CPSR{I,F,M[4.0]} <- op2
-MRS Rd, CPSR                    ; Rd <- CPSR{N,Z,C,V,I,F,M[4:0]}
-MSR SPSR_all, Rm                    ; SPSR_mode{N,Z,C,V,I,F,M[4:0]} <- op2
-MSR SPSR_flg, Rm                    ; SPSR_mode{N,Z,C,V} <- op2
-MSR SPSR_ctl, Rm                    ; SPSR_mode{I,F,M[4.0]} <- op2
-MRS Rd, SPSR                    ; Rd <- SPSR_mode{N,Z,C,V,I,F,M[4:0]}
+MRS Rd, CPSR                         ; Rd <- CPSR{N,Z,C,V,I,F,M[4:0]}
+MSR SPSR_all, Rm                     ; SPSR_mode{N,Z,C,V,I,F,M[4:0]} <- op2
+MSR SPSR_flg, Rm                     ; SPSR_mode{N,Z,C,V} <- op2
+MSR SPSR_ctl, Rm                     ; SPSR_mode{I,F,M[4.0]} <- op2
+MRS Rd, SPSR                         ; Rd <- SPSR_mode{N,Z,C,V,I,F,M[4:0]}
 ```
 
 ### Single data transfer
