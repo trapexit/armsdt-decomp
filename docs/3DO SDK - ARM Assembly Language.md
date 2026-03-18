@@ -207,8 +207,8 @@ by a pair of the appropriate character; e.g. $$ for $.
 
 #### Boolean
 
-The Boolean constants `true` and `false` should be written as {TRUE}
-and {FALSE}.
+The Boolean constants `true` and `false` should be written as `{TRUE}`
+and `{FALSE}`.
 
 ### The END directive
 
