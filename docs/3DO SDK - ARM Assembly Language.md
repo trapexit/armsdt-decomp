@@ -556,7 +556,10 @@ The syntax of these instructions is:
 opcode{condition}type base{!},register-list{^}
 ```
 
-The opcode is combined with one of eight instruction types with the mnemonics DB, DA, IB, IA, FD, ED, FA, and EA; the meaning of FD, ED FA and EA varies according to whether a load or store is performed. In detail:
+The opcode is combined with one of eight instruction types with the
+mnemonics DB, DA, IB, IA, FD, ED, FA, and EA; the meaning of FD, ED FA
+and EA varies according to whether a load or store is performed. In
+detail:
 
 | Instruction | Meaning |
 | --- | --- |
@@ -577,11 +580,23 @@ The opcode is combined with one of eight instruction types with the mnemonics DB
 | LDMFA | Pop registers from a Full stack, Ascending (LDMDA) |
 | LDMEA | Pop registers from an Empty stack, Ascending (LDMDB) |
 
-A full stack is one in which the stack pointer points to the last data item written to it, and an empty stack is one where the stack pointer points to the first free slot in it. A descending stack grows from high memory addresses to low, and an ascending stack vice versa.
+A full stack is one in which the stack pointer points to the last data
+item written to it, and an empty stack is one where the stack pointer
+points to the first free slot in it. A descending stack grows from
+high memory addresses to low, and an ascending stack vice versa.
 
-*Base* contains the starting address for the transfer and can be any register except R15. If present *!* requests writeback of the updated base address to *base* after the instruction is executed.
+*Base* contains the starting address for the transfer and can be any
+register except R15. If present *!* requests writeback of the updated
+base address to *base* after the instruction is executed.
 
-*Register-list* is a comma-separated list of registers, or register ranges enclosed in {}. A register range is two register names joined by a hyphen, and represents the registers named and all those between them. The directive RLIST (see section [Miscellaneous directives - ALIGN, NOFP, RLIST and ENTRY](#miscellaneous-directives)) can also be used to create a list of registers to be used. In user mode ^ sets the S bit to load the PSR along with the PC; in privileged modes it forces transfer of the user mode registers.
+*Register-list* is a comma-separated list of registers, or register
+ranges enclosed in {}. A register range is two register names joined
+by a hyphen, and represents the registers named and all those between
+them. The directive RLIST (see section "Miscellaneous directives -
+ALIGN, NOFP, RLIST and ENTRY") can also be used to create a list of
+registers to be used. In user mode ^ sets the S bit to load the PSR
+along with the PC; in privileged modes it forces transfer of the user
+mode registers.
 
 ### Multiplies
 
@@ -592,80 +607,133 @@ MUL{condition}{S} destination,operand1,operand2
 MLA{condition}{S} destination,operand1,operand2,operand3
 ```
 
-The *destination* and all operands must be registers. MUL multiplies *operand1* by *operand2*, and places the result in the destination register. MLA multiplies *operand1* by *operand2*, adds *operand3* to the product and places the result in the destination register. Both instructions work with signed and unsigned integers. For details of how to make multiply instructions execute quickly, see the appropriate ARM datasheet, or the Cookbook.
+The *destination* and all operands must be registers. MUL multiplies
+*operand1* by *operand2*, and places the result in the destination
+register. MLA multiplies *operand1* by *operand2*, adds *operand3* to
+the product and places the result in the destination register. Both
+instructions work withsigned and unsigned integers. For details of how
+to make multiply instructions execute quickly, see the appropriate ARM
+datasheet, or the Cookbook.
 
-Certain combinations of operands should be avoided and are warned against by the assembler. The destination register should not be the same as *operand1* as this will give a meaningless result. R15 should not be used as a destination register, nor as an operand. See the appropriate ARM datasheet for further details.
+Certain combinations of operands should be avoided and are warned
+against by the assembler. The destination register should not be the
+same as *operand1* as this will give a meaningless result. R15 should
+not be used as a destination register, nor as an operand. See the
+appropriate ARM datasheet for further details.
 
 ### Single data swap
 
-SWP swaps a byte or word quantity between a register and memory, locking the memory bus in the process to preserve atomic operation (where supported by external hardware). The syntax is:
+SWP swaps a byte or word quantity between a register and memory,
+locking the memory bus in the process to preserve atomic operation
+(where supported by external hardware). The syntax is:
 
 ```text
 SWP{condition}{B} destination,source,[base]
 ```
 
-*Destination*, *source* and *base* must all be registers. *B* sets the width of the transfer to byte rather than word. The memory address is that in *base*; its contents are read, the source register is written to it, and the old memory contents are then stored in *destination*. The same register can serve as *source* and *destination*. R15 may not be used as the swap address, the *source* or the *destination*.
+*Destination*, *source* and *base* must all be registers. *B* sets the
+width of the transfer to byte rather than word. The memory address is
+that in *base*; its contents are read, the source register is written
+to it, and the old memory contents are then stored in
+*destination*. The same register can serve as *source* and
+*destination*. R15 may not be used as the swap address, the *source*
+or the *destination*.
 
 ### Software interrupt/supervisor call
 
-This instruction is used by programs to communicate with the host operating system. The syntax is:
+This instruction is used by programs to communicate with the host
+operating system. The syntax is:
 
 ```text
 SWI constant-expression
 ```
 
-The expression value is truncated to 24 bits (i.e. between &0 and &FFFFFF); it is ignored by the processor but is interpreted by operating system software.
+The expression value is truncated to 24 bits (i.e. between &0 and
+&FFFFFF); it is ignored by the processor but is interpreted by
+operating system software.
 
 ### Pseudo-instructions
 
-The Assembler supports several pseudo-instructions which are translated into the appropriate combination of ARM instructions at assembly time.
+The Assembler supports several pseudo-instructions which are
+translated into the appropriate combination of ARM instructions at
+assembly time.
 
 | Pseudo-instruction | Meaning |
 | --- | --- |
 | ADR | Assemble address to register |
 
-Because the ARM has no `load effective address' instruction the assembler provides ADR, which will always assemble to produce ADD, SUB, MOV or MVN instructions to generate the address. The syntax is:
+Because the ARM has no `load effective address' instruction the
+assembler provides ADR, which will always assemble to produce ADD,
+SUB, MOV or MVN instructions to generate the address. The syntax is:
 
 ```text
 ADR{condition}{L} register,expression
 ```
 
-The *expression* can be register-relative, program-relative or numeric. ADR must assemble to one instruction, whereas ADRL allows a wider range of effective addresses to be assembled in two instructions..
+The *expression* can be register-relative, program-relative or
+numeric. ADR must assemble to one instruction, whereas ADRL allows a
+wider range of effective addresses to be assembled in two
+instructions..
 
 | Pseudo-instruction | Meaning |
 | --- | --- |
 | NOP | No operation |
 
-This generates the preferred *no-operation* code for a given ARM processor, which is often *MOV R0,R0*. NOP is really a directive and so cannot be used conditionally; not executing a *no-operation* is the same as executing it, so conditional execution is pointless.
+This generates the preferred *no-operation* code for a given ARM
+processor, which is often *MOV R0,R0*. NOP is really a directive and
+so cannot be used conditionally; not executing a *no-operation* is the
+same as executing it, so conditional execution is pointless.
 
 ## Generic coprocessor instructions
 
-These are the generic coprocessor instructions implemented by all ARM processors with a coprocessor interface. Up to 16 coprocessors can be supported; all coprocessors have a number (CP#) in the range 0 to 15, and this must be specified in the instructions. Coprocessor 15 is used for cache, write-buffer and memory management control in several ARM processors, while coprocessors 1 and 2 are conventionally floating point units.
+These are the generic coprocessor instructions implemented by all ARM
+processors with a coprocessor interface. Up to 16 coprocessors can be
+supported; all coprocessors have a number (CP#) in the range 0 to 15,
+and this must be specified in the instructions. Coprocessor 15 is used
+for cache, write-buffer and memory management control in several ARM
+processors, while coprocessors 1 and 2 are conventionally floating
+point units.
 
 Coprocessors may have up to 16 directly addressable registers, C0-C15.
 
 ### Coprocessor data transfers
 
-These instructions transfer data between a coprocessor and memory. The syntax is:
+These instructions transfer data between a coprocessor and memory. The
+syntax is:
 
 ```text
-op{condition}{L} CP#,Cd,[Rn {,#offset}]{!}
-            [Rn],#offset
+op{condition}{L} CP#,Cd,[Rn {,#offset}]{!} [Rn],#offset
 ```
 
-The memory address can be expressed in one of three ways, as shown above. In the first, pre-indexed form, an ARM register, *Rn*, holds the base address to which an offset can be added if necessary. Writeback of the effective address to *Rn* can be enabled using *!*. The offset must be divisible by 4, and within the range -1020 to 1020 bytes. With the second, post-indexed form, write-back of Rn+*offset* to Rn after the transfer, is automatic. Alternatively, a *program-or-register-relative-expression* can be used, in which case the assembler will generate a PC- or register-relative, pre-indexed address; if it is out of range an error will result.
+The memory address can be expressed in one of three ways, as shown
+above. In the first, pre-indexed form, an ARM register, *Rn*, holds
+the base address to which an offset can be added if
+necessary. Writeback of the effective address to *Rn* can be enabled
+using *!*. The offset must be divisible by 4, and within the range
+-1020 to 1020 bytes. With the second, post-indexed form, write-back of
+Rn+*offset* to Rn after the transfer, is automatic. Alternatively, a
+*program-or-register-relative-expression* can be used, in which case
+the assembler will generate a PC- or register-relative, pre-indexed
+address; if it is out of range an error will result.
 
-*L* appended to the instruction specifies a long transfer; otherwise a short transfer takes place. The meaning of this is coprocessor-specific.
+*L* appended to the instruction specifies a long transfer; otherwise a
+short transfer takes place. The meaning of this is
+coprocessor-specific.
 
 ### Coprocessor data operations
 
-This instruction is used for internal coprocessor operations. The syntax is:
+This instruction is used for internal coprocessor operations. The
+syntax is:
 
 ```text
 CDP{condition} CP#,CPOp,CRd,CRn,CRm{,CPOp2}
 ```
 
-*CPOp* represents the coprocessor operation to be performed (four bits); details of such operations are coprocessor-specific and can be found in the appropriate datasheet. The operation is performed on *CRn* and *CRm* and the result written to *CRd*. The second, optional, *CPOp2* field allows further variations on the operation (three bits).
+*CPOp* represents the coprocessor operation to be performed (four
+bits); details of such operations are coprocessor-specific and can be
+found in the appropriate datasheet. The operation is performed on
+*CRn* and *CRm* and the result written to *CRd*. The second, optional,
+*CPOp2* field allows further variations on the operation (three bits).
 
 ### Coprocessor register transfers
 
@@ -675,17 +743,40 @@ The syntax of these two instructions is:
 op{condition} CP#,CPOp,Rd,Cn,Cm{,CPOp2}
 ```
 
-*CPOp* is a 3-bit constant which specifies which variant of the instruction to perform. The selected operation is performed using the coprocessor registers *Cn* and *Cm*, and the result transferred to the ARM register *Rd*. If R15 is specified as the destination, only bits 28-31 of the result are transferred and are used to set the N, Z, C and V flags in the PSR without affecting the program counter. *CPOp2*, where present, is a 3-bit constant which sets the ARM condition flags, supporting the further coprocessor-specific sub-operations.
+*CPOp* is a 3-bit constant which specifies which variant of the
+instruction to perform. The selected operation is performed using the
+coprocessor registers *Cn* and *Cm*, and the result transferred to the
+ARM register *Rd*. If R15 is specified as the destination, only bits
+28-31 of the result are transferred and are used to set the N, Z, C
+and V flags in the PSR without affecting the program counter. *CPOp2*,
+where present, is a 3-bit constant which sets the ARM condition flags,
+supporting the further coprocessor-specific sub-operations.
 
-MRC is often used to read a coprocessor's status register(s), while MCR is used to write its control register(s). MRC, with R15 as the destination, supports execution of ARM code conditional on the result of an earlier coprocessor operation, (e.g. floating point compare).
+MRC is often used to read a coprocessor's status register(s), while
+MCR is used to write its control register(s). MRC, with R15 as the
+destination, supports execution of ARM code conditional on the result
+of an earlier coprocessor operation, (e.g. floating point compare).
 
 ## Floating point instructions
 
-The ARM assembler supports a comprehensive floating point instruction set. Whether implemented by hardware coprocessor or software emulation, floating point operations are performed to the IEEE 754 standard. There are eight floating point registers, numbered F0 to F7. Floating point operations, like integer operations, are performed between registers.
+The ARM assembler supports a comprehensive floating point instruction
+set. Whether implemented by hardware coprocessor or software
+emulation, floating point operations are performed to the IEEE 754
+standard. There are eight floating point registers, numbered F0 to
+F7. Floating point operations, like integer operations, are performed
+between registers.
 
-Precision must be specified for many floating point operations where shown as *prec* below. The options are *S* (Single), *D* (Double), *E* (Extended) and *P* (Packed BCD). The format in which extended precision numbers are stored varies between FP implementations, and cannot be relied upon. The rounding mode, shown below as *round*, defaults to `round to nearest', but can optionally be set in the appropriate instructions to: *P* (round to +infinity), *M* (round to -infinity) or *Z* (round to zero).
+Precision must be specified for many floating point operations where
+shown as *prec* below. The options are *S* (Single), *D* (Double), *E*
+(Extended) and *P* (Packed BCD). The format in which extended
+precision numbers are stored varies between FP implementations, and
+cannot be relied upon. The rounding mode, shown below as *round*,
+defaults to `round to nearest', but can optionally be set in the
+appropriate instructions to: *P* (round to +infinity), *M* (round to
+-infinity) or *Z* (round to zero).
 
-In all the following instruction patterns, *Rx* represents an ARM register, and *Fx* a floating point register.
+In all the following instruction patterns, *Rx* represents an ARM
+register, and *Fx* a floating point register.
 
 ### Floating point data transfer
 
@@ -696,7 +787,16 @@ op{condition}prec Fd,[Rn]{,#offset}
             [Rn,#offset]{!}
 ```
 
-The memory address can be expressed in one of three ways, as shown above. In the first, pre-indexed form, an ARM register *Rn* holds the base address, to which an offset can be added if necessary. Writeback of the effective address to *Rn* can be enabled using *!*. The offset must be divisible by 4, and within the range -1020 to 1020 bytes. With the second, post-indexed form, writeback of Rn+*offset* to Rn after the transfer, is automatic. Alternatively, a program- or register-relative expression can be used, in which case the assembler will generate a PC- or register-relative, pre-indexed address; if it is out of range an error will result.
+The memory address can be expressed in one of three ways, as shown
+above. In the first, pre-indexed form, an ARM register *Rn* holds the
+base address, to which an offset can be added if necessary. Writeback
+of the effective address to *Rn* can be enabled using *!*. The offset
+must be divisible by 4, and within the range -1020 to 1020 bytes. With
+the second, post-indexed form, writeback of Rn+*offset* to Rn after
+the transfer, is automatic. Alternatively, a program- or
+register-relative expression can be used, in which case the assembler
+will generate a PC- or register-relative, pre-indexed address; if it
+is out of range an error will result.
 
 ### Floating point register transfer
 
@@ -707,7 +807,8 @@ FLT{condition}prec{round} Fn,Rd
                           Fn,#built-in-fp-constant
 ```
 
-where *Rd* is an ARM register and *built-in-fp-constant* is one of 0, 1, 2, 3, 4, 5, 10 or 0.5.
+where *Rd* is an ARM register and *built-in-fp-constant* is one of 0,
+1, 2, 3, 4, 5, 10 or 0.5.
 
 | Opcode | Meaning | Effect |
 | --- | --- | --- |
@@ -721,7 +822,9 @@ FIX{condition}{round} Rd,Fn
 
 ### Floating point register transfer
 
-The following instructions transfer values between the FP coprocessor's status and control registers, and an ARM general purpose register.
+The following instructions transfer values between the FP
+coprocessor's status and control registers, and an ARM general purpose
+register.
 
 | Opcode | Meaning | Effect |
 | --- | --- | --- |
@@ -738,14 +841,21 @@ opcode{condition} Rd
 
 ### Floating point multiple data transfer
 
-(Note that these instructions are not supported by some older versions of the Floating Point Emulator.)
+(Note that these instructions are not supported by some older versions
+of the Floating Point Emulator.)
 
 | Opcode | Meaning |
 | --- | --- |
 | LFM | Load Floating Multiple |
 | SFM | Store Floating Multiple |
 
-These instructions are used for block data transfers between the floating point registers and memory. Values are transferred in an internal 96-bit format, with no loss of precision and with no possibility of an IEEE exception occurring, (unlike STFE which may fault on loading a trapping NaN). There are two forms, depending on whether the instruction is being used for stacking operations or not. The first, non-stacking, form is:
+These instructions are used for block data transfers between the
+floating point registers and memory. Values are transferred in an
+internal 96-bit format, with no loss of precision and with no
+possibility of an IEEE exception occurring, (unlike STFE which may
+fault on loading a trapping NaN). There are two forms, depending on
+whether the instruction is being used for stacking operations or
+not. The first, non-stacking, form is:
 
 ```text
 op{condition} Fd,count,[Rn]
@@ -753,15 +863,33 @@ op{condition} Fd,count,[Rn]
                 [Rn],#offset
 ```
 
-The first register to transfer is *Fd*, and the number of registers to transfer is *count*. Up to four registers can be transferred, always in ascending order. The count wraps round at F7, so if F6 is specified with four registers to transfer, F6, F7, F0 and F1 will be transferred in that order. With pre-indexed addressing the destination/source register can be specified with or without an *offset* expressed in bytes; writeback of the effective address to *Rn* can be specified with *!*. With post-indexed addressing (the third form above) writeback is automatically enabled. Note that R15 cannot be used with writeback, and that *offset* must be divisible by 4 and in the range -1020 to 1020, as for other coprocessor loads and stores.
+The first register to transfer is *Fd*, and the number of registers to
+transfer is *count*. Up to four registers can be transferred, always
+in ascending order. The count wraps round at F7, so if F6 is specified
+with four registers to transfer, F6, F7, F0 and F1 will be transferred
+in that order. With pre-indexed addressing the destination/source
+register can be specified with or without an *offset* expressed in
+bytes; writeback of the effective address to *Rn* can be specified
+with *!*. With post-indexed addressing (the third form above)
+writeback is automatically enabled. Note that R15 cannot be used with
+writeback, and that *offset* must be divisible by 4 and in the range
+-1020 to 1020, as for other coprocessor loads and stores.
 
-The second form adds a two-letter stacking mnemonic (below *ss*) to the instruction and optional condition codes. The mnemonic, FD, denotes a full, descending stack (pre-decrement push, post-decrement pop), while EA denotes an empty, ascending stack (post-increment push, pre-decrement pop). The syntax is as follows:
+The second form adds a two-letter stacking mnemonic (below *ss*) to
+the instruction and optional condition codes. The mnemonic, FD,
+denotes a full, descending stack (pre-decrement push, post-decrement
+pop), while EA denotes an empty, ascending stack (post-increment push,
+pre-decrement pop). The syntax is as follows:
 
 ```text
 op{condition}ss Fd,count,[Rn]{!}
 ```
 
-FD and EA define pre- and post-indexing, and the up/down bit by reference to the form of stack required. Unlike the integer block-data transfer operations, only FD and EA stacks are supported. *!*, if present, enables writeback of the updated base address to Rn; R15 cannot be the base register if writeback is enabled.
+FD and EA define pre- and post-indexing, and the up/down bit by
+reference to the form of stack required. Unlike the integer block-data
+transfer operations, only FD and EA stacks are supported. *!*, if
+present, enables writeback of the updated base address to Rn; R15
+cannot be the base register if writeback is enabled.
 
 The possible combinations of mnemonics are listed below:
 
@@ -780,7 +908,10 @@ The syntax of these instructions is:
 opcode{condition}{E} Fn,Fm
 ```
 
-CMF raises no exceptions and should be used to test for equality (Z clear/set) and unorderedness (V set/clear). To comply with IEEE 754, all other tests should use CMFE, which may raise an exception if either of the operands is not a number.
+CMF raises no exceptions and should be used to test for equality (Z
+clear/set) and unorderedness (V set/clear). To comply with IEEE 754,
+all other tests should use CMFE, which may raise an exception if
+either of the operands is not a number.
 
 ### Floating point binary operations
 
@@ -806,7 +937,9 @@ The syntax of these instructions is:
 binop{condition}prec{round} Fd,Fn,Fm
 ```
 
-*Fm* can be either a floating point register, or one of the floating point constants #0, #1, #2, #3, #4, #5, #10 or #0.5. Fast operations produce results accurate to only single precision.
+*Fm* can be either a floating point register, or one of the floating
+point constants #0, #1, #2, #3, #4, #5, #10 or #0.5. Fast operations
+produce results accurate to only single precision.
 
 ### Floating point unary operations
 
@@ -835,7 +968,8 @@ The syntax of these instructions is:
 unop{condition}prec{round} Fd,Fm
 ```
 
-*Fm* can be either a floating point register or one of the floating point constants #0, #1, #2, #3, #4, #5, #10 or #0.5.
+*Fm* can be either a floating point register or one of the floating
+point constants #0, #1, #2, #3, #4, #5, #10 or #0.5.
 
 ## Directives
 
@@ -847,7 +981,12 @@ The syntax of the first three directives is:
 {label} directive expression-list
 ```
 
-DCD can take program-relative and external expressions as well as numeric ones. In the case of DCB, the *expression-list* can include string expressions, the characters of which are loaded into consecutive bytes in store. Unlike C-strings, *armasm* strings do not contain an implicit trailing NUL, so a C-string has to be fabricated thus:
+DCD can take program-relative and external expressions as well as
+numeric ones. In the case of DCB, the *expression-list* can include
+string expressions, the characters of which are loaded into
+consecutive bytes in store. Unlike C-strings, *armasm* strings do not
+contain an implicit trailing NUL, so a C-string has to be fabricated
+thus:
 
 ```text
 C_string DCB "C_string",0
@@ -859,9 +998,12 @@ The syntax of *%* is:
 {label} % numeric-expression
 ```
 
-This directive will initialise to zero the number of bytes specified by the *numeric* expression.
+This directive will initialise to zero the number of bytes specified
+by the *numeric* expression.
 
-Note that an *external expression* consists of an external symbol followed optionally by a constant expression. The external symbol *must* come first.
+Note that an *external expression* consists of an external symbol
+followed optionally by a constant expression. The external symbol
+*must* come first.
 
 ### Floating point store initialisation
 
@@ -871,7 +1013,9 @@ The syntax of these directives is:
 {label} directive fp-constant{,fp-constant}
 ```
 
-Single precision numbers occupy one word, and double precision numbers occupy two; both should be word aligned. An *fp-constant* takes one of the following forms:
+Single precision numbers occupy one word, and double precision numbers
+occupy two; both should be word aligned. An *fp-constant* takes one of
+the following forms:
 
 ```text
 {-}integer E{-}integer                            e.g. 1E3, -4E-9
@@ -888,11 +1032,22 @@ The syntax of these directives is:
 ^ expression{,base-register}{label} # expression
 ```
 
-The ^ directive sets the origin of a storage map at the address specified by the *expression*. A storage map location counter, @, is also set to the same address. The *expression* must be fully evaluable in the first pass of the assembly, but may be program-relative. If no ^ directive is used, the @ counter is set to zero. @ can be reset any number of times using ^ to allow many storage maps to be established.
+The ^ directive sets the origin of a storage map at the address
+specified by the *expression*. A storage map location counter, @, is
+also set to the same address. The *expression* must be fully evaluable
+in the first pass of the assembly, but may be program-relative. If no
+^ directive is used, the @ counter is set to zero. @ can be reset any
+number of times using ^ to allow many storage maps to be established.
 
-Space within a storage map is described by the # directive. Every time # is used its *label* (if any) is given the value of the storage location counter @, and @ is then incremented by the number of bytes reserved.
+Space within a storage map is described by the # directive. Every time
+# is used its *label* (if any) is given the value of the storage
+location counter @, and @ is then incremented by the number of bytes
+reserved.
 
-In a ^ directive with a *base register*, the register becomes implicit in all symbols defined by # directives which follow, until cancelled by a subsequent ^ directive. These register-relative symbols can later be quoted in load and store instructions. For example:
+In a ^ directive with a *base register*, the register becomes implicit
+in all symbols defined by # directives which follow, until cancelled
+by a subsequent ^ directive. These register-relative symbols can later
+be quoted in load and store instructions. For example:
 
 ```text
 ^ 0,r9
@@ -913,7 +1068,12 @@ LDR   r0,[r9,#4]
 END
 ```
 
-The assembler stops processing a source file when it reaches the END directive. If assembly of the file was invoked by a GET directive, the assembler returns and continues after the GET directive (see section [Links to other source files - GET/INCLUDE](#links-to-other-source-files)). If END is reached in the top-level source file during the first pass without any errors, the second pass will begin. Failing to end a file with END is an error.
+The assembler stops processing a source file when it reaches the END
+directive. If assembly of the file was invoked by a GET directive, the
+assembler returns and continues after the GET directive (see section
+"Links to other source files - GET/INCLUDE"). If END is reached in the
+top-level source file during the first pass without any errors, the
+second pass will begin. Failing to end a file with END is an error.
 
 ```text
 ORG numeric-expression
