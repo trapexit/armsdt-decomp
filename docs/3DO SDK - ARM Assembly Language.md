@@ -1534,7 +1534,7 @@ Two directives are used to define a macro. The syntax is:
 MACRO
 {$label} macroname {$parameter1}{,$parameter2}{,$parameter3}..
     ...code...
-    MEND
+MEND
 ```
 
 The directive MACRO must be followed by a macro prototype statement on
