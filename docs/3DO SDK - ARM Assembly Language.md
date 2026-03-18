@@ -174,29 +174,41 @@ assembler looks both forward and backward. However searches will never
 go outside the local label area (i.e. beyond the nearest ROUT
 directives).
 
-*y* provides the following options: *A* to look at all macro levels, *T* to look only at this macro level, or, if *y* is absent, to look at all macro from the current level to the top level.
+`y` provides the following options: *A* to look at all macro levels,
+*T* to look only at this macro level, or, if *y* is absent, to look at
+all macro from the current level to the top level.
 
-*n* is the number of the local label.
+`n` is the number of the local label.
 
-*routinename* is optional, but if present it will be checked against the enclosing ROUT's label.
+`routinename` is optional, but if present it will be checked against
+the enclosing ROUT's label.
 
 ### Comments
 
-The first semi-colon on a line marks the beginning of a comment, except where the semi-colon appears inside a string constant. A comment alone is a valid line. All comments are ignored by the assembler.
+The first semi-colon on a line marks the beginning of a comment,
+except where the semi-colon appears inside a string constant. A
+comment alone is a valid line. All comments are ignored by the
+assembler.
 
 ### Constants
 
 #### Numbers
 
-Numeric constants are accepted in three forms: decimal (e.g. 123), hexadecimal (e.g. &7B), and n_xxx, where n is a base between 2 and 9 and xxx is a number in that base.
+Numeric constants are accepted in three forms: decimal (e.g. 123),
+hexadecimal (e.g. &7B), and n_xxx, where n is a base between 2 and 9
+and xxx is a number in that base.
 
 #### Strings
 
-Strings consist of opening and closing double quotes, enclosing characters and spaces. If double quotes or dollar signs are used within a string as literal text characters, they should be represented by a pair of the appropriate character; e.g. $$ for $.
+Strings consist of opening and closing double quotes, enclosing
+characters and spaces. If double quotes or dollar signs are used
+within a string as literal text characters, they should be represented
+by a pair of the appropriate character; e.g. $$ for $.
 
 #### Boolean
 
-The Boolean constants `true' and `false' should be written as {TRUE} and {FALSE}.
+The Boolean constants `true` and `false` should be written as {TRUE}
+and {FALSE}.
 
 ### The END directive
 
