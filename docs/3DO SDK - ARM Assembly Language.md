@@ -1,19 +1,9 @@
 # ARM Assembly Language
 
-ARM Assembly Language is the language which *armasm*, the ARM Assembler, parses and compiles to produce object code in ARM Object Format. Information on *armasm* command line options are detailed in [The ARM Assembler (armasm)](./aug2frst.html#XREF22713). This chapter details ARM Assembly Language, but does not give examples of its use. For such examples refer to the Cookbook.
-
-Click on one of the topics below to select it:
-
-- [Overview](./7auga.html#XREF10889)
-- [The ARM instruction set](./7augb.html#XREF40499)
-- [Generic coprocessor instructions](./7augc.html#XREF19413)
-- [Floating point instructions](./7augd.html#XREF35943)
-- [Directives](./7auge.html#XREF17895)
-- [Symbolic capabilities](./7augf.html#XREF27003)
-- [Expressions and operators](./7augg.html#XREF24165)
-- [Conditional assembly - [, | and ]](./7augh.html#XREF11233)
-- [Repetitive assembly - WHILE and WEND](./7augi.html#XREF10886)
-- [Macros](./7augj.html#XREF31690)
+ARM Assembly Language is the language which *armasm*, the ARM
+Assembler, parses and compiles to produce object code in ARM Object
+Format. This chapter details ARM Assembly Language, but does not give
+examples of its use. For such examples refer to the Cookbook.
 
 ## Overview
 
@@ -76,7 +66,7 @@ The ORG (origin) directive is used to set the base address and the ABS (absolute
 
 ### Symbols
 
-Numbers, logical values, string values and addresses may be represented by symbols. Symbols representing numbers or addresses, logical values and strings are declared using the GBL and LCL directives, and values are assigned immediately by SETA, SETL and SETS directives respectively (see [Local and global variables - GBL, LCL and SET](./7augf.html#XREF42681)). Addresses are assigned by the Assembler as assembly proceeds, some remaining in symbolic, relocatable form until link time.
+Numbers, logical values, string values and addresses may be represented by symbols. Symbols representing numbers or addresses, logical values and strings are declared using the GBL and LCL directives, and values are assigned immediately by SETA, SETL and SETS directives respectively (see [Local and global variables - GBL, LCL and SET](#local-and-global-variables)). Addresses are assigned by the Assembler as assembly proceeds, some remaining in symbolic, relocatable form until link time.
 
 Symbols must start with a letter in either upper or lower case; the assembler is case-sensitive and treats the two forms as distinct. Numeric characters and the underscore character may be part of the symbol name. All characters are significant.
 
@@ -375,7 +365,7 @@ LDR can also used to generate literal constants, program counter relative consta
 LDR register,=expression
 ```
 
-If expression is a numeric constant, then a MOV or MVN will be used rather than an LDR if the constant can be constructed by either of these instructions. Otherwise, the assembler will generate a program-relative LDR, and if the desired literal does nor already exist within the addressable range of this LDR, it will place the literal in the next literal pool, (see also LTORG [Organisational directives - END, ORG, LTORG and KEEP](./7auge.html#XREF23090).
+If expression is a numeric constant, then a MOV or MVN will be used rather than an LDR if the constant can be constructed by either of these instructions. Otherwise, the assembler will generate a program-relative LDR, and if the desired literal does nor already exist within the addressable range of this LDR, it will place the literal in the next literal pool, (see also LTORG [Organisational directives - END, ORG, LTORG and KEEP](#organisational-directives).
 
 Additionally, LDR or STR can be used to transfer data to or from an address specified by a label (optionally with an offset) as follows:
 
@@ -383,7 +373,7 @@ Additionally, LDR or STR can be used to transfer data to or from an address spec
 opcode{cond}{B} register,label-expression
 ```
 
-When used in this form, *label expression* must either be addressable PC-relative from this instruction, or must be a register-relative label created using the `^' directive with a register operand, (see section [Describing the layout of store - ^ and #](./7auge.html#XREF29996)).
+When used in this form, *label expression* must either be addressable PC-relative from this instruction, or must be a register-relative label created using the `^' directive with a register operand, (see section [Describing the layout of store - ^ and #](#describing-the-layout-of-store)).
 
 ### Block data transfer
 
@@ -418,7 +408,7 @@ A full stack is one in which the stack pointer points to the last data item writ
 
 *Base* contains the starting address for the transfer and can be any register except R15. If present *!* requests writeback of the updated base address to *base* after the instruction is executed.
 
-*Register-list* is a comma-separated list of registers, or register ranges enclosed in {}. A register range is two register names joined by a hyphen, and represents the registers named and all those between them. The directive RLIST (see section [Miscellaneous directives - ALIGN, NOFP, RLIST and ENTRY](./7auge.html#XREF11810)) can also be used to create a list of registers to be used. In user mode ^ sets the S bit to load the PSR along with the PC; in privileged modes it forces transfer of the user mode registers.
+*Register-list* is a comma-separated list of registers, or register ranges enclosed in {}. A register range is two register names joined by a hyphen, and represents the registers named and all those between them. The directive RLIST (see section [Miscellaneous directives - ALIGN, NOFP, RLIST and ENTRY](#miscellaneous-directives)) can also be used to create a list of registers to be used. In user mode ^ sets the S bit to load the PSR along with the PC; in privileged modes it forces transfer of the user mode registers.
 
 ### Multiplies
 
@@ -857,7 +847,7 @@ The syntax of this directive is:
 label RLIST list-of-registers
 ```
 
-The RLIST (register list) directive can be used to give a name to a set of registers to be transferred by LDM or STM. *List-of-registers* is a list of register names or ranges enclosed in {} (see [Block data transfer - LDM and STM](./7augb.html#XREF35349)).
+The RLIST (register list) directive can be used to give a name to a set of registers to be transferred by LDM or STM. *List-of-registers* is a list of register names or ranges enclosed in {} (see [Block data transfer - LDM and STM](#block-data-transfer)).
 
 ```text
 ENTRY
@@ -896,7 +886,7 @@ label CN numeric-expression
 
 ### Local and global variables
 
-While most symbols have fixed values determined during assembly, variables have values which may change as assembly proceeds. The assembler supports both global and local variables. The scope of global variables extends across the entire source file while that of local variables is restricted to a particular instantiation of a macro (see [Macros](./7augj.html#XREF31690)). Variables must be declared before use with one of these directives.
+While most symbols have fixed values determined during assembly, variables have values which may change as assembly proceeds. The assembler supports both global and local variables. The scope of global variables extends across the entire source file while that of local variables is restricted to a particular instantiation of a macro (see [Macros](#macros)). Variables must be declared before use with one of these directives.
 
 | Directive | Meaning |
 | --- | --- |
@@ -931,7 +921,7 @@ where *expression* evaluates to the value being assigned to the variable named.
 
 ### Variable substitution
 
-Once a variable has been declared its name cannot be used for any other purpose, and any attempt to do so will result in an error. However, if the $ character is prefixed to the name, the variable's value will be substituted before the assembler checks the line's syntax. Logical and arithmetic variables are replaced by the result of performing a :STR: operation on them (see [Unary operators](./7augg.html#XREF19144)), string variables by their value.
+Once a variable has been declared its name cannot be used for any other purpose, and any attempt to do so will result in an error. However, if the $ character is prefixed to the name, the variable's value will be substituted before the assembler checks the line's syntax. Logical and arithmetic variables are replaced by the result of performing a :STR: operation on them (see [Unary operators](#unary-operators)), string variables by their value.
 
 ### Built-in variables
 
@@ -1094,7 +1084,7 @@ MACRO
 
 The directive MACRO must be followed by a macro prototype statement on the next line. This tells the assembler the name of the macro and its parameters. A label is optional, but useful if calls of the macro may be labelled. Any number of parameters can be used; each must begin with `$' to distinguish them from ordinary program symbols.
 
-Within the macro body, *$label*, *$parameter*, etc., can be used in the same way as any other variables (see[Local and global variables - GBL, LCL and SET](./7augf.html#XREF42681), and section [Variable substitution - $](./7augf.html#XREF17481)). They will be given new values each time the macro is called.
+Within the macro body, *$label*, *$parameter*, etc., can be used in the same way as any other variables (see[Local and global variables - GBL, LCL and SET](#local-and-global-variables), and section [Variable substitution - $](#variable-substitution)). They will be given new values each time the macro is called.
 
 Sometimes a macro parameter or label needs to be appended by a value. The appended value should be separated by a dot, which the assembler will ignore once it has used it to recognise the end of the parameter and label. For example:
 
