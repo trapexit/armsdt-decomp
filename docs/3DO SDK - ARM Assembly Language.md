@@ -24,8 +24,6 @@ Topics:
 
 ## Overview
 
-Source: https://ext.3dodev.com/3DO/Portfolio_2.5/OnLineDoc/DevDocs/tktfldr/augfldr/7auga.html
-
 ### General
 
 Instruction mnemonics and register names may be written in upper or lower case (but not mixed case). Directives must be written in upper case.
