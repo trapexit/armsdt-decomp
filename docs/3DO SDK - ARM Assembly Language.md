@@ -47,14 +47,26 @@ General form:
 
 ### AREAs
 
-AREAs are named indivisible chunks of code/data manipulated by the linker.
+AREAs are the independent, named, indivisible chunks of code and data
+manipulated by the Linker. The Linker places each AREA in a program
+image according to the AREA placement rules (ie. not necessarily
+adjacent to the AREAs with which it was assembled or compiled).
 
-Typical output has:
-- one code AREA (usually read-only)
-- one writable data AREA
-- for reentrant objects, often a third `BASED sb` AREA holding relocatable address constants.
+Conventionally, an assembly, or the output of a compilation, consists
+of two AREAs, one for the code (usually marked read-only), and one for
+the data which may be written to. A reentrant object will generally
+have a third AREA marked BASED sb (see below), which will contain
+relocatable address constants. This allows the code area to be
+read-only, position-independent and reentrant, making it easily
+ROM-able.
 
-Each AREA begins with:
+In ARM assembly language, each AREA begins with an AREA directive. If
+the AREA directive is missing the assembler will generate an AREA with
+an unlikely name (|$$$$$$$|) and produce a diagnostic message to this
+effect. This will limit the number of spurious errors caused by the
+missing directive, but will not lead to a successful assembly.
+
+The syntax of the AREA directive is:
 
 ```asm
 AREA name
