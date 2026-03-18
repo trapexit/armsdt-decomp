@@ -72,6 +72,11 @@ The syntax of the AREA directive is:
 AREA name
 ```
 
+You may choose any name for your AREAs, but certain choices are
+conventional. For example, `|C$$code|` is used for code AREAs produced
+by the C compiler, or for code AREAs otherwise associated with the C
+library.
+
 If missing, assembler generates `|$$$$$$$|` and reports a diagnostic.
 
 AREA attributes:
