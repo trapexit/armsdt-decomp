@@ -105,31 +105,48 @@ represented by symbols. Symbols representing numbers or addresses,
 logical values and strings are declared using the GBL and LCL
 directives, and values are assigned immediately by SETA, SETL and SETS
 directives respectively (see "Local and global variables - GBL, LCL
-and SET"). Addresses are assigned by the
-Assembler as assembly proceeds, some remaining in symbolic,
-relocatable form until link time.
+and SET"). Addresses are assigned by the Assembler as assembly
+proceeds, some remaining in symbolic, relocatable form until link
+time.
 
-Symbols must start with a letter in either upper or lower case; the assembler is case-sensitive and treats the two forms as distinct. Numeric characters and the underscore character may be part of the symbol name. All characters are significant.
+Symbols must start with a letter in either upper or lower case; the
+assembler is case-sensitive and treats the two forms as
+distinct. Numeric characters and the underscore character may be part
+of the symbol name. All characters are significant.
 
-Symbols should not use the same name as instruction mnemonics or directives. While the assembler can distinguish between the uses of the term through their relative positions in the input line, a programmer may not always be able to do so.
+Symbols should not use the same name as instruction mnemonics or
+directives. While the assembler can distinguish between the uses of
+the term through their relative positions in the input line, a
+programmer may not always be able to do so.
 
 Symbol length is limited by the 255 character line length limit.
 
-If there is a need to use a wider range of characters in symbols, for instance when working with other compilers, use enclosing bars to delimit the symbol name; for example, `|C$$code|`. The bars are not part of the symbol.
+If there is a need to use a wider range of characters in symbols, for
+instance when working with other compilers, use enclosing bars to
+delimit the symbol name; for example, `|C$$code|`. The bars are not
+part of the symbol.
 
 ### Labels
 
-Labels are a special form of symbol, distinguished by their position at the start of lines. The address represented by a label is not explicitly stated but is calculated during assembly.
+Labels are a special form of symbol, distinguished by their position
+at the start of lines. The address represented by a label is not
+explicitly stated but is calculated during assembly.
 
 ### Local labels
 
-The local label, a subclass of label, begins with a number in the range 0-99. Local labels work in conjunction with the ROUT directive and are most useful for solving the problem of macro-generated labels. Unlike global labels, a local label may be defined many times; the assembler uses the definition closest to the point of reference. To begin a local label area use:
+The local label, a subclass of label, begins with a number in the
+range 0-99. Local labels work in conjunction with the ROUT directive
+and are most useful for solving the problem of macro-generated
+labels. Unlike global labels, a local label may be defined many times;
+the assembler uses the definition closest to the point of
+reference. To begin a local label area use:
 
 ```text
 {label}
 ```
 
-The label area will start with the next line of source, and will end with the next ROUT directive or the end of the program.
+The label area will start with the next line of source, and will end
+with the next ROUT directive or the end of the program.
 
 Local labels are defined as:
 
@@ -137,7 +154,10 @@ Local labels are defined as:
 number{routinename}
 ```
 
-although *routinename* need not be used; if omitted, it is assumed to match the label of the last ROUT directive. It is an error to give a routine name when no label has been attached to the preceding ROUT directive.
+although *routinename* need not be used; if omitted, it is assumed to
+match the label of the last ROUT directive. It is an error to give a
+routine name when no label has been attached to the preceding ROUT
+directive.
 
 A reference to a local label has the following syntax:
 
@@ -145,9 +165,14 @@ A reference to a local label has the following syntax:
 %{x}{y}n{routinename}
 ```
 
-% introduces the reference and may be used anywhere where an ordinary label reference is valid.
+`%` introduces the reference and may be used anywhere where an ordinary
+label reference is valid.
 
-*x* tells the assembler where to search for the label; use *B* for backward or *F* for forward. If no direction is specified the assembler looks both forward and backward. However searches will never go outside the local label area (i.e. beyond the nearest ROUT directives).
+`x` tells the assembler where to search for the label; use *B* for
+backward or *F* for forward. If no direction is specified the
+assembler looks both forward and backward. However searches will never
+go outside the local label area (i.e. beyond the nearest ROUT
+directives).
 
 *y* provides the following options: *A* to look at all macro levels, *T* to look only at this macro level, or, if *y* is absent, to look at all macro from the current level to the top level.
 
