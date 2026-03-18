@@ -1,6 +1,6 @@
 # 3DO SDK - ARM Assembly Language
 
-## ARM Assembly Language (Index)
+## ARM Assembly Language
 
 ARM Assembly Language is the language which `armasm`, the ARM
 Assembler, parses and compiles to produce object code in ARM Object
