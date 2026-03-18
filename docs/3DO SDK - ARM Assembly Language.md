@@ -9,7 +9,9 @@ examples of its use. For such examples refer to the Cookbook.
 
 ### General
 
-Instruction mnemonics and register names may be written in upper or lower case (but not mixed case). Directives must be written in upper case.
+Instruction mnemonics and register names may be written in upper or
+lower case (but not mixed case). Directives must be written in upper
+case.
 
 ### Input lines
 
@@ -19,17 +21,40 @@ The general form of assembler input lines is:
 {label} {instruction} {;comment}
 ```
 
-A space or tab should separate the label, where one is used, and the instruction. If no label is used, the line must begin with a space or tab. Any combination of these three items will produce a valid line; empty lines are also accepted by the assembler and can be used to improve the clarity of source code.
+A space or tab should separate the label, where one is used, and the
+instruction. If no label is used, the line must begin with a space or
+tab. Any combination of these three items will produce a valid line;
+empty lines are also accepted by the assembler and can be used to
+improve the clarity of source code.
 
-Assembler source lines are allowed to be up to 255 characters long. To make source files easier to read, a long line of source can be split onto several lines by placing a backslash character, `', at the end of a line. The backslash must not be followed by any other characters (including spaces or tabs). The backslash + end of line sequence is treated by *armasm* as white space. Note that the backslash + end of line sequence should not be used within quoted strings.
+Assembler source lines are allowed to be up to 255 characters long. To
+make source files easier to read, a long line of source can be split
+onto several lines by placing a backslash character, `', at the end of
+a line. The backslash must not be followed by any other characters
+(including spaces or tabs). The backslash + end of line sequence is
+treated by *armasm* as white space. Note that the backslash + end of
+line sequence should not be used within quoted strings.
 
 ### AREAs
 
-AREAs are the independent, named, indivisible chunks of code and data manipulated by the Linker. The Linker places each AREA in a program image according to the AREA placement rules (ie. not necessarily adjacent to the AREAs with which it was assembled or compiled).
+AREAs are the independent, named, indivisible chunks of code and data
+manipulated by the Linker. The Linker places each AREA in a program
+image according to the AREA placement rules (ie. not necessarily
+adjacent to the AREAs with which it was assembled or compiled).
 
-Conventionally, an assembly, or the output of a compilation, consists of two AREAs, one for the code (usually marked read-only), and one for the data which may be written to. A reentrant object will generally have a third AREA marked BASED sb (see below), which will contain relocatable address constants. This allows the code area to be read-only, position-independent and reentrant, making it easily ROM-able.
+Conventionally, an assembly, or the output of a compilation, consists
+of two AREAs, one for the code (usually marked read-only), and one for
+the data which may be written to. A reentrant object will generally
+have a third AREA marked BASED sb (see below), which will contain
+relocatable address constants. This allows the code area to be
+read-only, position-independent and reentrant, making it easily
+ROM-able.
 
-In ARM assembly language, each AREA begins with an AREA directive. If the AREA directive is missing the assembler will generate an AREA with an unlikely name (|$$$$$$$|) and produce a diagnostic message to this effect. This will limit the number of spurious errors caused by the missing directive, but will not lead to a successful assembly.
+In ARM assembly language, each AREA begins with an AREA directive. If
+the AREA directive is missing the assembler will generate an AREA with
+an unlikely name (|$$$$$$$|) and produce a diagnostic message to this
+effect. This will limit the number of spurious errors caused by the
+missing directive, but will not lead to a successful assembly.
 
 The syntax of the AREA directive is:
 
