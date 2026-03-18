@@ -1548,17 +1548,28 @@ the same way as any other variables (see "Local and global variables -
 GBL, LCL and SET" and section ""Variable substitution - $"). They will
 be given new values each time the macro is called.
 
-Sometimes a macro parameter or label needs to be appended by a value. The appended value should be separated by a dot, which the assembler will ignore once it has used it to recognise the end of the parameter and label. For example:
+Sometimes a macro parameter or label needs to be appended by a
+value. The appended value should be separated by a dot, which the
+assembler will ignore once it has used it to recognise the end of the
+parameter and label. For example:
 
 ```text
 $label.$count
 ```
 
-The end of the macro definition is signified by the MEND directive.There must be no un-closed WHILE/WEND loops or conditional assembly when the MEND directive is reached. Macro expansion terminates at MEND. However it can also be terminated with the MEXIT directive, which can be used in conjunction with WHILE/WEND or conditional assembly.
+The end of the macro definition is signified by the MEND
+directive.There must be no un-closed WHILE/WEND loops or conditional
+assembly when the MEND directive is reached. Macro expansion
+terminates at MEND. However it can also be terminated with the MEXIT
+directive, which can be used in conjunction with WHILE/WEND or
+conditional assembly.
 
 ### Setting default parameter values
 
-Default values can be set for parameters by following them with an equals sign and the default value. If the default has a leading or trailing space, the whole value should appear in quotes, as shown below:
+Default values can be set for parameters by following them with an
+equals sign and the default value. If the default has a leading or
+trailing space, the whole value should appear in quotes, as shown
+below:
 
 ```text
 ...{$parameter="default value"}
@@ -1578,4 +1589,5 @@ can be invoked as:
 Label    xxxx val1,val2,val3
 ```
 
-An omitted actual argument is given a null (empty string) value. To force use of the default value, use `|' as the actual argument.
+An omitted actual argument is given a null (empty string) value. To
+force use of the default value, use `|' as the actual argument.
