@@ -489,7 +489,8 @@ MRS Rd, SPSR                         ; Rd <- SPSR_mode{N,Z,C,V,I,F,M[4:0]}
 
 ### Single data transfer
 
-These instructions come in two forms called pre-indexed and post-indexed. The syntax of pre-indexed instructions is:
+These instructions come in two forms called pre-indexed and
+post-indexed. The syntax of pre-indexed instructions is:
 
 ```text
 opcode{condition}{B} register,[base{,index}]{!}
@@ -501,7 +502,13 @@ Post-indexed instructions take the form:
 opcode{condition}{B} register,[base]{,index}
 ```
 
-*B* specifies a byte instead of a word transfer (i.e. 8 bits instead of 32). *Register* is the destination of the load or source of the store. *Base* must be a register; for pre-indexed addressing, *index* is added to it to yield the load or store address; with post-indexed addressing, *base* gives the address for the load or store, and *base*+*index* is the value written back to *base*. In the pre-indexed case *!* enables writeback of *base*+*index* to base.
+*B* specifies a byte instead of a word transfer (i.e. 8 bits instead
+of 32). *Register* is the destination of the load or source of the
+store. *Base* must be a register; for pre-indexed addressing, *index*
+is added to it to yield the load or store address; with post-indexed
+addressing, *base* gives the address for the load or store, and
+*base*+*index* is the value written back to *base*. In the pre-indexed
+case *!* enables writeback of *base*+*index* to base.
 
 Index may be one of the following:
 
@@ -510,23 +517,36 @@ Index may be one of the following:
 {-}register {, shift #5-bit-constant-expression}
 ```
 
-(*Shift* is explained in section [Data processing instructions - MOV and MVN](#data-processing-instructions). In this second form the value of *index* is the value in *register* shifted as specified.
+(*Shift* is explained in section ""Data processing instructions - MOV
+and MVN". In this second form the value of *index* is the value in
+*register* shifted as specified.
 
-LDR can also used to generate literal constants, program counter relative constant addresses and external addresses. The syntax is:
+LDR can also used to generate literal constants, program counter
+relative constant addresses and external addresses. The syntax is:
 
 ```text
 LDR register,=expression
 ```
 
-If expression is a numeric constant, then a MOV or MVN will be used rather than an LDR if the constant can be constructed by either of these instructions. Otherwise, the assembler will generate a program-relative LDR, and if the desired literal does nor already exist within the addressable range of this LDR, it will place the literal in the next literal pool, (see also LTORG [Organisational directives - END, ORG, LTORG and KEEP](#organisational-directives).
+If expression is a numeric constant, then a MOV or MVN will be used
+rather than an LDR if the constant can be constructed by either of
+these instructions. Otherwise, the assembler will generate a
+program-relative LDR, and if the desired literal does nor already
+exist within the addressable range of this LDR, it will place the
+literal in the next literal pool, (see also LTORG "Organisational
+directives - END, ORG, LTORG and KEEP".
 
-Additionally, LDR or STR can be used to transfer data to or from an address specified by a label (optionally with an offset) as follows:
+Additionally, LDR or STR can be used to transfer data to or from an
+address specified by a label (optionally with an offset) as follows:
 
 ```text
 opcode{cond}{B} register,label-expression
 ```
 
-When used in this form, *label expression* must either be addressable PC-relative from this instruction, or must be a register-relative label created using the `^' directive with a register operand, (see section [Describing the layout of store - ^ and #](#describing-the-layout-of-store)).
+When used in this form, *label expression* must either be addressable
+PC-relative from this instruction, or must be a register-relative
+label created using the `^' directive with a register operand, (see
+section "Describing the layout of store - ^ and #".
 
 ### Block data transfer
 
