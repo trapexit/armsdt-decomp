@@ -1308,7 +1308,8 @@ The syntax of these directives is:
 directive variable-name
 ```
 
-The value of a variable can be altered using the relevant one of the following three directives:
+The value of a variable can be altered using the relevant one of the
+following three directives:
 
 | Directive | Meaning |
 | --- | --- |
@@ -1326,7 +1327,13 @@ where *expression* evaluates to the value being assigned to the variable named.
 
 ### Variable substitution
 
-Once a variable has been declared its name cannot be used for any other purpose, and any attempt to do so will result in an error. However, if the $ character is prefixed to the name, the variable's value will be substituted before the assembler checks the line's syntax. Logical and arithmetic variables are replaced by the result of performing a :STR: operation on them (see [Unary operators](#unary-operators)), string variables by their value.
+Once a variable has been declared its name cannot be used for any
+other purpose, and any attempt to do so will result in an
+error. However, if the $ character is prefixed to the name, the
+variable's value will be substituted before the assembler checks the
+line's syntax. Logical and arithmetic variables are replaced by the
+result of performing a :STR: operation on them (see [Unary
+operators](#unary-operators)), string variables by their value.
 
 ### Built-in variables
 
@@ -1344,13 +1351,22 @@ There are seven built-in variables. They are:
 
 ## Expressions and operators
 
-Expressions are combinations of simple values, unary and binary operators, and brackets. There is a strict order of precedence in their evaluation: expressions in brackets are evaluated first, then operators are applied in precedence order. Adjacent unary operators evaluate from right to left; binary operators of equal precedence are evaluated from left to right.
+Expressions are combinations of simple values, unary and binary
+operators, and brackets. There is a strict order of precedence in
+their evaluation: expressions in brackets are evaluated first, then
+operators are applied in precedence order. Adjacent unary operators
+evaluate from right to left; binary operators of equal precedence are
+evaluated from left to right.
 
-The assembler includes an extensive set of operators for use in expressions, many of which resemble their counterparts in high-level languages.
+The assembler includes an extensive set of operators for use in
+expressions, many of which resemble their counterparts in high-level
+languages.
 
 ### Unary operators
 
-Unary operators have the highest precedence (bind most tightly) so are evaluated first. A unary operator precedes its operand, and adjacent operators are evaluated from right to left.
+Unary operators have the highest precedence (bind most tightly) so are
+evaluated first. A unary operator precedes its operand, and adjacent
+operators are evaluated from right to left.
 
 | Operator | Usage | Explanation |
 | --- | --- | --- |
@@ -1368,11 +1384,15 @@ Unary operators have the highest precedence (bind most tightly) so are evaluated
 
 ### Binary operators
 
-Binary operators are written between the pair of sub-expressions on which they operate. Operators of equal precedence are evaluated in left to right order. The binary operators are presented below in groups of equal precedence, in decreasing precedence order.
+Binary operators are written between the pair of sub-expressions on
+which they operate. Operators of equal precedence are evaluated in
+left to right order. The binary operators are presented below in
+groups of equal precedence, in decreasing precedence order.
 
 #### Multiplicative operators
 
-These are the binary operators which bind most tightly and have the highest precedence:
+These are the binary operators which bind most tightly and have the
+highest precedence:
 
 | Operator | Usage | Explanation |
 | --- | --- | --- |
@@ -1390,7 +1410,8 @@ These operators act only on numeric expressions.
 | RIGHT | A:RIGHT:B | The right-most B characters of A |
 | CC | A:CC:B | B concatenated on to the end of A |
 
-In the two slicing operators LEFT and RIGHT, *A* must be a string and *B* must be a numeric expression.
+In the two slicing operators LEFT and RIGHT, *A* must be a string and
+*B* must be a numeric expression.
 
 #### Shift operators
 
@@ -1401,7 +1422,9 @@ In the two slicing operators LEFT and RIGHT, *A* must be a string and *B* must b
 | SHL | A:SHL:B | Shift A left B bits |
 | SHR | A:SHR:B | Shift A right B bits |
 
-The shift operators act on numeric expressions, shifting or rotating the first operand by the amount specified by the second. Note that SHR is a logical shift and does not propagate the sign bit.
+The shift operators act on numeric expressions, shifting or rotating
+the first operand by the amount specified by the second. Note that SHR
+is a logical shift and does not propagate the sign bit.
 
 #### Addition and logical operators
 
@@ -1413,7 +1436,9 @@ The shift operators act on numeric expressions, shifting or rotating the first o
 | + | A+B | Add A to B |
 | - | A-B | Subtract B from A |
 
-The bitwise operators act on numeric expressions. The operation is performed independently on each bit of the operands to produce the result.
+The bitwise operators act on numeric expressions. The operation is
+performed independently on each bit of the operands to produce the
+result.
 
 #### Relational operators
 
@@ -1427,7 +1452,14 @@ The bitwise operators act on numeric expressions. The operation is performed ind
 | /= | A/=B | A not equal to B |
 | <> | A<>B | A not equal to B |
 
-The relational operators act upon two operands of the same type to produce a logical value. Allowable types of operand are numeric, program-relative, register-relative, and strings. Strings are sorted using ASCII ordering. String A will be less than string B if it is either a leading substring of string B, or if the left-most character of A in which the two strings differ is less than the corresponding character in string B. Note that arithmetic values are unsigned, so the value of 0>-1 is {FALSE}.
+The relational operators act upon two operands of the same type to
+produce a logical value. Allowable types of operand are numeric,
+program-relative, register-relative, and strings. Strings are sorted
+using ASCII ordering. String A will be less than string B if it is
+either a leading substring of string B, or if the left-most character
+of A in which the two strings differ is less than the corresponding
+character in string B. Note that arithmetic values are unsigned, so
+the value of 0>-1 is {FALSE}.
 
 #### Boolean operators
 
@@ -1439,11 +1471,15 @@ These are the weakest binding operators with the lowest precedence.
 | LOR | A:LOR:B | Logical OR of A and B |
 | LEOR | A:LEOR:B | Logical Exclusive OR of A and B |
 
-The Boolean operators perform the standard logical operations on their operands, which should evaluate to {TRUE} or {FALSE}.
+The Boolean operators perform the standard logical operations on their
+operands, which should evaluate to {TRUE} or {FALSE}.
 
 ## Conditional assembly
 
-Sections of a source file may be assembled conditionally, only if certain conditions are true. The [ and ] (if and endif) directives are used to mark their start and finish; | provides an else construct. The syntax is:
+Sections of a source file may be assembled conditionally, only if
+certain conditions are true. The [ and ] (if and endif) directives are
+used to mark their start and finish; | provides an else construct. The
+syntax is:
 
 ```text
 [ logical-expression
@@ -1453,13 +1489,24 @@ Sections of a source file may be assembled conditionally, only if certain condit
 ]
 ```
 
-Note that [, | and ] may not be the first character of a line. If the logical-expression is true, the section will be assembled; if it is false, the second piece of code, the beginning of which is marked by | and the end of which is marked by ], will be assembled instead. Lines of code skipped during conditional assembly will not be listed unless the assembler is switched from its default TERSE mode by the -NOTERSE command-line switch.
+Note that [, | and ] may not be the first character of a line. If the
+logical-expression is true, the section will be assembled; if it is
+false, the second piece of code, the beginning of which is marked by |
+and the end of which is marked by ], will be assembled instead. Lines
+of code skipped during conditional assembly will not be listed unless
+the assembler is switched from its default TERSE mode by the -NOTERSE
+command-line switch.
 
 The directives IF, ELSE and ENDIF may be used instead of [, | and ] respectively.
 
 ## Repetitive assembly
 
-The conditional looping statement, useful for generating repetitive tables, is provided in the assembler by the WHILE...WEND directives. This produces an assembly-time loop, not a run-time loop. Because the test for the WHILE condition is made at the top of the loop, it is possible that no code will be generated during assembly; lines are listed as for conditional assembly. The syntax is:
+The conditional looping statement, useful for generating repetitive
+tables, is provided in the assembler by the WHILE...WEND
+directives. This produces an assembly-time loop, not a run-time
+loop. Because the test for the WHILE condition is made at the top of
+the loop, it is possible that no code will be generated during
+assembly; lines are listed as for conditional assembly. The syntax is:
 
 ```text
 WHILE
@@ -1474,7 +1521,10 @@ WEND
 
 ### Usage
 
-Macros are useful when a group of instructions and/or directives is frequently needed. *armasm* will replace the macro name with its definition. Macros may contain calls to other macros, nested up to 255 levels.
+Macros are useful when a group of instructions and/or directives is
+frequently needed. *armasm* will replace the macro name with its
+definition. Macros may contain calls to other macros, nested up to 255
+levels.
 
 ### Defining a macro
 
@@ -1487,9 +1537,16 @@ MACRO
     MEND
 ```
 
-The directive MACRO must be followed by a macro prototype statement on the next line. This tells the assembler the name of the macro and its parameters. A label is optional, but useful if calls of the macro may be labelled. Any number of parameters can be used; each must begin with `$' to distinguish them from ordinary program symbols.
+The directive MACRO must be followed by a macro prototype statement on
+the next line. This tells the assembler the name of the macro and its
+parameters. A label is optional, but useful if calls of the macro may
+be labelled. Any number of parameters can be used; each must begin
+with `$' to distinguish them from ordinary program symbols.
 
-Within the macro body, *$label*, *$parameter*, etc., can be used in the same way as any other variables (see[Local and global variables - GBL, LCL and SET](#local-and-global-variables), and section [Variable substitution - $](#variable-substitution)). They will be given new values each time the macro is called.
+Within the macro body, *$label*, *$parameter*, etc., can be used in
+the same way as any other variables (see "Local and global variables -
+GBL, LCL and SET" and section ""Variable substitution - $"). They will
+be given new values each time the macro is called.
 
 Sometimes a macro parameter or label needs to be appended by a value. The appended value should be separated by a dot, which the assembler will ignore once it has used it to recognise the end of the parameter and label. For example:
 
