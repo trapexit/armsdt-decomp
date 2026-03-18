@@ -1246,31 +1246,37 @@ transfer - LDM and STM").
 ENTRY
 ```
 
-The ENTRY directive declares its offset in its containing AREA to be the unique entry point to any program containing this AREA.
+The ENTRY directive declares its offset in its containing AREA to be
+the unique entry point to any program containing this AREA.
 
 ## Symbolic capabilities
 
 ### Setting constants
 
-The EQU and * directives are used to give a symbolic name to a fixed or program-relative value. The syntax is:
+The EQU and * directives are used to give a symbolic name to a fixed
+or program-relative value. The syntax is:
 
 ```text
 label EQU expression
 label * expression
 ```
 
-*RN* defines register names. Registers can only be referred to by name. The names R0-R15, r0-r15, PC, pc, LR and lr, are predefined.
+*RN* defines register names. Registers can only be referred to by
+name. The names R0-R15, r0-r15, PC, pc, LR and lr, are predefined.
 
-*FN* defines the names of floating point registers. The names F0-F7 and f0-f7 are built in. The syntax is:
+*FN* defines the names of floating point registers. The names F0-F7
+and f0-f7 are built in. The syntax is:
 
 ```text
 label RN numeric-expression
 label FN numeric-expression
 ```
 
-*CP* gives a name to a coprocessor number, which must be within the range 0 to 15. The names p0-p15 are pre-defined.
+*CP* gives a name to a coprocessor number, which must be within the
+range 0 to 15. The names p0-p15 are pre-defined.
 
-*CN* names a coprocessor register number; c0-c15 are pre-defined. The syntax is:
+*CN* names a coprocessor register number; c0-c15 are pre-defined. The
+syntax is:
 
 ```text
 label CP numeric-expression
@@ -1279,7 +1285,13 @@ label CN numeric-expression
 
 ### Local and global variables
 
-While most symbols have fixed values determined during assembly, variables have values which may change as assembly proceeds. The assembler supports both global and local variables. The scope of global variables extends across the entire source file while that of local variables is restricted to a particular instantiation of a macro (see [Macros](#macros)). Variables must be declared before use with one of these directives.
+While most symbols have fixed values determined during assembly,
+variables have values which may change as assembly proceeds. The
+assembler supports both global and local variables. The scope of
+global variables extends across the entire source file while that of
+local variables is restricted to a particular instantiation of a macro
+(see ""Macros"). Variables must be declared before use with
+one of these directives.
 
 | Directive | Meaning |
 | --- | --- |
