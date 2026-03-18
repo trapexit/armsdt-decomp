@@ -62,7 +62,10 @@ The syntax of the AREA directive is:
 AREA name
 ```
 
-You may choose any name for your AREAs, but certain choices are conventional. For example, |C$$code| is used for code AREAs produced by the C compiler, or for code AREAs otherwise associated with the C library.
+You may choose any name for your AREAs, but certain choices are
+conventional. For example, `|C$$code|` is used for code AREAs produced
+by the C compiler, or for code AREAs otherwise associated with the C
+library.
 
 AREA Attributes are as follows:
 
@@ -87,11 +90,24 @@ AREA Attributes are as follows:
 ORG
 ```
 
-The ORG (origin) directive is used to set the base address and the ABS (absolute) attribute of the containing AREA, or of the following AREA if there is no containing AREA. In some circumstances this will create objects which cannot be linked. In general it only makes sense to use ORG in programs consisting of one AREA, which need to map fixed hardware addresses such as trap vector locations. Otherwise ORG should be avoided.
+The ORG (origin) directive is used to set the base address and the ABS
+(absolute) attribute of the containing AREA, or of the following AREA
+if there is no containing AREA. In some circumstances this will create
+objects which cannot be linked. In general it only makes sense to use
+ORG in programs consisting of one AREA, which need to map fixed
+hardware addresses such as trap vector locations. Otherwise ORG should
+be avoided.
 
 ### Symbols
 
-Numbers, logical values, string values and addresses may be represented by symbols. Symbols representing numbers or addresses, logical values and strings are declared using the GBL and LCL directives, and values are assigned immediately by SETA, SETL and SETS directives respectively (see [Local and global variables - GBL, LCL and SET](#local-and-global-variables)). Addresses are assigned by the Assembler as assembly proceeds, some remaining in symbolic, relocatable form until link time.
+Numbers, logical values, string values and addresses may be
+represented by symbols. Symbols representing numbers or addresses,
+logical values and strings are declared using the GBL and LCL
+directives, and values are assigned immediately by SETA, SETL and SETS
+directives respectively (see "Local and global variables - GBL, LCL
+and SET"). Addresses are assigned by the
+Assembler as assembly proceeds, some remaining in symbolic,
+relocatable form until link time.
 
 Symbols must start with a letter in either upper or lower case; the assembler is case-sensitive and treats the two forms as distinct. Numeric characters and the underscore character may be part of the symbol name. All characters are significant.
 
