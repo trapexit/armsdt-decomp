@@ -222,13 +222,29 @@ on a line by itself.
 
 ## The ARM instruction set
 
-The ARM instruction set, describedin this section, may be subject to processor-specific restrictions and changes. Particular combinations of instructions must be avoided where noted, as unpredictable results may otherwise occur. Refer to the appropriate ARM processor datasheet for a precise definition of the instruction set, and also refer to companion application notes for information on relevant restrictions and changes.
+The ARM instruction set, describedin this section, may be subject to
+processor-specific restrictions and changes. Particular combinations
+of instructions must be avoided where noted, as unpredictable results
+may otherwise occur. Refer to the appropriate ARM processor datasheet
+for a precise definition of the instruction set, and also refer to
+companion application notes for information on relevant restrictions
+and changes.
 
-The most significant variations are those between ARM processors with 26- and 32-bit program counters.
+The most significant variations are those between ARM processors with
+26- and 32-bit program counters.
 
-### Conditional execution and the `S' bit
+### Conditional execution and the `S` bit
 
-All ARM instructions are conditional and are only executed if their condition field matches the N, Z, C and V condition flags of the program status register (PSR). For full details of the processor status flags refer to the ARM Datasheet for the appropriate ARM device. The default condition field setting is *execute* *always*; other conditions are specified by appending a two-character condition mnemonic to the instruction mnemonic. A conditionally executed sequence of instructions will usually be shorter and sometimes even faster than a branched-around sequence, because it will not cause breaks in the CPU pipeline.
+All ARM instructions are conditional and are only executed if their
+condition field matches the N, Z, C and V condition flags of the
+program status register (PSR). For full details of the processor
+status flags refer to the ARM Datasheet for the appropriate ARM
+device. The default condition field setting is *execute* *always*;
+other conditions are specified by appending a two-character condition
+mnemonic to the instruction mnemonic. A conditionally executed
+sequence of instructions will usually be shorter and sometimes even
+faster than a branched-around sequence, because it will not cause
+breaks in the CPU pipeline.
 
 | Mnemonic | Condition | CPU condition flags |
 | --- | --- | --- |
@@ -249,15 +265,30 @@ All ARM instructions are conditional and are only executed if their condition fi
 
 HS (Higher or Same) and LO (LOwer than) are synonyms for CS and CC respectively.
 
-Condition flags are set by executed ALU instructions which have the `S' bit set, and by executed comparison instructions. The S bit is set by appending `S' to the instruction mnemonic.
+Condition flags are set by executed ALU instructions which have the
+`S` bit set, and by executed comparison instructions. The S bit is set
+by appending `S` to the instruction mnemonic.
 
 ### Register Names and `.'
 
-Fifteen registers (R0 to R14), the program counter (PC), and the processor status register (PSR), are all directly accessible to the programmer. Register R15 contains the PC, and in 26-bit address ARMs it contains the PSR too. In 32-bit address ARMs the PSR is separate, and is manipulated by separate instructions.
+Fifteen registers (R0 to R14), the program counter (PC), and the
+processor status register (PSR), are all directly accessible to the
+programmer. Register R15 contains the PC, and in 26-bit address ARMs
+it contains the PSR too. In 32-bit address ARMs the PSR is separate,
+and is manipulated by separate instructions.
 
-R14 is used as the subroutine link register, saving a copy of R15 when a *Branch with Link* instruction is executed (see [Branch instructions - B and BL](#branch-instructions)). R13 is conventionally used as a stack pointer.
+R14 is used as the subroutine link register, saving a copy of R15 when
+a *Branch with Link* instruction is executed (see "Branch
+instructions - B and BL"). R13 is conventionally used as a stack
+pointer.
 
-The non-user processor modes each have their own R13 and R14, and in 32-bit ARMs, PSR registers. FIQ mode additionally has its own R8-R12. When a mode change occurs, because of interrupts, SWIs or traps, R14 of the new mode is set to a copy of R15, and in 32-bit ARMs the PSR of the new mode is copied from the PSR of the old mode. For further details of banked registers and mode changes, consult the appropriate ARM datasheet for the target processor.
+The non-user processor modes each have their own R13 and R14, and in
+32-bit ARMs, PSR registers. FIQ mode additionally has its own
+R8-R12. When a mode change occurs, because of interrupts, SWIs or
+traps, R14 of the new mode is set to a copy of R15, and in 32-bit ARMs
+the PSR of the new mode is copied from the PSR of the old mode. For
+further details of banked registers and mode changes, consult the
+appropriate ARM datasheet for the target processor.
 
 Within an assembly language source, the current value of the program counter (PC) can be referred to as `.'. Usually, `.' is 8 bytes ahead of the instruction using it because of pipelining. For example:
 
