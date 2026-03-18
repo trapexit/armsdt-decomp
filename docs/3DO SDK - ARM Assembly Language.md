@@ -62,7 +62,7 @@ ROM-able.
 
 In ARM assembly language, each AREA begins with an AREA directive. If
 the AREA directive is missing the assembler will generate an AREA with
-an unlikely name (|$$$$$$$|) and produce a diagnostic message to this
+an unlikely name (`|$$$$$$$|`) and produce a diagnostic message to this
 effect. This will limit the number of spurious errors caused by the
 missing directive, but will not lead to a successful assembly.
 
