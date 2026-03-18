@@ -26,7 +26,9 @@ Topics:
 
 ### General
 
-Instruction mnemonics and register names may be written in upper or lower case (but not mixed case). Directives must be written in upper case.
+Instruction mnemonics and register names may be written in upper or
+lower case (but not mixed case). Directives must be written in upper
+case.
 
 ### Input lines
 
@@ -71,7 +73,11 @@ AREA attributes:
 - `COMMON`: Common area
 - `NOINIT`: Zero-initialized data area with space reservation only
 - `REENTRANT`: Reentrant code area
-- `BASED Rn`: Static-base area containing address constants (conventionally `R9`)
+- `BASED Rn`: Static base data AREA containing tables of address
+  constants locating static data items. Rn is a register,
+  conventionally R9. Any label defined within this AREA becomes a
+  register-relative expression which can be used with LDR and STR
+  instructions.
 - `ALIGN=expression`: Force area alignment to power-of-two boundary (2..12, default word aligned)
 
 ### ORG and ABS
