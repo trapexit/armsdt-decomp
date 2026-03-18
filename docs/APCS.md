@@ -2,11 +2,6 @@
 
 Source: [ARM Procedure Call Standard (APCS.txt)](https://www.chiark.greenend.org.uk/~theom/riscos/docs/CodeStds/APCS.txt)
 
----
-
-# ARM Procedure Call Standard
-
-
 ## Introduction
 
 The <ARM Procedure Call Standard> (<APCS>) is a set of rules which
