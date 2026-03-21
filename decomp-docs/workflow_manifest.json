@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "canonical_human_entrypoint": "decomp-docs/README.md",
+  "repository_overview": "HOW_TO_PROCESS_DECOMP_C.md",
+  "machine_validation": "decomp-docs/validate_docs.py",
+  "status_values": [
+    "confirmed",
+    "open",
+    "blocked"
+  ],
+  "shared_docs": {
+    "step1": "decomp-docs/generic_step1.md",
+    "step2": "decomp-docs/generic_step2.md",
+    "step3": "decomp-docs/generic_step3.md"
+  },
+  "authority_order": [
+    "original binary runtime behavior",
+    "decomp-docs/README.md",
+    "decomp-docs/workflow_manifest.json",
+    "decomp-docs/generic_step1.md",
+    "decomp-docs/generic_step2.md",
+    "decomp-docs/generic_step3.md",
+    "per-tool step docs",
+    "HOW_TO_PROCESS_DECOMP_C.md"
+  ],
+  "selection_rules": {
+    "priority_policy": [
+      "Prefer finishing near-complete work before opening a new front.",
+      "Otherwise choose the first ready tool in recompiled priority order, then recreated priority order."
+    ],
+    "near_complete_criteria": [
+      "All required outputs for the candidate step already exist.",
+      "Remaining work is limited to evidence refresh, focused parity checks, or narrowly scoped fixes.",
+      "No unresolved hard-stop issue remains.",
+      "Remaining work fits in one material batch.",
+      "Finishing the candidate does not violate step start gates."
+    ],
+    "step_readiness": {
+      "1": {
+        "phase": "recompiled",
+        "generic_doc": "decomp-docs/generic_step1.md",
+        "ready_when": [
+          "Any required output under <tool>/recompiled/ is missing.",
+          "Parity evidence or closeout requirements are incomplete."
+        ],
+        "required_outputs": [
+          "<tool>/recompiled/Makefile",
+          "<tool>/recompiled/src/",
+          "<tool>/recompiled/tests/",
+          "<tool>/recompiled/build/<tool>"
+        ]
+      },
+      "2": {
+        "phase": "specification",
+        "generic_doc": "decomp-docs/generic_step2.md",
+        "ready_when": [
+          "Step 1 outputs exist and <tool>/technical_specification.md is missing.",
+          "The spec exists but lacks traceability, evidence, or full feature inventory coverage."
+        ],
+        "required_outputs": [
+          "<tool>/technical_specification.md"
+        ]
+      },
+      "3": {
+        "phase": "recreated",
+        "generic_doc": "decomp-docs/generic_step3.md",
+        "ready_when": [
+          "The step 2 spec exists and any required output under <tool>/recreated/ is missing.",
+          "Three-way parity evidence or closeout requirements are incomplete."
+        ],
+        "required_outputs": [
+          "<tool>/recreated/Makefile",
+          "<tool>/recreated/src/",
+          "<tool>/recreated/tests/",
+          "<tool>/recreated/build/<tool>"
+        ]
+      }
+    },
+    "resume_rules": [
+      "Recompute state from files and docs rather than from memory.",
+      "If required outputs exist but closeout evidence is missing, stay in the same step.",
+      "Treat prior evidence as stale when it predates a material change to covered code, tests, fixtures, or requirement mapping.",
+      "Refresh stale evidence before marking closeout criteria as satisfied.",
+      "Use confirmed/open/blocked consistently across inventories and checklists.",
+      "Document blockers with parity impact and closure experiments in repo artifacts."
+    ]
+  },
+  "tools": [
+    {
+      "name": "armlib",
+      "label": "ARM Library Manager",
+      "description": "Creates, modifies, and lists ALF library archives",
+      "recompiled_priority": 1,
+      "recreated_priority": 7,
+      "tool_directory": "armlib",
+      "spec_path": "armlib/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/armlib_step1.md",
+        "2": "decomp-docs/armlib_step2.md",
+        "3": "decomp-docs/armlib_step3.md"
+      }
+    },
+    {
+      "name": "decaof",
+      "label": "AOF Decoder v4.20",
+      "description": "Dumps and disassembles AOF/ALF chunk files",
+      "recompiled_priority": 2,
+      "recreated_priority": 8,
+      "tool_directory": "decaof",
+      "spec_path": "decaof/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/decaof_step1.md",
+        "2": "decomp-docs/decaof_step2.md",
+        "3": "decomp-docs/decaof_step3.md"
+      }
+    },
+    {
+      "name": "armlink",
+      "label": "ARM Linker v5.20",
+      "description": "Links AOF objects into AIF executables",
+      "recompiled_priority": 3,
+      "recreated_priority": 9,
+      "tool_directory": "armlink",
+      "spec_path": "armlink/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/armlink_step1.md",
+        "2": "decomp-docs/armlink_step2.md",
+        "3": "decomp-docs/armlink_step3.md"
+      }
+    },
+    {
+      "name": "armasm",
+      "label": "ARM AOF Macro Assembler v2.50",
+      "description": "Assembles ARM source into AOF objects",
+      "recompiled_priority": 4,
+      "recreated_priority": 10,
+      "tool_directory": "armasm",
+      "spec_path": "armasm/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/armasm_step1.md",
+        "2": "decomp-docs/armasm_step2.md",
+        "3": "decomp-docs/armasm_step3.md"
+      }
+    },
+    {
+      "name": "armcc",
+      "label": "ARM C Compiler",
+      "description": "Compiles C source into AOF objects",
+      "recompiled_priority": 5,
+      "recreated_priority": 11,
+      "tool_directory": "armcc",
+      "spec_path": "armcc/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/armcc_step1.md",
+        "2": "decomp-docs/armcc_step2.md",
+        "3": "decomp-docs/armcc_step3.md"
+      }
+    },
+    {
+      "name": "armcpp",
+      "label": "ARM C++ Compiler",
+      "description": "Compiles C++ source into AOF objects",
+      "recompiled_priority": 6,
+      "recreated_priority": 12,
+      "tool_directory": "armcpp",
+      "spec_path": "armcpp/technical_specification.md",
+      "step_docs": {
+        "1": "decomp-docs/armcpp_step1.md",
+        "2": "decomp-docs/armcpp_step2.md",
+        "3": "decomp-docs/armcpp_step3.md"
+      }
+    }
+  ]
+}
