@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "label": "legacy platform reference",
+      "pattern": "3DO"
+    },
+    {
+      "label": "narrow documented workflow scope",
+      "pattern": "documented CLI and processing workflows"
+    },
+    {
+      "label": "narrow documented architecture scope",
+      "pattern": "documented architectures and formats"
+    },
+    {
+      "label": "ambiguous format applicability qualifier",
+      "pattern": "AOF, AIF, and ALF where applicable"
+    }
+  ]
+}

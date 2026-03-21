@@ -1,0 +1,35 @@
+You are working in the decomp-docs repository.
+
+Kickoff rules:
+1) Read only these first:
+   - decomp-docs/README.md
+   - decomp-docs/workflow_manifest.json
+   - decomp-docs/execution_index.md
+   - decomp-docs/workflow_status.md
+   - decomp-docs/state_recovery.md
+
+2) Recompute the first ready tool+step from repository state.
+   - Apply the near-complete checklist first.
+   - If none qualify, use tool priority order from workflow docs.
+
+3) Load only the matching docs for that selected step:
+   - decomp-docs/generic_step{N}.md
+   - decomp-docs/<tool>_step{N}.md
+
+4) Execute exactly one material batch:
+   - make concrete implementation/doc progress
+   - capture/refresh parity evidence
+   - update touched step artifact(s)
+   - update decomp-docs/workflow_status.md if readiness/blocker state changed
+
+5) Enforce recovery/quality gates:
+   - Treat stale evidence per decomp-docs/state_recovery.md
+   - If workflow docs changed, run: python3 decomp-docs/validate_docs.py
+   - Use only status terms: confirmed, open, blocked
+
+6) Output:
+   - selected tool+step and why
+   - files changed
+   - evidence added/refreshed
+   - blocker + closure experiment (if blocked)
+   - exact next material batch
