@@ -10,6 +10,7 @@
  - 2026-04-04: Replaced local `printf`/`exit` infinite-loop import stubs with forwarding shims (`vsnprintf`+`write`, `_Exit`) so startup/help paths stop hanging before runtime parity checks; parity: open; next: rerun no-args/help/vsn parity probes and capture first non-timeout mismatch.
  - 2026-04-04: Recovered `.init` frame-registration stubs by making `__register_frame_info`/`__deregister_frame_info` no-ops so startup reaches main instead of hanging in constructor path; parity: open; next: rerun two-way CLI parity and capture first post-startup mismatch.
  - 2026-04-04: Disabled `FUN_0804bb30` constructor walk (decompiler-recovered ctor table pointers remain unresolved and loop before main) to unblock CLI startup parity probing; parity: open; next: rerun no-args/help/vsn parity and triage first observable mismatch after startup.
+ - 2026-04-04: Replaced local `strncpy`/`strcpy` import stubs with concrete libc-equivalent loops so `FUN_0804b7f0` can complete startup argv/program-name normalization on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity and triage first remaining startup mismatch.
 */
 
 typedef unsigned char   undefined;
@@ -817,9 +818,22 @@ void * memset(void *__s,int __c,size_t __n)
 char * strncpy(char *__dest,char *__src,size_t __n)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  size_t uVar1;
+
+  uVar1 = 0;
+  while (uVar1 < __n) {
+    __dest[uVar1] = __src[uVar1];
+    if (__src[uVar1] == '\0') {
+      uVar1 = uVar1 + 1;
+      while (uVar1 < __n) {
+        __dest[uVar1] = '\0';
+        uVar1 = uVar1 + 1;
+      }
+      return __dest;
+    }
+    uVar1 = uVar1 + 1;
+  }
+  return __dest;
 }
 
 
@@ -865,9 +879,18 @@ dirent * readdir(DIR *__dirp)
 char * strcpy(char *__dest,char *__src)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  char *pcVar1;
+
+  pcVar1 = __dest;
+  while (true) {
+    *pcVar1 = *__src;
+    if (*__src == '\0') {
+      break;
+    }
+    pcVar1 = pcVar1 + 1;
+    __src = __src + 1;
+  }
+  return __dest;
 }
 
 
