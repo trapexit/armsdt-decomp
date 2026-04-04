@@ -6,6 +6,7 @@
  - 2026-04-04: Added forward declarations/no-op init stub, replaced CONCAT31 bool artifacts, and retyped list-tail globals to pointer-safe forms to clear current hard compile blockers; parity: open; next: rerun make and continue pointer-width cleanup in archive/member traversal paths.
  - 2026-04-04: Migrated archive-base and argument-tail globals to pointer-typed state (`DAT_0804d84c`, `DAT_0804d7cc`) and updated affected traversals to pointer arithmetic to clear current int-conversion compile blockers; parity: open; next: rerun make and continue 64-bit pointer-flow cleanup in member payload ownership paths.
  - 2026-04-04: Added a concrete `main` shim that dispatches to `FUN_0804a988` so link can produce `build/armlib`; parity: open; next: rerun build and two-way CLI parity tests to capture the next blocker.
+ - 2026-04-04: Retyped `FUN_0804a988` argv entry/traversal to pointer-width-safe `char **` flow so startup argument packing no longer dereferences truncated pointers on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity probes and capture next behavior mismatch.
 */
 
 typedef unsigned char   undefined;
@@ -372,7 +373,7 @@ struct Elf32_Ehdr {
 
 
 void _DT_INIT(void);
-undefined4 FUN_0804a988(int param_1,undefined4 *param_2);
+int FUN_0804a988(int param_1,char **param_2);
 void _DT_FINI(void);
 int DAT_0804d640;
 undefined *PTR_DAT_0804d63c;
@@ -657,8 +658,8 @@ int strncmp(char *__s1,char *__s2,size_t __n)
 
 
 
-int __libc_start_main(undefined4 (*param_1)(int,undefined4 *),int param_2,char **param_3,
-                     void (*param_4)(void),void (*param_5)(void),void *param_6,void *param_7)
+int __libc_start_main(int (*param_1)(int,char **),int param_2,char **param_3,
+                      void (*param_4)(void),void (*param_5)(void),void *param_6,void *param_7)
 
 {
   (void)param_1;
@@ -871,7 +872,7 @@ void processEntry_entry(undefined4 param_1,undefined4 param_2)
 int main(int argc,char **argv)
 
 {
-  return (int)FUN_0804a988(argc,(undefined4 *)argv);
+  return FUN_0804a988(argc,argv);
 }
 
 
@@ -2370,7 +2371,7 @@ LAB_0804a8f1:
 
 // WARNING: Globals starting with '_' overlap smaller symbols at the same address
 
-undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
+int FUN_0804a988(int param_1,char **param_2)
 
 {
   char cVar1;
@@ -2380,8 +2381,8 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
   int iVar5;
   uint uVar6;
   byte *pbVar7;
-  int *piVar8;
-  int *piVar9;
+  char **ppcVar8;
+  char **ppcVar9;
   undefined4 *puVar10;
   char *pcVar11;
   byte *pbVar12;
@@ -2389,7 +2390,7 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
   uint local_c;
   int local_8;
   
-  FUN_0804b7f0((char *)*param_2,&DAT_0804d7e0,0x20);
+  FUN_0804b7f0(param_2[0],&DAT_0804d7e0,0x20);
   DAT_0804d7cc = 0;
   DAT_0804d7c8 = 0;
   DAT_0804d7d4 = 0;
@@ -2428,13 +2429,12 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
                     // WARNING: Subroutine does not return
     exit(1);
   }
-  piVar8 = param_2 + 1;
+  ppcVar8 = param_2 + 1;
   iVar5 = 0;
-  iVar3 = param_2[1];
-  piVar9 = piVar8;
-  while (iVar3 != 0) {
+  pcVar11 = param_2[1];
+  ppcVar9 = ppcVar8;
+  while (pcVar11 != (char *)0x0) {
     uVar6 = 0xffffffff;
-    pcVar11 = (char *)*piVar9;
     do {
       if (uVar6 == 0) break;
       uVar6 = uVar6 - 1;
@@ -2442,14 +2442,14 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
       pcVar11 = pcVar11 + 1;
     } while (cVar1 != '\0');
     iVar5 = iVar5 + 2 + ~uVar6;
-    piVar9 = piVar9 + 1;
-    iVar3 = *piVar9;
+    ppcVar9 = ppcVar9 + 1;
+    pcVar11 = *ppcVar9;
   }
   pbVar4 = FUN_08048d28(iVar5 + 1);
-  iVar5 = param_2[1];
+  pcVar11 = param_2[1];
   pbVar7 = pbVar4;
   do {
-    if (iVar5 == 0) {
+    if (pcVar11 == (char *)0x0) {
       pbVar7[-1] = 0;
       uVar6 = time((time_t *)0x0);
       local_8 = 0;
@@ -2471,7 +2471,7 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
       return 0;
     }
     *pbVar7 = 0x27;
-    strcpy((char *)(pbVar7 + 1),(char *)*piVar8);
+    strcpy((char *)(pbVar7 + 1),*ppcVar8);
     uVar6 = 0xffffffff;
     pbVar12 = pbVar7 + 1;
     do {
@@ -2484,8 +2484,8 @@ undefined4 FUN_0804a988(int param_1,undefined4 *param_2)
     *pbVar7 = 0x27;
     pbVar7[1] = 0x20;
     pbVar7 = pbVar7 + 2;
-    piVar8 = piVar8 + 1;
-    iVar5 = *piVar8;
+    ppcVar8 = ppcVar8 + 1;
+    pcVar11 = *ppcVar8;
   } while( true );
 }
 
