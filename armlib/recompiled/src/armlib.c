@@ -7,6 +7,9 @@
  - 2026-04-04: Migrated archive-base and argument-tail globals to pointer-typed state (`DAT_0804d84c`, `DAT_0804d7cc`) and updated affected traversals to pointer arithmetic to clear current int-conversion compile blockers; parity: open; next: rerun make and continue 64-bit pointer-flow cleanup in member payload ownership paths.
  - 2026-04-04: Added a concrete `main` shim that dispatches to `FUN_0804a988` so link can produce `build/armlib`; parity: open; next: rerun build and two-way CLI parity tests to capture the next blocker.
  - 2026-04-04: Retyped `FUN_0804a988` argv entry/traversal to pointer-width-safe `char **` flow so startup argument packing no longer dereferences truncated pointers on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity probes and capture next behavior mismatch.
+ - 2026-04-04: Replaced local `printf`/`exit` infinite-loop import stubs with forwarding shims (`vsnprintf`+`write`, `_Exit`) so startup/help paths stop hanging before runtime parity checks; parity: open; next: rerun no-args/help/vsn parity probes and capture first non-timeout mismatch.
+ - 2026-04-04: Recovered `.init` frame-registration stubs by making `__register_frame_info`/`__deregister_frame_info` no-ops so startup reaches main instead of hanging in constructor path; parity: open; next: rerun two-way CLI parity and capture first post-startup mismatch.
+ - 2026-04-04: Disabled `FUN_0804bb30` constructor walk (decompiler-recovered ctor table pointers remain unresolved and loop before main) to unblock CLI startup parity probing; parity: open; next: rerun no-args/help/vsn parity and triage first observable mismatch after startup.
 */
 
 typedef unsigned char   undefined;
@@ -426,6 +429,9 @@ undefined DAT_0804c61f;
 undefined DAT_0804c625;
 undefined4 DAT_0804d650;
 FILE *stderr;
+int vsnprintf(char *__s,size_t __maxlen,char *__format,__builtin_va_list __arg);
+long write(int __fd,void *__buf,size_t __n);
+void _Exit(int __status);
 
 #define _DAT_0804d83c DAT_0804d83c
 
@@ -484,9 +490,7 @@ void __register_frame_info(void *param_1,void *param_2)
 {
   (void)param_1;
   (void)param_2;
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  return;
 }
 
 
@@ -591,9 +595,7 @@ void __deregister_frame_info(void *param_1)
 
 {
   (void)param_1;
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  return;
 }
 
 
@@ -681,9 +683,25 @@ int __libc_start_main(int (*param_1)(int,char **),int param_2,char **param_3,
 int printf(char *__format,...)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  __builtin_va_list ap;
+  char local_buf[0x1000];
+  int iVar1;
+  size_t sVar2;
+
+  __builtin_va_start(ap,__format);
+  iVar1 = vsnprintf(local_buf,sizeof(local_buf),__format,ap);
+  __builtin_va_end(ap);
+  if (iVar1 < 1) {
+    return iVar1;
+  }
+  sVar2 = (size_t)iVar1;
+  if (sizeof(local_buf) <= sVar2) {
+    sVar2 = sizeof(local_buf) - 1;
+  }
+  if (sVar2 != 0) {
+    write(1,local_buf,sVar2);
+  }
+  return iVar1;
 }
 
 
@@ -765,9 +783,7 @@ DIR * opendir(char *__name)
 void exit(int __status)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  _Exit(__status);
 }
 
 
@@ -3452,16 +3468,6 @@ bool FUN_0804ba90(char *param_1,char *param_2)
 void FUN_0804bb30(void)
 
 {
-  int iVar1;
-  int *piVar2;
-  
-  piVar2 = &DAT_0804d650;
-  iVar1 = DAT_0804d650;
-  while (iVar1 != -1) {
-    (*(code *)*piVar2)();
-    piVar2 = piVar2 + -1;
-    iVar1 = *piVar2;
-  }
   return;
 }
 
