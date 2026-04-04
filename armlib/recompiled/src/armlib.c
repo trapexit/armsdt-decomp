@@ -5,6 +5,7 @@
  - 2026-04-04: Removed C90-only front-end blockers by moving build to C99 and replacing the FUN_0804acd0 pseudo-field byte write with an explicit pointer-difference assignment; parity: open; next: rerun make and triage the next hard compiler errors.
  - 2026-04-04: Added forward declarations/no-op init stub, replaced CONCAT31 bool artifacts, and retyped list-tail globals to pointer-safe forms to clear current hard compile blockers; parity: open; next: rerun make and continue pointer-width cleanup in archive/member traversal paths.
  - 2026-04-04: Migrated archive-base and argument-tail globals to pointer-typed state (`DAT_0804d84c`, `DAT_0804d7cc`) and updated affected traversals to pointer arithmetic to clear current int-conversion compile blockers; parity: open; next: rerun make and continue 64-bit pointer-flow cleanup in member payload ownership paths.
+ - 2026-04-04: Added a concrete `main` shim that dispatches to `FUN_0804a988` so link can produce `build/armlib`; parity: open; next: rerun build and two-way CLI parity tests to capture the next blocker.
 */
 
 typedef unsigned char   undefined;
@@ -863,6 +864,14 @@ void processEntry_entry(undefined4 param_1,undefined4 param_2)
   do {
                     // WARNING: Do nothing block with infinite loop
   } while( true );
+}
+
+
+
+int main(int argc,char **argv)
+
+{
+  return (int)FUN_0804a988(argc,(undefined4 *)argv);
 }
 
 
