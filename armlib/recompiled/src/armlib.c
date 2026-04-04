@@ -20,6 +20,7 @@ HISTORY:
 - GEN-018: Replaced the local `isgraph` import stub infinite loop with an ASCII graph classifier so argument tokenization in `FUN_0804a3e4` can advance past the first non-space checks on help/vsn paths; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next still-looping import/call site.
 - GEN-019: Replaced the local `memset` import stub infinite loop with a concrete byte-fill implementation so long printf formatting paths can complete buffer initialization instead of hanging mid-banner; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next still-looping import/call site.
 - GEN-020: Added fine-grained breadcrumbs around `FUN_0804a378` banner segments and the `-help` dispatch branch in `FUN_0804a458` to isolate the first post-reset help-path stall before the next import-stub recovery; parity: open; next: use emitted checkpoint boundary to patch the first still-looping helper on that path.
+- GEN-021: Replaced local `strcmp`/`strncmp` infinite-loop stubs with concrete lexicographic implementations so option matching can progress past pre-dispatch checks on `-help`/`-vsn` paths; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next unresolved helper on each path.
 */
 
 typedef unsigned char   undefined;
@@ -521,9 +522,11 @@ void __register_frame_info(void *param_1,void *param_2)
 int strcmp(char *__s1,char *__s2)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  while ((*__s1 != '\0') && (*__s1 == *__s2)) {
+    __s1 = __s1 + 1;
+    __s2 = __s2 + 1;
+  }
+  return (int)(byte)*__s1 - (int)(byte)*__s2;
 }
 
 
@@ -672,9 +675,16 @@ time_t time(time_t *__timer)
 int strncmp(char *__s1,char *__s2,size_t __n)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  size_t uVar1;
+
+  uVar1 = 0;
+  while (uVar1 < __n) {
+    if ((__s1[uVar1] != __s2[uVar1]) || (__s1[uVar1] == '\0')) {
+      return (int)(byte)__s1[uVar1] - (int)(byte)__s2[uVar1];
+    }
+    uVar1 = uVar1 + 1;
+  }
+  return 0;
 }
 
 
