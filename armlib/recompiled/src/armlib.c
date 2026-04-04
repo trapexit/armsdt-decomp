@@ -17,6 +17,7 @@ HISTORY:
 - GEN-015: Added finer `FUN_0804a988` checkpoint breadcrumbs around workspace reset and argv-packing setup, and fixed the workspace-array pointer handoff to use element pointer decay; parity: open; next: use emitted checkpoint boundary to isolate the first post-reset crashing helper/global write.
 - GEN-016: Recovered `DAT_0804d7e0` as a 0x20-byte program-name buffer and updated call sites to pass decayed `char *`, eliminating the pre-reset crash caused by writing through a scalar placeholder; parity: open; next: rerun no-args/help/vsn and capture the next concrete mismatch beyond startup setup.
 - GEN-017: Replaced the local `memcpy` import stub infinite loop with a concrete byte-copy implementation so libc formatting/file paths no longer deadlock when they transit the program-owned symbol; parity: open; next: rerun no-args/help/vsn parity probes to capture the next post-startup mismatch.
+- GEN-018: Replaced the local `isgraph` import stub infinite loop with an ASCII graph classifier so argument tokenization in `FUN_0804a3e4` can advance past the first non-space checks on help/vsn paths; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next still-looping import/call site.
 */
 
 typedef unsigned char   undefined;
@@ -542,9 +543,7 @@ int fprintf(FILE *__stream,char *__format,...)
 int isgraph(int param_1)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  return (0x20 < param_1) && (param_1 < 0x7f);
 }
 
 
