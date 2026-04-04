@@ -19,6 +19,7 @@ HISTORY:
 - GEN-017: Replaced the local `memcpy` import stub infinite loop with a concrete byte-copy implementation so libc formatting/file paths no longer deadlock when they transit the program-owned symbol; parity: open; next: rerun no-args/help/vsn parity probes to capture the next post-startup mismatch.
 - GEN-018: Replaced the local `isgraph` import stub infinite loop with an ASCII graph classifier so argument tokenization in `FUN_0804a3e4` can advance past the first non-space checks on help/vsn paths; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next still-looping import/call site.
 - GEN-019: Replaced the local `memset` import stub infinite loop with a concrete byte-fill implementation so long printf formatting paths can complete buffer initialization instead of hanging mid-banner; parity: open; next: rerun no-args/help/vsn parity probes and isolate the next still-looping import/call site.
+- GEN-020: Added fine-grained breadcrumbs around `FUN_0804a378` banner segments and the `-help` dispatch branch in `FUN_0804a458` to isolate the first post-reset help-path stall before the next import-stub recovery; parity: open; next: use emitted checkpoint boundary to patch the first still-looping helper on that path.
 */
 
 typedef unsigned char   undefined;
@@ -2145,17 +2146,23 @@ void FUN_0804a170(void)
 void FUN_0804a378(void)
 
 {
+  FUN_08048750("DBG:4a378:enter\n",16);
   printf("%s version %s [%s]\n       - AOF library creation and maintenance tool\n\nCommand format:\n\n%s options library [ file_list | member_list ]\n\n"
          ,"AOF Librarian","4.50 (ARM Ltd SDT2.51)","Build number 130",DAT_0804d7e0);
+  FUN_08048750("DBG:4a378:post_hdr\n",19);
   printf("Wildcards \'%c\' and \'*\' may be used in <member_list>\n\n",'?');
+  FUN_08048750("DBG:4a378:post_wc\n",18);
   printf(
         "Options:-\n\n-c      Create a new library containing files in <file_list>.\n-i      Insert files in <file_list>, replace existing members of the same name.\n-d      Delete the members in <member_list>.\n-e      Extract members in <member_list> placing in files of the same name.\n"
         );
+  FUN_08048750("DBG:4a378:post_opt1\n",20);
   printf(
         "-o      Add an external symbol table to an object library (DEFAULT).\n-n      Do not add an external symbol table to an object library.\n-p      Respect paths of files and objects.\n-l      List library, may be specified with any other option.\n-s      List symbol table, may be specified with any other option.\n-t dir  Extract files to <dir> directory.\n-v file Take additional arguments from via file.\n\n"
         );
+  FUN_08048750("DBG:4a378:post_opt2\n",20);
   printf("Examples:-\n\n        %s -c mylib obj1 obj2 obj3...\n        %s -e mylib %csort*\n        %s -d mylib hash.o\n        %s -i mylib quick_sort.o quick_hash1.o\n        %s -l -s ansilib\n\n"
          ,DAT_0804d7e0,DAT_0804d7e0,'?',DAT_0804d7e0,DAT_0804d7e0,DAT_0804d7e0);
+  FUN_08048750("DBG:4a378:post_examples\n",24);
   return;
 }
 
@@ -2240,7 +2247,9 @@ LAB_0804a5ba:
           FUN_08048c94(2,pcVar4);
           break;
         case 0x68:
+          FUN_08048750("DBG:4a458:help_branch\n",22);
           FUN_0804a378();
+          FUN_08048750("DBG:4a458:post_help\n",20);
                     // WARNING: Subroutine does not return
           exit(0);
         case 0x69:
