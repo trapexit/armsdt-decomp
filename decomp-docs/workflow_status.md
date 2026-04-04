@@ -8,7 +8,7 @@ Status vocabulary: `confirmed`, `open`, `blocked`.
 
 | Tool | Step 1 core outputs (`Makefile`, `src/`, `tests/`) | Step 1 build (`recompiled/build/<tool>`) | Step 2 spec (`technical_specification.md`) | Step 3 core outputs (`Makefile`, `src/`, `tests/`) | Step 3 build (`recreated/build/<tool>`) | Primary blocker/notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| `armlib` | confirmed | blocked | open | open | open | Step 1 compile-triage remains blocked at runtime parity. This batch continued startup-unblock work in `recompiled/src/armlib.c` by replacing local `strncpy`/`strcpy` infinite-loop stubs with concrete libc-equivalent loops used by `FUN_0804b7f0` program-name normalization. Build still succeeds (`rtk make` emits `recompiled/build/armlib`), but behavior is unchanged: candidate timeouts persist for `timeout 3s ./build/armlib`/`-help`/`-vsn` (exit 124) while original exits are `1`/`0`/`1`; `timeout 5s rtk make test` still exits 124 at the no-args case. Next closure experiment: add lightweight startup checkpoints (`write`-based breadcrumbs) across `_DT_INIT` -> `FUN_08048a60` -> `FUN_0804bb30` -> `FUN_0804a988` to pinpoint first reached hang site, then replace exactly that remaining import stub loop (likely in `strcmp`/`fopen`/`opendir` family). |
+| `armlib` | confirmed | blocked | open | open | open | Step 1 compile-triage remains blocked at runtime parity. This batch converted `__libc_start_main` from an infinite-loop stub to a minimal dispatcher and added lightweight startup breadcrumbs in `recompiled/src/armlib.c`. Evidence now advances from timeout to crash: candidate `./build/armlib`, `./build/armlib -help`, and `./build/armlib -vsn` each exit 139 (segfault), while original exits remain `1`/`0`/`1`; `make test` now fails with no-args exit mismatch (`orig=1`, `cand=139`). Breadcrumbs show execution reaches `FUN_0804a988` and passes `FUN_0804b7f0` (`DBG:4a988:enter`, `DBG:4a988:post_b7f0`) before crashing. Next closure experiment: instrument immediately after each reset/allocation step in `FUN_0804a988` and triage the first crashing helper/global write on that path (pointer-width/global typing likely), then rerun no-args/help/vsn parity probes. |
 | `decaof` | open | open | open | open | open | Step outputs not started |
 | `armlink` | open | open | open | open | open | Step outputs not started |
 | `armasm` | open | open | open | open | open | Step outputs not started |
@@ -18,7 +18,7 @@ Status vocabulary: `confirmed`, `open`, `blocked`.
 ## Current readiness highlights
 
 1. Highest-priority actionable item remains step 1 completion for `armlib`.
-2. `armlib` step 1 core outputs remain present (`recompiled/Makefile`, `recompiled/src/`, `recompiled/tests/`), and compile triage is active with incremental startup-stub recovery applied, but runtime still blocks before two-way CLI parity can pass.
+2. `armlib` step 1 core outputs remain present (`recompiled/Makefile`, `recompiled/src/`, `recompiled/tests/`), and compile triage is active with startup-dispatch recovery applied; runtime has progressed from timeout to an early segfault and still blocks two-way CLI parity.
 3. Step 1 remains the active phase across all tools; step 2 and step 3 are not ready for any tool.
 
 ## Update rules

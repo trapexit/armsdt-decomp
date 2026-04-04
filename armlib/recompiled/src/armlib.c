@@ -11,6 +11,8 @@
  - 2026-04-04: Recovered `.init` frame-registration stubs by making `__register_frame_info`/`__deregister_frame_info` no-ops so startup reaches main instead of hanging in constructor path; parity: open; next: rerun two-way CLI parity and capture first post-startup mismatch.
  - 2026-04-04: Disabled `FUN_0804bb30` constructor walk (decompiler-recovered ctor table pointers remain unresolved and loop before main) to unblock CLI startup parity probing; parity: open; next: rerun no-args/help/vsn parity and triage first observable mismatch after startup.
  - 2026-04-04: Replaced local `strncpy`/`strcpy` import stubs with concrete libc-equivalent loops so `FUN_0804b7f0` can complete startup argv/program-name normalization on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity and triage first remaining startup mismatch.
+ - 2026-04-04: Added write-based startup breadcrumbs across `_DT_INIT`, `FUN_08048a60`, `FUN_0804bb30`, and `FUN_0804a988` to pinpoint the first reached hang stage before further import-stub recovery; parity: open; next: run timeout probes, capture breadcrumb trace, then replace the first still-hanging imported helper on that path.
+ - 2026-04-04: Replaced local `__libc_start_main` infinite-loop stub with a minimal startup dispatcher that runs init and calls `main`, so process startup no longer hard-loops before any CLI path executes; parity: open; next: rerun no-args/help/vsn and capture first post-startup mismatch.
 */
 
 typedef unsigned char   undefined;
@@ -434,6 +436,13 @@ int vsnprintf(char *__s,size_t __maxlen,char *__format,__builtin_va_list __arg);
 long write(int __fd,void *__buf,size_t __n);
 void _Exit(int __status);
 
+static void FUN_08048750(char *param_1,size_t param_2)
+
+{
+  write(2,param_1,param_2);
+  return;
+}
+
 #define _DAT_0804d83c DAT_0804d83c
 
 void FUN_0804abe0(undefined4 param_1);
@@ -457,9 +466,13 @@ static void func_0x00000000(void)
 void _DT_INIT(void)
 
 {
+  FUN_08048750("DBG:_DT_INIT:enter\n",19);
   func_0x00000000();
+  FUN_08048750("DBG:_DT_INIT:post_func0\n",24);
   FUN_08048a60();
+  FUN_08048750("DBG:_DT_INIT:post_48a60\n",24);
   FUN_0804bb30();
+  FUN_08048750("DBG:_DT_INIT:post_4bb30\n",24);
   return;
 }
 
@@ -665,16 +678,19 @@ int __libc_start_main(int (*param_1)(int,char **),int param_2,char **param_3,
                       void (*param_4)(void),void (*param_5)(void),void *param_6,void *param_7)
 
 {
-  (void)param_1;
-  (void)param_2;
-  (void)param_3;
-  (void)param_4;
+  int iVar1;
+
+  iVar1 = 0;
+  if (param_4 != (void (*)(void))0x0) {
+    param_4();
+  }
+  if (param_1 != (int (*)(int,char **))0x0) {
+    iVar1 = param_1(param_2,param_3);
+  }
   (void)param_5;
   (void)param_6;
   (void)param_7;
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  return iVar1;
 }
 
 
@@ -946,7 +962,9 @@ void FUN_08048a58(void)
 void FUN_08048a60(void)
 
 {
+  FUN_08048750("DBG:48a60:enter\n",16);
   __register_frame_info(&DWORD_0804d64c,&DAT_0804d7a4);
+  FUN_08048750("DBG:48a60:exit\n",15);
   return;
 }
 
@@ -2429,7 +2447,9 @@ int FUN_0804a988(int param_1,char **param_2)
   uint local_c;
   int local_8;
   
+  FUN_08048750("DBG:4a988:enter\n",16);
   FUN_0804b7f0(param_2[0],&DAT_0804d7e0,0x20);
+  FUN_08048750("DBG:4a988:post_b7f0\n",20);
   DAT_0804d7cc = 0;
   DAT_0804d7c8 = 0;
   DAT_0804d7d4 = 0;
@@ -3491,6 +3511,8 @@ bool FUN_0804ba90(char *param_1,char *param_2)
 void FUN_0804bb30(void)
 
 {
+  FUN_08048750("DBG:4bb30:enter\n",16);
+  FUN_08048750("DBG:4bb30:exit\n",15);
   return;
 }
 
