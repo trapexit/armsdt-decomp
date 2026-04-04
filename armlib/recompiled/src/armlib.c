@@ -1,18 +1,22 @@
 /*
- HISTORY:
- - 2026-04-04: Seeded step-1 baseline by copying Ghidra output into recompiled/src; parity: open; next: establish bootstrap Makefile and two-way CLI parity harness.
- - 2026-04-04: Performed compile-triage pass by deduplicating overlapping DAT globals and fixing baseline parse blockers (code/undefined3/true-false, entry signature, vararg stack artifact); parity: open; next: rerun make to surface the next constrained blocker set.
- - 2026-04-04: Removed C90-only front-end blockers by moving build to C99 and replacing the FUN_0804acd0 pseudo-field byte write with an explicit pointer-difference assignment; parity: open; next: rerun make and triage the next hard compiler errors.
- - 2026-04-04: Added forward declarations/no-op init stub, replaced CONCAT31 bool artifacts, and retyped list-tail globals to pointer-safe forms to clear current hard compile blockers; parity: open; next: rerun make and continue pointer-width cleanup in archive/member traversal paths.
- - 2026-04-04: Migrated archive-base and argument-tail globals to pointer-typed state (`DAT_0804d84c`, `DAT_0804d7cc`) and updated affected traversals to pointer arithmetic to clear current int-conversion compile blockers; parity: open; next: rerun make and continue 64-bit pointer-flow cleanup in member payload ownership paths.
- - 2026-04-04: Added a concrete `main` shim that dispatches to `FUN_0804a988` so link can produce `build/armlib`; parity: open; next: rerun build and two-way CLI parity tests to capture the next blocker.
- - 2026-04-04: Retyped `FUN_0804a988` argv entry/traversal to pointer-width-safe `char **` flow so startup argument packing no longer dereferences truncated pointers on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity probes and capture next behavior mismatch.
- - 2026-04-04: Replaced local `printf`/`exit` infinite-loop import stubs with forwarding shims (`vsnprintf`+`write`, `_Exit`) so startup/help paths stop hanging before runtime parity checks; parity: open; next: rerun no-args/help/vsn parity probes and capture first non-timeout mismatch.
- - 2026-04-04: Recovered `.init` frame-registration stubs by making `__register_frame_info`/`__deregister_frame_info` no-ops so startup reaches main instead of hanging in constructor path; parity: open; next: rerun two-way CLI parity and capture first post-startup mismatch.
- - 2026-04-04: Disabled `FUN_0804bb30` constructor walk (decompiler-recovered ctor table pointers remain unresolved and loop before main) to unblock CLI startup parity probing; parity: open; next: rerun no-args/help/vsn parity and triage first observable mismatch after startup.
- - 2026-04-04: Replaced local `strncpy`/`strcpy` import stubs with concrete libc-equivalent loops so `FUN_0804b7f0` can complete startup argv/program-name normalization on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity and triage first remaining startup mismatch.
- - 2026-04-04: Added write-based startup breadcrumbs across `_DT_INIT`, `FUN_08048a60`, `FUN_0804bb30`, and `FUN_0804a988` to pinpoint the first reached hang stage before further import-stub recovery; parity: open; next: run timeout probes, capture breadcrumb trace, then replace the first still-hanging imported helper on that path.
- - 2026-04-04: Replaced local `__libc_start_main` infinite-loop stub with a minimal startup dispatcher that runs init and calls `main`, so process startup no longer hard-loops before any CLI path executes; parity: open; next: rerun no-args/help/vsn and capture first post-startup mismatch.
+HISTORY:
+- GEN-001: Seeded step-1 baseline by copying Ghidra output into recompiled/src; parity: open; next: establish bootstrap Makefile and two-way CLI parity harness.
+- GEN-002: Performed compile-triage pass by deduplicating overlapping DAT globals and fixing baseline parse blockers (code/undefined3/true-false, entry signature, vararg stack artifact); parity: open; next: rerun make to surface the next constrained blocker set.
+- GEN-003: Removed C90-only front-end blockers by moving build to C99 and replacing the FUN_0804acd0 pseudo-field byte write with an explicit pointer-difference assignment; parity: open; next: rerun make and triage the next hard compiler errors.
+- GEN-004: Added forward declarations/no-op init stub, replaced CONCAT31 bool artifacts, and retyped list-tail globals to pointer-safe forms to clear current hard compile blockers; parity: open; next: rerun make and continue pointer-width cleanup in archive/member traversal paths.
+- GEN-005: Migrated archive-base and argument-tail globals to pointer-typed state (`DAT_0804d84c`, `DAT_0804d7cc`) and updated affected traversals to pointer arithmetic to clear current int-conversion compile blockers; parity: open; next: rerun make and continue 64-bit pointer-flow cleanup in member payload ownership paths.
+- GEN-006: Added a concrete `main` shim that dispatches to `FUN_0804a988` so link can produce `build/armlib`; parity: open; next: rerun build and two-way CLI parity tests to capture the next blocker.
+- GEN-007: Retyped `FUN_0804a988` argv entry/traversal to pointer-width-safe `char **` flow so startup argument packing no longer dereferences truncated pointers on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity probes and capture next behavior mismatch.
+- GEN-008: Replaced local `printf`/`exit` infinite-loop import stubs with forwarding shims (`vsnprintf`+`write`, `_Exit`) so startup/help paths stop hanging before runtime parity checks; parity: open; next: rerun no-args/help/vsn parity probes and capture first non-timeout mismatch.
+- GEN-009: Recovered `.init` frame-registration stubs by making `__register_frame_info`/`__deregister_frame_info` no-ops so startup reaches main instead of hanging in constructor path; parity: open; next: rerun two-way CLI parity and capture first post-startup mismatch.
+- GEN-010: Disabled `FUN_0804bb30` constructor walk (decompiler-recovered ctor table pointers remain unresolved and loop before main) to unblock CLI startup parity probing; parity: open; next: rerun no-args/help/vsn parity and triage first observable mismatch after startup.
+- GEN-011: Replaced local `strncpy`/`strcpy` import stubs with concrete libc-equivalent loops so `FUN_0804b7f0` can complete startup argv/program-name normalization on 64-bit hosts; parity: open; next: rerun no-args/help/vsn parity and triage first remaining startup mismatch.
+- GEN-012: Added write-based startup breadcrumbs across `_DT_INIT`, `FUN_08048a60`, `FUN_0804bb30`, and `FUN_0804a988` to pinpoint the first reached hang stage before further import-stub recovery; parity: open; next: run timeout probes, capture breadcrumb trace, then replace the first still-hanging imported helper on that path.
+- GEN-013: Replaced local `__libc_start_main` infinite-loop stub with a minimal startup dispatcher that runs init and calls `main`, so process startup no longer hard-loops before any CLI path executes; parity: open; next: rerun no-args/help/vsn and capture first post-startup mismatch.
+- GEN-014: Recovered `DAT_0804d880` as a 0x400-word workspace array (instead of scalar) so the startup zeroing loop in `FUN_0804a988` no longer writes past declared storage and crashes immediately; parity: open; next: rerun no-args/help/vsn and locate the first remaining mismatch after init/reset.
+- GEN-015: Added finer `FUN_0804a988` checkpoint breadcrumbs around workspace reset and argv-packing setup, and fixed the workspace-array pointer handoff to use element pointer decay; parity: open; next: use emitted checkpoint boundary to isolate the first post-reset crashing helper/global write.
+- GEN-016: Recovered `DAT_0804d7e0` as a 0x20-byte program-name buffer and updated call sites to pass decayed `char *`, eliminating the pre-reset crash caused by writing through a scalar placeholder; parity: open; next: rerun no-args/help/vsn and capture the next concrete mismatch beyond startup setup.
+- GEN-017: Replaced the local `memcpy` import stub infinite loop with a concrete byte-copy implementation so libc formatting/file paths no longer deadlock when they transit the program-owned symbol; parity: open; next: rerun no-args/help/vsn parity probes to capture the next post-startup mismatch.
 */
 
 typedef unsigned char   undefined;
@@ -416,7 +420,7 @@ char *DAT_0804d820;
 undefined DAT_0804bd59;
 int DAT_0804d828;
 uint DAT_0804d7c4;
-undefined DAT_0804d7e0;
+char DAT_0804d7e0[0x20];
 uint DAT_0804d644;
 undefined4 **DAT_0804d7cc;
 undefined DAT_0804c486;
@@ -426,7 +430,7 @@ undefined DAT_0804c4df;
 undefined DAT_0804c4e3;
 undefined DAT_0804c4ef;
 undefined DAT_0804c4f3;
-undefined4 DAT_0804d880;
+undefined4 DAT_0804d880[0x400];
 undefined4 DAT_0804d648;
 undefined DAT_0804c61f;
 undefined DAT_0804c625;
@@ -728,9 +732,16 @@ int printf(char *__format,...)
 void * memcpy(void *__dest,void *__src,size_t __n)
 
 {
-  do {
-                    // WARNING: Do nothing block with infinite loop
-  } while( true );
+  byte *pbVar1;
+  byte *pbVar2;
+  size_t uVar3;
+
+  pbVar1 = (byte *)__dest;
+  pbVar2 = (byte *)__src;
+  for (uVar3 = 0; uVar3 < __n; uVar3 = uVar3 + 1) {
+    pbVar1[uVar3] = pbVar2[uVar3];
+  }
+  return __dest;
 }
 
 
@@ -2130,7 +2141,7 @@ void FUN_0804a378(void)
 
 {
   printf("%s version %s [%s]\n       - AOF library creation and maintenance tool\n\nCommand format:\n\n%s options library [ file_list | member_list ]\n\n"
-         ,"AOF Librarian","4.50 (ARM Ltd SDT2.51)","Build number 130",&DAT_0804d7e0);
+         ,"AOF Librarian","4.50 (ARM Ltd SDT2.51)","Build number 130",DAT_0804d7e0);
   printf("Wildcards \'%c\' and \'*\' may be used in <member_list>\n\n",'?');
   printf(
         "Options:-\n\n-c      Create a new library containing files in <file_list>.\n-i      Insert files in <file_list>, replace existing members of the same name.\n-d      Delete the members in <member_list>.\n-e      Extract members in <member_list> placing in files of the same name.\n"
@@ -2139,7 +2150,7 @@ void FUN_0804a378(void)
         "-o      Add an external symbol table to an object library (DEFAULT).\n-n      Do not add an external symbol table to an object library.\n-p      Respect paths of files and objects.\n-l      List library, may be specified with any other option.\n-s      List symbol table, may be specified with any other option.\n-t dir  Extract files to <dir> directory.\n-v file Take additional arguments from via file.\n\n"
         );
   printf("Examples:-\n\n        %s -c mylib obj1 obj2 obj3...\n        %s -e mylib %csort*\n        %s -d mylib hash.o\n        %s -i mylib quick_sort.o quick_hash1.o\n        %s -l -s ansilib\n\n"
-         ,&DAT_0804d7e0,&DAT_0804d7e0,'?',&DAT_0804d7e0,&DAT_0804d7e0,&DAT_0804d7e0);
+         ,DAT_0804d7e0,DAT_0804d7e0,'?',DAT_0804d7e0,DAT_0804d7e0,DAT_0804d7e0);
   return;
 }
 
@@ -2448,17 +2459,19 @@ int FUN_0804a988(int param_1,char **param_2)
   int local_8;
   
   FUN_08048750("DBG:4a988:enter\n",16);
-  FUN_0804b7f0(param_2[0],&DAT_0804d7e0,0x20);
+  FUN_0804b7f0(param_2[0],DAT_0804d7e0,0x20);
   FUN_08048750("DBG:4a988:post_b7f0\n",20);
+  FUN_08048750("DBG:4a988:pre_reset\n",20);
   DAT_0804d7cc = 0;
   DAT_0804d7c8 = 0;
   DAT_0804d7d4 = 0;
   DAT_0804d7d0 = 0;
-  puVar10 = &DAT_0804d880;
+  puVar10 = DAT_0804d880;
   for (iVar5 = 0x400; iVar5 != 0; iVar5 = iVar5 + -1) {
     *puVar10 = 0;
     puVar10 = puVar10 + 1;
   }
+  FUN_08048750("DBG:4a988:post_workspace_zero\n",30);
   DAT_0804d844 = 0;
   DAT_0804d840 = 0;
   _DAT_0804d83c = 0;
@@ -2483,6 +2496,7 @@ int FUN_0804a988(int param_1,char **param_2)
   DAT_0804d814 = 0;
   DAT_0804d820 = 0;
   DAT_0804d828 = 1;
+  FUN_08048750("DBG:4a988:post_globals_reset\n",29);
   if (param_1 < 2) {
     FUN_0804a378();
                     // WARNING: Subroutine does not return
@@ -2505,6 +2519,7 @@ int FUN_0804a988(int param_1,char **param_2)
     pcVar11 = *ppcVar9;
   }
   pbVar4 = FUN_08048d28(iVar5 + 1);
+  FUN_08048750("DBG:4a988:post_alloc\n",21);
   pcVar11 = param_2[1];
   pbVar7 = pbVar4;
   do {
